@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech World | WhatsApp Channel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #0f172a; color: #f8fafc; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .gradient-text { background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    </style>
+</head>
+<body class="font-sans">
+
+    <nav class="p-6 flex justify-between items-center max-w-6xl mx-auto">
+        <h1 class="text-2xl font-bold tracking-tighter uppercase gradient-text">Tech World</h1>
+        <a href="https://wa.me/yourlink" class="bg-blue-600 hover:bg-blue-500 px-5 py-2 rounded-full font-medium transition">Join Channel</a>
+    </nav>
+
+    <header class="text-center py-20 px-4">
+        <h2 class="text-5xl md:text-7xl font-extrabold mb-6">Stay Ahead of the <span class="gradient-text">Future</span></h2>
+        <p class="text-gray-400 max-w-2xl mx-auto text-lg">Daily updates on AI, Gadgets, and Code. Join 10k+ tech enthusiasts on our WhatsApp channel.</p>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 pb-20">
+        
+        <article class="glass rounded-2xl p-6 mb-10">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center font-bold">TW</div>
+                <div>
+                    <p class="font-bold">Tech World Admin</p>
+                    <p class="text-xs text-gray-500">Posted 2 hours ago</p>
+                </div>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">The New Era of Quantum Computing 💻</h3>
+            <p class="text-gray-300 leading-relaxed mb-6">
+                Today we're looking at how quantum processors are breaking encryption records. Is your data still safe? Let's discuss in the comments below!
+            </p>
+            
+            <section class="border-t border-gray-700 pt-6">
+                <h4 class="text-sm font-bold uppercase tracking-widest text-gray-500 mb-4">Discussion</h4>
+                
+                <div class="flex gap-2 mb-6">
+                    <input type="text" id="commentInput" placeholder="Add a comment..." class="w-full bg-slate-800 border border-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500">
+                    <button onclick="addComment()" class="bg-blue-600 px-4 py-2 rounded-lg hover:bg-blue-500 transition"><i class="fa-solid fa-paper-plane"></i></button>
+                </div>
+
+                <div id="commentList" class="space-y-4">
+                    <div class="text-sm bg-slate-800/50 p-3 rounded-lg">
+                        <span class="font-bold text-blue-400">@DevUser:</span> This is mind-blowing! Can't wait for consumer-grade tech.
+                    </div>
+                </div>
+            </section>
+        </article>
+
+    </main>
+
+    <script>
+        function addComment() {
+            const input = document.getElementById('commentInput');
+            const list = document.getElementById('commentList');
+            
+            if (input.value.trim() !== "") {
+                const newComment = document.createElement('div');
+                newComment.className = "text-sm bg-slate-800/50 p-3 rounded-lg animate-pulse";
+                newComment.innerHTML = `<span class="font-bold text-blue-400">@Guest:</span> ${input.value}`;
+                
+                // Add to list
+                list.prepend(newComment);
+                
+                // Reset input and pulse effect
+                input.value = "";
+                setTimeout(() => newComment.classList.remove('animate-pulse'), 1000);
+            }
+        }
+    </script>
+
+</body>
+</html>
