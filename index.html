@@ -125,67 +125,96 @@ Settings > General > iPhone Storage ගිහින් App එකක් ඇත�
   gtag('config', 'G-51ZLGN7KH0');
 </script>
 
-    <script>
-        // 1. Initial Load from LocalStorage
-        document.addEventListener('DOMContentLoaded', () => {
-            displayComments();
-            // Refresh time labels every 30 seconds
-            setInterval(displayComments, 30000);
-        });
+   <script type="module">
+  // 1. Import the necessary Firebase SDKs
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getDatabase, ref, push, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        function addComment() {
-            const input = document.getElementById('commentInput');
-            if (input.value.trim() !== "") {
-                const newComment = {
-                    user: "@User_" + Math.floor(1000 + Math.random() * 9000),
-                    text: input.value,
-                    timestamp: new Date().getTime()
-                };
+  // 2. Your specific Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyDM4BWnLf6jGycrMdQClWtq-Ra2iDidWsQ",
+    authDomain: "tech-world-93ee6.firebaseapp.com",
+    databaseURL: "https://tech-world-93ee6-default-rtdb.firebaseio.com", // Manually added for Realtime DB
+    projectId: "tech-world-93ee6",
+    storageBucket: "tech-world-93ee6.firebasestorage.app",
+    messagingSenderId: "912275465700",
+    appId: "1:912275465700:web:5ec12525e03446712153f1",
+    measurementId: "G-CR0ZKLY8H2"
+  };
 
-                saveToStorage(newComment);
-                displayComments();
-                input.value = "";
-            }
-        }
+  // 3. Initialize Firebase and Database
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const commentsRef = ref(db, 'comments');
 
-        function saveToStorage(comment) {
-            const comments = JSON.parse(localStorage.getItem('techWorld_comments')) || [];
-            comments.push(comment);
-            localStorage.setItem('techWorld_comments', JSON.stringify(comments));
-        }
+  /**
+   * Function to add a comment to Firebase
+   * Attached to 'window' so the HTML button can trigger it
+   */
+  window.addComment = function() {
+    const input = document.getElementById('commentInput');
+    const text = input.value.trim();
 
-        function displayComments() {
-            const list = document.getElementById('commentList');
-            const comments = JSON.parse(localStorage.getItem('techWorld_comments')) || [];
-            
-            // Clear existing list
-            list.innerHTML = ""; 
+    if (text !== "") {
+      push(commentsRef, {
+        user: "@User_" + Math.floor(1000 + Math.random() * 9000),
+        text: text,
+        timestamp: serverTimestamp()
+      })
+      .then(() => {
+        input.value = ""; // Clear input on success
+      })
+      .catch((error) => {
+        console.error("Error adding comment: ", error);
+        alert("Failed to post comment. Check your Firebase Rules!");
+      });
+    }
+  };
 
-            // Render comments (Latest first)
-            comments.slice().reverse().forEach(c => {
-                const timeStr = formatTimeAgo(c.timestamp);
-                const div = document.createElement('div');
-                div.className = "bg-slate-800/30 p-4 rounded-xl border border-gray-800/50 hover:border-gray-700 transition";
-                
-                div.innerHTML = `
-                    <div class="flex justify-between items-center mb-1">
-                        <span class="font-bold text-blue-400 text-sm">${c.user}</span>
-                        <span class="text-[10px] text-gray-500 font-bold uppercase tracking-tighter">${timeStr}</span>
-                    </div>
-                    <p class="text-gray-300 text-sm leading-relaxed">${c.text}</p>
-                `;
-                list.appendChild(div);
-            });
-        }
+  /**
+   * Listen for Real-time Updates
+   * This runs automatically every time the database changes
+   */
+  onValue(commentsRef, (snapshot) => {
+    const list = document.getElementById('commentList');
+    list.innerHTML = ""; // Clear current UI list
+    
+    const data = snapshot.val();
+    if (data) {
+      // Convert object to array and reverse to show newest first
+      const commentsArray = Object.values(data).reverse();
+      
+      commentsArray.forEach(c => {
+        const timeStr = formatTimeAgo(c.timestamp);
+        const div = document.createElement('div');
+        div.className = "bg-slate-800/30 p-4 rounded-xl border border-gray-800/50 hover:border-gray-700 transition mb-4";
+        
+        div.innerHTML = `
+            <div class="flex justify-between items-center mb-1">
+                <span class="font-bold text-blue-400 text-sm">${c.user}</span>
+                <span class="text-[10px] text-gray-500 font-bold uppercase tracking-tighter">${timeStr}</span>
+            </div>
+            <p class="text-gray-300 text-sm leading-relaxed">${c.text}</p>
+        `;
+        list.appendChild(div);
+      });
+    } else {
+      list.innerHTML = `<p class="text-gray-600 text-center text-sm italic">No comments yet. Be the first!</p>`;
+    }
+  });
 
-        function formatTimeAgo(timestamp) {
-            const diff = Math.floor((new Date() - timestamp) / 1000);
-            if (diff < 60) return "Just now";
-            if (diff < 3600) return Math.floor(diff / 60) + "m ago";
-            if (diff < 86400) return Math.floor(diff / 3600) + "h ago";
-            return new Date(timestamp).toLocaleDateString();
-        }
-    </script>
+  /**
+   * Helper function to format timestamps
+   */
+  function formatTimeAgo(timestamp) {
+    if (!timestamp) return "Just now";
+    const diff = Math.floor((new Date() - new Date(timestamp)) / 1000);
+    if (diff < 60) return "Just now";
+    if (diff < 3600) return Math.floor(diff / 60) + "m ago";
+    if (diff < 86400) return Math.floor(diff / 3600) + "h ago";
+    return new Date(timestamp).toLocaleDateString();
+  }
+</script>
 
 </body>
 </html>
