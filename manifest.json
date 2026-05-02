@@ -1,0 +1,28 @@
+{
+  "background_color": "#0a1941",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "Tech World",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "agentghost.netlify",
+  "start_url": "/",
+  "theme_color": "#04a7c9",
+  "icons": [
+    {
+      "src": "https://agentghost.netlify.app/techworld.jpeg",
+      "type": "image/jpeg",
+      "sizes": "500x500",
+      "isSquare": true,
+      "isPng": false,
+      "isWebp": false,
+      "isJpg": true,
+      "width": 500,
+      "is512x512": false,
+      "is256x256": false,
+      "is192x192": false
+    }
+  ],
+  "id": "techworld",
+  "description": "Stay ahead of the tech curve with the official app for the Tech World WhatsApp community!\n\nThis app is designed specifically for our members in Sri Lanka to provide a faster, more organized way to access all our tech updates, tutorials, and exclusive links without getting lost in the WhatsApp chat history.\n\nWhat’s Inside:\n\nInstant Updates: Get notified about the latest tech news and channel announcements the moment they drop.\n\nCurated Tech Links: Access all the important tools, apps, and resources shared in our channel in one organized place.\n\nOffline Access: Save and read our most important tech guides even when you don't have a stable connection.\n\nLightweight Performance: Built as a high-speed PWA, this app won't slow down your Samsung device or take up valuable storage.\n\nWhy install the app?\nWhile WhatsApp is great for chatting, this app is your permanent library for everything we share. No more scrolling through thousands of messages to find that one link or tip!\n\nNote: This is an official companion app for the Tech World community. Join us and upgrade your tech game!"
+}
