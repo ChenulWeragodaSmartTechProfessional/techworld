@@ -1,26 +1,26 @@
 {
-  "name": "Smart Tech Channel",
-  "short_name": "SmartTech",
-  "description": "The official app for our Tech WhatsApp Channel.",
+  "name": "Tech World",
+  "short_name": "TechWorld",
+  "description": "Official app for our Tech WhatsApp Channel.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#25D366",
+  "background_color": "#0f172a",
+  "theme_color": "#38bdf8",
   "icons": [
     {
-      "src": "icons/icon-192x192.png",
+      "src": "launchericon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icons/icon-512x512.png",
+      "src": "launchericon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "icons/icon-512x512.png",
+      "src": "launchericon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
