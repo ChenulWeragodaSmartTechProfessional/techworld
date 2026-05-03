@@ -3,56 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maintenance Mode</title>
+    <title>Under Maintenance</title>
     <style>
-        /* This ID is specific to override injected styles */
-        #recovery-shield {
+        /* STUBBORN CSS OVERRIDE 
+           Using !important on every property to block external injections.
+        */
+        #maintenance-screen {
             position: fixed !important;
             top: 0 !important;
             left: 0 !important;
-            width: 100vw !important;
-            height: 100vh !important;
-            background-color: #111 !important;
-            color: #fff !important;
+            width: 100% !important;
+            height: 100% !important;
+            background-color: #0d1117 !important;
+            color: #e6edf3 !important;
             display: flex !important;
             flex-direction: column !important;
             justify-content: center !important;
             align-items: center !important;
-            z-index: 999999 !important; /* Stays on top of everything */
-            font-family: sans-serif !important;
+            z-index: 2147483647 !important; /* Maximum possible z-index */
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
             text-align: center !important;
+            margin: 0 !important;
+            padding: 20px !important;
+            box-sizing: border-box !important;
         }
 
-        .notice-box {
-            max-width: 600px;
-            padding: 40px;
-            border-top: 5px solid #ff0000;
-            background: #1a1a1a;
+        .content-card {
+            max-width: 500px !important;
+            border: 1px solid #30363d !important;
+            padding: 40px !important;
+            border-radius: 12px !important;
+            background: #161b22 !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
         }
 
-        h1 { color: #fff; margin-bottom: 10px; }
-        p { color: #ccc; line-height: 1.6; }
+        h1 { color: #58a6ff !important; margin-top: 0 !important; font-size: 2rem !important; }
+        p { font-size: 1.1rem !important; line-height: 1.5 !important; color: #8b949e !important; }
 
-        .dev-note {
-            margin-top: 50px;
-            font-family: monospace;
-            color: #555;
-            font-size: 0.9rem;
+        .defiant-footer {
+            margin-top: 40px !important;
+            font-family: monospace !important;
+            background: #21262d !important;
+            padding: 10px 20px !important;
+            border-radius: 6px !important;
+            border-left: 4px solid #f85149 !important;
+            color: #f85149 !important;
+            font-weight: bold !important;
         }
     </style>
 </head>
-<body>
+<body style="margin:0 !important;">
 
-    <div id="recovery-shield">
-        <div class="notice-box">
-            <h1>We'll Be Right Back</h1>
-            <p>To our valued visitors: Don't worry! We are performing some security updates and temporary maintenance. Your data is safe, and we will be back online shortly.</p>
+    <div id="maintenance-screen">
+        <div class="content-card">
+            <h1>Site Under Improvement</h1>
+            <p>Don't worry—we are just performing some quick technical maintenance to ensure the best experience for our visitors.</p>
+            <p><strong>Everything will be back to normal very soon.</strong></p>
         </div>
 
-        <div class="dev-note">
-            [ STATUS: DEFENSE ACTIVE ] <br>
-            To the person injecting CSS: Nice try, but we aren't stopping. <br>
-            We're just getting started.
+        <div class="defiant-footer">
+            SYSTEM STATUS: ONLINE & UNYIELDING <br>
+            <span style="font-size: 0.8rem; opacity: 0.8;">
+                To the injector: Your efforts are noted, but we are not stopping.
+            </span>
         </div>
     </div>
 
