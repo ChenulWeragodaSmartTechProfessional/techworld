@@ -3,155 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tech World | Stay Ahead of the Future</title>
-    
-    <meta name="description" content="Official Tech World portal for updates on AI, Gadgets, and Code.">
-    
-    <meta name="theme-color" content="#0f172a">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
-    <link rel="icon" type="image/png" href="/icons/icon-192x192.png">
-    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
-    <link rel="manifest" href="/manifest.json">
-
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-   
+    <title>Maintenance Mode</title>
     <style>
-        body { 
-            background-color: #0f172a; 
-            color: #f8fafc; 
-            margin: 0;
-            overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
+        /* This ID is specific to override injected styles */
+        #recovery-shield {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            background-color: #111 !important;
+            color: #fff !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            z-index: 999999 !important; /* Stays on top of everything */
+            font-family: sans-serif !important;
+            text-align: center !important;
         }
 
-        #particles-js {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background-color: #0f172a;
+        .notice-box {
+            max-width: 600px;
+            padding: 40px;
+            border-top: 5px solid #ff0000;
+            background: #1a1a1a;
         }
 
-        .glass { 
-            background: rgba(30, 41, 59, 0.7); 
-            backdrop-filter: blur(12px); 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-        }
+        h1 { color: #fff; margin-bottom: 10px; }
+        p { color: #ccc; line-height: 1.6; }
 
-        .gradient-text { 
-            background: linear-gradient(90deg, #38bdf8, #818cf8); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-        }
-
-        .whatsapp-post { 
-            line-height: 1.7; 
-            white-space: pre-wrap; 
-            word-wrap: break-word;
-            font-size: 1.05rem;
-        }
-
-        .whatsapp-post b { color: #fff; font-weight: 800; }
-        hr { border: 0; border-top: 1px solid rgba(255, 255, 255, 0.1); margin: 20px 0; }
-        
-        .img-container {
-            position: relative;
-            width: 100%;
-            border-radius: 1rem;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 1.5rem;
+        .dev-note {
+            margin-top: 50px;
+            font-family: monospace;
+            color: #555;
+            font-size: 0.9rem;
         }
     </style>
 </head>
-<body class="font-sans">
+<body>
 
-    <div id="particles-js"></div>
+    <div id="recovery-shield">
+        <div class="notice-box">
+            <h1>We'll Be Right Back</h1>
+            <p>To our valued visitors: Don't worry! We are performing some security updates and temporary maintenance. Your data is safe, and we will be back online shortly.</p>
+        </div>
 
-    <nav class="p-6 flex justify-between items-center max-w-6xl mx-auto relative z-10">
-        <h1 class="text-2xl font-bold tracking-tighter uppercase gradient-text">Tech World</h1>
-        <a href="https://whatsapp.com/channel/0029VbBw2JR9cDDiNozMYF1p" class="bg-blue-600 hover:bg-blue-500 px-5 py-2 rounded-full font-medium transition flex items-center gap-2">
-            <i class="fa-brands fa-whatsapp"></i> Join Channel
-        </a>
-    </nav>
+        <div class="dev-note">
+            [ STATUS: DEFENSE ACTIVE ] <br>
+            To the person injecting CSS: Nice try, but we aren't stopping. <br>
+            We're just getting started.
+        </div>
+    </div>
 
-    <header class="text-center py-12 px-4 relative z-10">
-        <h2 class="text-5xl md:text-6xl font-extrabold mb-4">Stay Ahead of the <span class="gradient-text">Future</span></h2>
-        <p class="text-gray-400 max-w-2xl mx-auto text-lg">Daily updates on AI, Gadgets, and Code. Join 10k+ tech enthusiasts.</p>
-    </header>
-
-    <main class="max-w-3xl mx-auto px-4 pb-20 relative z-10">
-        <article class="glass rounded-3xl p-6 md:p-8 mb-10 shadow-2xl">
-            <div class="flex items-center gap-4 mb-8 border-b border-gray-800 pb-6">
-                <div class="w-14 h-14 bg-gradient-to-tr from-blue-600 to-indigo-500 rounded-full flex items-center justify-center text-xl font-black shadow-inner">TW</div>
-                <div>
-                    <div class="flex items-center gap-2">
-                        <p class="font-bold text-lg">Tech World</p>
-                        <i class="fa-solid fa-circle-check text-blue-400 text-sm"></i>
-                    </div>
-                    <p class="text-xs text-gray-500 uppercase tracking-widest">Admin • Official Update</p>
-                </div>
-            </div>
-
-            <div class="img-container shadow-2xl">
-                <img src="https://raw.githubusercontent.com/ChenulWeragodaSmartTechProfessional/techworld/main/post1.png" 
-                     alt="Internet Under the Sea" 
-                     class="w-full h-auto object-cover hover:scale-105 transition duration-500">
-            </div>
-
-            <div class="whatsapp-post text-gray-200">
-                <b>අපේ Internet එන්නේ අහසින් නෙවෙයි මුහුද යටින්? 🌊🌍</b><br>
-                ඔයා හිතන් ඉන්නේ Internet වැඩ කරන්නේ Satellites වලින් කියලද? 🛰️❌ එහෙනම් මේක අනිවාර්යයෙන් කියවන්න! ගොඩක් අය නොදන්න ලෝකයේ ලොකුම Tech රහසක් තමයි මේක. 💪🔥<br>
-                අපි ලෝකේ කොහේ ඉන්න කෙනෙක්ට Message එකක් යැව්වත්, Video එකක් බැලුවත් ඒ දත්ත වලින් **99% ක්ම** ගමන් කරන්නේ මුහුද යට එලලා තියෙන ඉතාම සිහින් කේබල් හරහායි! 😱👀<br>
-                ඒ තමයි <b>(Submarine Communications Cables)!</b> 🏗️🌐
-                <hr>
-                මේක නිකම්ම කේබල් එකක් නෙවෙයි, මුළු පෘථිවියම එකට යා කරන දැවැන්ත ජාලයක්. ලෝකය පුරා මුහුද පතුලේ කිලෝමීටර් මිලියන ගණනක Fiber Optic කේබල් එලලා තියෙනවා. මේවා හරහා දත්ත ගමන් කරන්නේ ආලෝකයේ වේගයට සමාන වේගයකින්. ⚡<br>
-                විශේෂම දේ තමයි මේ කේබල් එකක් සාමාන්‍යයෙන් ගෙවත්තකට වතුර දාන බටයක් තරම් සිහින් වුණාට, මුළු මහාද්වීපයකම Data ගෙනියන්න මේවට පුළුවන් වීමයි. 🤯 මුල් කාලේ මෝරුන් මේ කේබල් හපන්න උත්සාහ කරපු නිසා දැන් මේවා විශේෂ ආරක්ෂිත ආවරණ යොදලයි හදන්නේ! 🛡️🦈
-                <hr>
-                චන්ද්‍රිකා වලට වඩා ඉතාම වේගයෙන් දත්ත හුවමාරු කරන්න මේ කේබල් වලට පුළුවන් වගේම මේවා ලෝක ආර්ථිකයේ හදවත වගේ තමයි. 📉 මොකද මේ එක කේබල් එකක් හරි කැපුනොත් මුළු ලෝකයේම බැංකු පද්ධති, කොටස් වෙළඳපොළ සහ Internet සේවාවන් සම්පූර්ණයෙන් අඩාල වෙන්න පුළුවන්. ලෝකයේ දිගම කේබල් එක වන <b>2Africa</b> කේබල් එක පෘථිවියේ වටප්‍රමාණයටත් වඩා දිගින් වැඩියි! (45,000km+) 📏
-                <hr>
-                අපේ පුංචි ලංකාවත් මේ වගේ ලොකු කේබල් පද්ධති කිහිපයකටම සම්බන්ධ වෙලා තියෙන්නේ. 💡😌 ගොඩබිම ඉන්න අපිට කිසිම බාධාවකින් තොරව Facebook, YouTube යන්න පුළුවන් වෙලා තියෙන්නේ මුහුද යට තියෙන මේ අපූරු තාක්ෂණය නිසයි!<br>
-                අපි හැමෝම හිතන්නේ තාක්ෂණය තියෙන්නේ අහසේ කියලා, හැබැයි ඇත්තටම ලෝකය එකට යා කරලා තියෙනන්නේ මුහුද යටින් යන මේ පුදුම නූල් වැනි කේබල් පද්ධතියයි. මේක හරියට පෘථිවියේ "ස්නායු පද්ධතිය" වගෙයි. 🗿💪
-                <hr>
-                ඉතින් මේ සුපිරි රහස තාමත් නොදන්න යාළුවෙක්ට බලන්න මේ පෝස්ට් එක Share කරන්න. 🌍✨<br>
-                | ᴏᴡɴᴇʀ | ᴀɢᴇɴᴛ ɢʜᴏsᴛ
-                |🚫 Don't Copy This
-                | 🔥 𝐓𝐄𝐂𝐇 🌐 𝐖𝐎𝐑𝐋𝐃 ⚙️𝚂𝚈𝙼𝙱𝙾𝙻 𝙾𝙵 𝚃𝙴𝙲𝙷 𝚁𝙴𝚅𝙾𝙻𝚄𝚃𝙸𝙾𝙽.......<br>
-            </div>
-        </article>
-    </main>
-
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    
-    <script>
-        // Particle configuration remains to keep the background effect
-        particlesJS("particles-js", {
-            "particles": {
-                "number": { "value": 70, "density": { "enable": true, "value_area": 800 } },
-                "color": { "value": "#6366f1" },
-                "shape": { "type": "circle" },
-                "opacity": { "value": 0.3 },
-                "size": { "value": 2, "random": true },
-                "line_linked": {
-                    "enable": true,
-                    "distance": 150,
-                    "color": "#6366f1",
-                    "opacity": 0.2,
-                    "width": 1
-                },
-                "move": { "enable": true, "speed": 1.2 }
-            },
-            "interactivity": {
-                "events": { "onhover": { "enable": true, "mode": "grab" } },
-                "modes": { "grab": { "distance": 200, "line_linked": { "opacity": 0.5 } } }
-            },
-            "retina_detect": true
-        });
-    </script>
 </body>
 </html>
