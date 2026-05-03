@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tech World | Stay Ahead of the Future</title>
+    <title>Tech World | Rewards Portal</title>
     
     <style>
         :root {
@@ -24,7 +24,6 @@
 
         .container { max-width: 750px; margin: 0 auto; padding: 20px; }
 
-        /* Navigation & Header */
         nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; }
         .logo { font-size: 1.5rem; font-weight: 800; color: #38bdf8; text-transform: uppercase; }
         
@@ -37,7 +36,6 @@
             margin-bottom: 20px;
         }
 
-        /* Auth UI */
         .auth-hidden { display: none; }
         input { 
             width: 100%; padding: 14px; margin: 10px 0; 
@@ -48,8 +46,13 @@
             width: 100%; padding: 14px; border-radius: 10px; border: none; 
             background: var(--accent); color: white; font-weight: bold; cursor: pointer; 
         }
+        
+        .btn-google {
+            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ffffff;
+            background: transparent; color: white; font-weight: bold; cursor: pointer;
+            margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
 
-        /* Points Banner */
         .reward-banner {
             background: linear-gradient(90deg, #1d4ed8, #4f46e5);
             padding: 15px; border-radius: 12px; text-align: center;
@@ -57,17 +60,8 @@
         }
 
         .points-display { font-size: 1.2rem; color: #fbbf24; font-weight: bold; }
-
-        /* Post Content */
-        .img-container { width: 100%; border-radius: 1rem; overflow: hidden; margin-bottom: 1.5rem; border: 1px solid rgba(255,255,255,0.1); }
-        .img-container img { width: 100%; display: block; }
         .post-text { white-space: pre-wrap; font-size: 1.05rem; color: #e2e8f0; }
-        hr { border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 25px 0; }
-
-        /* Secure Comments */
         .comment-item { background: rgba(15, 23, 42, 0.5); padding: 15px; border-radius: 12px; margin-bottom: 10px; }
-        .comment-user { font-weight: bold; color: #60a5fa; font-size: 0.85rem; }
-        .comment-msg { font-size: 0.95rem; margin-top: 5px; word-break: break-all; }
     </style>
 </head>
 <body>
@@ -83,32 +77,26 @@
 
     <div id="authSection" class="glass-card">
         <h2 style="text-align:center;">Join Tech World</h2>
-        <p style="text-align:center; color:var(--text-dim);">Login to see updates and earn daily points.</p>
         <input type="email" id="email" placeholder="Email Address">
         <input type="password" id="password" placeholder="Password">
         <button class="btn-main" id="authBtn">Login / Register</button>
+        
+        <div style="text-align:center; margin: 15px 0; color:var(--text-dim);">OR</div>
+        
+        <button class="btn-google" id="googleBtn">
+            Continue with Google
+        </button>
     </div>
 
     <div id="mainContent" class="auth-hidden">
-        <div class="reward-banner" id="rewardMsg">🎉 Daily Bonus! +5 Points added to your account.</div>
+        <div class="reward-banner" id="rewardMsg">🎉 Daily Bonus! +5 Points added.</div>
 
         <article class="glass-card">
-            <div class="img-container">
-                <img src="https://raw.githubusercontent.com/ChenulWeragodaSmartTechProfessional/techworld/main/post1.png" alt="Submarine Cables">
-            </div>
-
             <div class="post-text">
-<b>අපේ Internet එන්නේ අහසින් නෙවෙයි මුහුද යටින්? 🌊🌍</b>
+<b>අපේ Internet එන්නේ මුහුද යටින්? 🌊🌍</b>
 ඔයා හිතන් ඉන්නේ Internet වැඩ කරන්නේ Satellites වලින් කියලද? 🛰️❌ එහෙනම් මේක අනිවාර්යයෙන් කියවන්න! 💪🔥
 
-අපි ලෝකේ කොහේ ඉන්න කෙනෙක්ට Message එකක් යැව්වත්, Video එකක් බැලුවත් ඒ දත්ත වලින් **99% ක්ම** ගමන් කරන්නේ මුහුද යට එලලා තියෙන ඉතාම සිහින් කේබල් හරහායි! 😱👀 ඒ තමයි <b>(Submarine Communications Cables)!</b> 🏗️🌐
-<hr>
-මේක නිකම්ම කේබල් එකක් නෙවෙයි, මුළු පෘථිවියම එකට යා කරන දැවැන්ත ජාලයක්. ලෝකය පුරා මුහුද පතුලේ Fiber Optic කේබල් එලලා තියෙනවා. මේවා හරහා දත්ත ගමන් කරන්නේ ආලෝකයේ වේගයෙන්. ⚡
-<hr>
-අපේ පුංචි ලංකාවත් මේ වගේ ලොකු කේබල් පද්ධති කිහිපයකටම සම්බන්ධ වෙලා තියෙන්නේ. 💡😌 ගොඩබිම ඉන්න අපිට කිසිම බාධාවකින් තොරව Facebook, YouTube යන්න පුළුවන් වෙලා තියෙන්නේ මුහුද යට තියෙන මේ අපූරු තාක්ෂණය නිසයි!
-
-| ᴏᴡɴᴇʀ | ᴀɢᴇɴᴛ ɢʜᴏsᴛ
-| 🔥 𝐓𝐄𝐂𝐇 🌐 𝐖𝐎𝐑𝐋𝐃 ⚙️
+අපි ලෝකේ කොහේ ඉන්න කෙනෙක්ට Message එකක් යැව්වත්, Video එකක් බැලුවත් ඒ දත්ත වලින් **99% ක්ම** ගමන් කරන්නේ මුහුද යට එලලා තියෙන ඉතාම සිහින් Fiber Optic කේබල් හරහායි! 😱👀
             </div>
 
             <section style="margin-top:40px;">
@@ -125,7 +113,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getDatabase, ref, get, set, update, push, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
@@ -140,39 +128,39 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getDatabase(app);
+    const provider = new GoogleAuthProvider();
 
-    // Auth Action
+    // Email Auth
     document.getElementById('authBtn').onclick = async () => {
         const email = document.getElementById('email').value;
         const pass = document.getElementById('password').value;
-        if(!email || !pass) return alert("Enter credentials");
-
         try {
             await signInWithEmailAndPassword(auth, email, pass);
         } catch (e) {
-            try { await createUserWithEmailAndPassword(auth, email, pass); } 
-            catch (err) { alert(err.message); }
+            try { await createUserWithEmailAndPassword(auth, email, pass); } catch (err) { alert(err.message); }
         }
+    };
+
+    // Google Auth
+    document.getElementById('googleBtn').onclick = async () => {
+        try {
+            await signInWithPopup(auth, provider);
+        } catch (e) { alert(e.message); }
     };
 
     window.signOutUser = () => signOut(auth);
 
-    // State Listener
     onAuthStateChanged(auth, async (user) => {
-        const authDiv = document.getElementById('authSection');
-        const mainDiv = document.getElementById('mainContent');
-        const headerDiv = document.getElementById('userHeader');
-
         if (user) {
-            authDiv.classList.add('auth-hidden');
-            mainDiv.classList.remove('auth-hidden');
-            headerDiv.classList.remove('auth-hidden');
+            document.getElementById('authSection').classList.add('auth-hidden');
+            document.getElementById('mainContent').classList.remove('auth-hidden');
+            document.getElementById('userHeader').classList.remove('auth-hidden');
             handlePoints(user);
             loadComments();
         } else {
-            authDiv.classList.remove('auth-hidden');
-            mainDiv.classList.add('auth-hidden');
-            headerDiv.classList.add('auth-hidden');
+            document.getElementById('authSection').classList.remove('auth-hidden');
+            document.getElementById('mainContent').classList.add('auth-hidden');
+            document.getElementById('userHeader').classList.add('auth-hidden');
         }
     });
 
@@ -198,8 +186,7 @@
     }
 
     function loadComments() {
-        const cRef = ref(db, 'comments');
-        onValue(cRef, (snap) => {
+        onValue(ref(db, 'comments'), (snap) => {
             const list = document.getElementById('commentList');
             list.innerHTML = "";
             const data = snap.val();
@@ -207,16 +194,8 @@
                 Object.values(data).reverse().forEach(c => {
                     const div = document.createElement('div');
                     div.className = "comment-item";
-                    
-                    const u = document.createElement('div');
-                    u.className = "comment-user";
-                    u.textContent = c.user; // SECURE
-
-                    const m = document.createElement('div');
-                    m.className = "comment-msg";
-                    m.textContent = c.text; // SECURE - No scripts will run
-
-                    div.appendChild(u); div.appendChild(m);
+                    div.innerHTML = `<div style="font-weight:bold; color:#60a5fa; font-size:0.85rem;">${c.user}</div>
+                                     <div style="font-size:0.95rem; margin-top:5px;">${document.createTextNode(c.text).wholeText}</div>`;
                     list.appendChild(div);
                 });
             }
@@ -227,7 +206,7 @@
         const input = document.getElementById('commentMsg');
         if(input.value.trim() && !input.value.includes('<')) {
             push(ref(db, 'comments'), {
-                user: auth.currentUser.email.split('@')[0],
+                user: auth.currentUser.displayName || auth.currentUser.email.split('@')[0],
                 text: input.value,
                 timestamp: serverTimestamp()
             });
@@ -235,6 +214,5 @@
         }
     };
 </script>
-
 </body>
 </html>
