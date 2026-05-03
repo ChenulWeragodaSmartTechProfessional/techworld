@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tech World | Stay Ahead of the Future</title>
+    <title>Tech World | Secure Rewards Portal</title>
     
     <style>
         :root {
@@ -17,57 +17,64 @@
         body { 
             background-color: var(--bg); 
             color: var(--text); 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             margin: 0; padding: 0;
             line-height: 1.6;
         }
 
         .container { max-width: 750px; margin: 0 auto; padding: 20px; }
 
-        /* Navigation & Header */
         nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; }
-        .logo { font-size: 1.5rem; font-weight: 800; color: #38bdf8; text-transform: uppercase; }
+        .logo { font-size: 1.5rem; font-weight: 800; color: #38bdf8; text-transform: uppercase; letter-spacing: 1px; }
         
         .glass-card { 
             background: var(--card); 
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 1.5rem;
-            padding: 2rem;
+            padding: 2.5rem;
             margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        /* Auth UI */
-        .auth-hidden { display: none; }
+        .auth-hidden { display: none !important; }
+        
         input { 
             width: 100%; padding: 14px; margin: 10px 0; 
             border-radius: 10px; border: 1px solid #334155; 
-            background: #1e293b; color: white; box-sizing: border-box; 
+            background: #1e293b; color: white; box-sizing: border-box;
+            outline: none; transition: 0.3s;
         }
+        input:focus { border-color: var(--accent); }
+
         .btn-main { 
             width: 100%; padding: 14px; border-radius: 10px; border: none; 
             background: var(--accent); color: white; font-weight: bold; cursor: pointer; 
+            transition: 0.3s;
+        }
+        .btn-main:hover { opacity: 0.9; transform: translateY(-1px); }
+        
+        .btn-google {
+            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ffffff;
+            background: transparent; color: white; font-weight: bold; cursor: pointer;
+            margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 10px;
         }
 
-        /* Points Banner */
         .reward-banner {
             background: linear-gradient(90deg, #1d4ed8, #4f46e5);
             padding: 15px; border-radius: 12px; text-align: center;
             margin-bottom: 20px; display: none; font-weight: bold;
+            animation: slideDown 0.5s ease-out;
         }
 
-        .points-display { font-size: 1.2rem; color: #fbbf24; font-weight: bold; }
-
-        /* Post Content */
-        .img-container { width: 100%; border-radius: 1rem; overflow: hidden; margin-bottom: 1.5rem; border: 1px solid rgba(255,255,255,0.1); }
-        .img-container img { width: 100%; display: block; }
+        .points-display { font-size: 1.2rem; color: #fbbf24; font-weight: bold; background: rgba(251, 191, 36, 0.1); padding: 5px 15px; border-radius: 20px; }
+        
         .post-text { white-space: pre-wrap; font-size: 1.05rem; color: #e2e8f0; }
-        hr { border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 25px 0; }
+        .post-text b { color: #fff; }
 
-        /* Secure Comments */
-        .comment-item { background: rgba(15, 23, 42, 0.5); padding: 15px; border-radius: 12px; margin-bottom: 10px; }
-        .comment-user { font-weight: bold; color: #60a5fa; font-size: 0.85rem; }
-        .comment-msg { font-size: 0.95rem; margin-top: 5px; word-break: break-all; }
+        .comment-item { background: rgba(15, 23, 42, 0.5); padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid var(--accent); }
+
+        @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     </style>
 </head>
 <body>
@@ -82,40 +89,42 @@
     </nav>
 
     <div id="authSection" class="glass-card">
-        <h2 style="text-align:center;">Join Tech World</h2>
-        <p style="text-align:center; color:var(--text-dim);">Login to see updates and earn daily points.</p>
+        <h2 style="text-align:center; margin-top:0;">Welcome to the Future</h2>
+        <p style="text-align:center; color:var(--text-dim);">Login to unlock premium content and earn daily points.</p>
+        
         <input type="email" id="email" placeholder="Email Address">
         <input type="password" id="password" placeholder="Password">
-        <button class="btn-main" id="authBtn">Login / Register</button>
+        <button class="btn-main" id="authBtn">Continue</button>
+        
+        <div style="text-align:center; margin: 20px 0; color:var(--text-dim); position:relative;">
+            <span style="background: var(--bg); padding: 0 10px; position: relative; z-index: 1;">OR</span>
+            <hr style="position: absolute; top: 50%; width: 100%; border: 0; border-top: 1px solid #334155; margin:0;">
+        </div>
+        
+        <button class="btn-google" id="googleBtn">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="18" alt="G">
+            Continue with Google
+        </button>
     </div>
 
     <div id="mainContent" class="auth-hidden">
         <div class="reward-banner" id="rewardMsg">🎉 Daily Bonus! +5 Points added to your account.</div>
 
         <article class="glass-card">
-            <div class="img-container">
-                <img src="https://raw.githubusercontent.com/ChenulWeragodaSmartTechProfessional/techworld/main/post1.png" alt="Submarine Cables">
-            </div>
-
             <div class="post-text">
-<b>අපේ Internet එන්නේ අහසින් නෙවෙයි මුහුද යටින්? 🌊🌍</b>
+<b>අපේ Internet එන්නේ මුහුද යටින්? 🌊🌍</b>
 ඔයා හිතන් ඉන්නේ Internet වැඩ කරන්නේ Satellites වලින් කියලද? 🛰️❌ එහෙනම් මේක අනිවාර්යයෙන් කියවන්න! 💪🔥
 
-අපි ලෝකේ කොහේ ඉන්න කෙනෙක්ට Message එකක් යැව්වත්, Video එකක් බැලුවත් ඒ දත්ත වලින් **99% ක්ම** ගමන් කරන්නේ මුහුද යට එලලා තියෙන ඉතාම සිහින් කේබල් හරහායි! 😱👀 ඒ තමයි <b>(Submarine Communications Cables)!</b> 🏗️🌐
-<hr>
-මේක නිකම්ම කේබල් එකක් නෙවෙයි, මුළු පෘථිවියම එකට යා කරන දැවැන්ත ජාලයක්. ලෝකය පුරා මුහුද පතුලේ Fiber Optic කේබල් එලලා තියෙනවා. මේවා හරහා දත්ත ගමන් කරන්නේ ආලෝකයේ වේගයෙන්. ⚡
-<hr>
-අපේ පුංචි ලංකාවත් මේ වගේ ලොකු කේබල් පද්ධති කිහිපයකටම සම්බන්ධ වෙලා තියෙන්නේ. 💡😌 ගොඩබිම ඉන්න අපිට කිසිම බාධාවකින් තොරව Facebook, YouTube යන්න පුළුවන් වෙලා තියෙන්නේ මුහුද යට තියෙන මේ අපූරු තාක්ෂණය නිසයි!
+අපි ලෝකේ කොහේ ඉන්න කෙනෙක්ට Message එකක් යැව්වත්, Video එකක් බැලුවත් ඒ දත්ත වලින් **99% ක්ම** ගමන් කරන්නේ මුහුද යට එලලා තියෙන ඉතාම සිහින් Fiber Optic කේබල් හරහායි! 😱👀 ඒ තමයි <b>(Submarine Communications Cables)!</b> 🏗️🌐
 
-| ᴏᴡɴᴇʀ | ᴀɢᴇɴᴛ ɢʜᴏsᴛ
-| 🔥 𝐓𝐄𝐂𝐇 🌐 𝐖𝐎𝐑𝐋𝐃 ⚙️
+ලෝකය පුරා මුහුද පතුලේ කිලෝමීටර් මිලියන ගණනක කේබල් එලලා තියෙනවා. මේවා හරහා දත්ත ගමන් කරන්නේ ආලෝකයේ වේගයෙන්. ⚡ ලංකාවත් මේ වගේ ලොකු කේබල් පද්ධති කිහිපයකටම සම්බන්ධ වෙලා තියෙන්නේ. 💡😌
             </div>
 
             <section style="margin-top:40px;">
-                <h4 style="color:var(--text-dim);">COMMENTS</h4>
+                <h4 style="color:var(--text-dim); letter-spacing: 1px;">DISCUSSION</h4>
                 <div style="display:flex; gap:10px; margin-bottom:20px;">
-                    <input type="text" id="commentMsg" placeholder="Write something..." style="margin:0;">
-                    <button id="postComment" style="background:var(--accent); border:none; color:white; padding:0 20px; border-radius:10px; cursor:pointer;">Post</button>
+                    <input type="text" id="commentMsg" placeholder="Share your thoughts..." style="margin:0;">
+                    <button id="postComment" style="background:var(--accent); border:none; color:white; padding:0 20px; border-radius:10px; cursor:pointer; font-weight:bold;">Post</button>
                 </div>
                 <div id="commentList"></div>
             </section>
@@ -125,7 +134,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getDatabase, ref, get, set, update, push, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
@@ -140,42 +149,65 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getDatabase(app);
+    const provider = new GoogleAuthProvider();
 
-    // Auth Action
+    // Email Validation Regex
+    const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    // Email/Password Login & Register
     document.getElementById('authBtn').onclick = async () => {
-        const email = document.getElementById('email').value;
+        const email = document.getElementById('email').value.trim();
         const pass = document.getElementById('password').value;
-        if(!email || !pass) return alert("Enter credentials");
+
+        if(!validateEmail(email)) return alert("Please enter a valid email address.");
+        if(pass.length < 6) return alert("Password must be at least 6 characters.");
 
         try {
             await signInWithEmailAndPassword(auth, email, pass);
         } catch (e) {
-            try { await createUserWithEmailAndPassword(auth, email, pass); } 
-            catch (err) { alert(err.message); }
+            if (e.code === 'auth/user-not-found' || e.code === 'auth/invalid-credential') {
+                try {
+                    const res = await createUserWithEmailAndPassword(auth, email, pass);
+                    await sendEmailVerification(res.user);
+                    alert("A verification email has been sent! Please verify to unlock full features.");
+                } catch (err) { alert(err.message); }
+            } else { alert(e.message); }
         }
+    };
+
+    // Google Login
+    document.getElementById('googleBtn').onclick = async () => {
+        try { await signInWithPopup(auth, provider); } catch (e) { alert(e.message); }
     };
 
     window.signOutUser = () => signOut(auth);
 
-    // State Listener
+    // Auth State Monitor
     onAuthStateChanged(auth, async (user) => {
-        const authDiv = document.getElementById('authSection');
-        const mainDiv = document.getElementById('mainContent');
-        const headerDiv = document.getElementById('userHeader');
+        const authSec = document.getElementById('authSection');
+        const mainSec = document.getElementById('mainContent');
+        const headSec = document.getElementById('userHeader');
 
         if (user) {
-            authDiv.classList.add('auth-hidden');
-            mainDiv.classList.remove('auth-hidden');
-            headerDiv.classList.remove('auth-hidden');
+            authSec.classList.add('auth-hidden');
+            mainSec.classList.remove('auth-hidden');
+            headSec.classList.remove('auth-hidden');
+            
+            // Check if email is verified (Only for Email login)
+            if (!user.emailVerified && user.providerData[0].providerId === "password") {
+                console.log("Email not verified yet.");
+            }
+
             handlePoints(user);
             loadComments();
         } else {
-            authDiv.classList.remove('auth-hidden');
-            mainDiv.classList.add('auth-hidden');
-            headerDiv.classList.add('auth-hidden');
+            authSec.classList.remove('auth-hidden');
+            mainSec.classList.add('auth-hidden');
+            headSec.classList.add('auth-hidden');
         }
     });
 
+    // Points System Logic
     async function handlePoints(user) {
         const userRef = ref(db, 'users/' + user.uid);
         const today = new Date().toISOString().split('T')[0];
@@ -191,15 +223,15 @@
                 document.getElementById('rewardMsg').style.display = 'block';
             }
         } else {
-            await set(userRef, { points: 5, lastLogin: today });
+            await set(userRef, { points: 5, lastLogin: today, email: user.email });
             document.getElementById('displayPoints').textContent = "5 PTS";
             document.getElementById('rewardMsg').style.display = 'block';
         }
     }
 
+    // Secure Comment Loading
     function loadComments() {
-        const cRef = ref(db, 'comments');
-        onValue(cRef, (snap) => {
+        onValue(ref(db, 'comments'), (snap) => {
             const list = document.getElementById('commentList');
             list.innerHTML = "";
             const data = snap.val();
@@ -209,12 +241,12 @@
                     div.className = "comment-item";
                     
                     const u = document.createElement('div');
-                    u.className = "comment-user";
-                    u.textContent = c.user; // SECURE
+                    u.style.fontWeight = "bold"; u.style.color = "#60a5fa";
+                    u.textContent = c.user; // SECURE text
 
                     const m = document.createElement('div');
-                    m.className = "comment-msg";
-                    m.textContent = c.text; // SECURE - No scripts will run
+                    m.style.fontSize = "0.95rem"; m.style.marginTop = "5px";
+                    m.textContent = c.text; // SECURE text - This kills the "K9" attack
 
                     div.appendChild(u); div.appendChild(m);
                     list.appendChild(div);
@@ -223,18 +255,21 @@
         });
     }
 
+    // Secure Comment Posting
     document.getElementById('postComment').onclick = () => {
         const input = document.getElementById('commentMsg');
-        if(input.value.trim() && !input.value.includes('<')) {
+        const text = input.value.trim();
+        if(text && !text.includes('<')) {
             push(ref(db, 'comments'), {
-                user: auth.currentUser.email.split('@')[0],
-                text: input.value,
+                user: auth.currentUser.displayName || auth.currentUser.email.split('@')[0],
+                text: text,
                 timestamp: serverTimestamp()
             });
             input.value = "";
+        } else if (text.includes('<')) {
+            alert("No HTML tags allowed!");
         }
     };
 </script>
-
 </body>
 </html>
