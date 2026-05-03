@@ -27,7 +27,6 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Particles Container */
         #particles-js {
             position: fixed;
             top: 0;
@@ -130,21 +129,23 @@
                     <i class="fa-regular fa-comments"></i> Community Discussion
                 </h4>
                 <div class="flex gap-2 mb-8">
-                    <input type="text" id="commentInput" placeholder="Write a comment..." class="w-full bg-slate-900/50 border border-gray-700 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 transition">
-                    <button onclick="addComment()" class="bg-blue-600 px-6 py-3 rounded-xl hover:bg-blue-500 transition shadow-lg shadow-blue-900/20">
+                    <input type="text" id="commentInput" placeholder="Write a comment..." class="w-full bg-slate-900/50 border border-gray-700 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 transition text-white">
+                    <button id="submitBtn" onclick="window.addComment()" class="bg-blue-600 px-6 py-3 rounded-xl hover:bg-blue-500 transition shadow-lg shadow-blue-900/20">
                         <i class="fa-solid fa-paper-plane"></i>
                     </button>
                 </div>
-                <div id="commentList" class="space-y-4"></div>
+                <div id="commentList" class="space-y-4">
+                    </div>
             </section>
         </article>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, push, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // Your Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDM4BWnLf6jGycrMdQClWtq-Ra2iDidWsQ",
             authDomain: "tech-world-93ee6.firebaseapp.com",
@@ -160,38 +161,52 @@
         const db = getDatabase(app);
         const commentsRef = ref(db, 'comments');
 
+        // Global function for the button
         window.addComment = function() {
             const input = document.getElementById('commentInput');
             const text = input.value.trim();
+            
             if (text !== "") {
+                const randomID = Math.floor(1000 + Math.random() * 9000);
                 push(commentsRef, {
-                    user: "@User_" + Math.floor(1000 + Math.random() * 9000),
+                    user: "@User_" + randomID,
                     text: text,
                     timestamp: serverTimestamp()
-                }).then(() => { input.value = ""; });
+                }).then(() => { 
+                    input.value = ""; 
+                }).catch((error) => {
+                    console.error("Firebase Error:", error);
+                    alert("Failed to post comment. Check your database rules.");
+                });
             }
         };
 
+        // Listen for new comments
         onValue(commentsRef, (snapshot) => {
             const list = document.getElementById('commentList');
-            list.innerHTML = "";
             const data = snapshot.val();
-            if (data) {
-                const commentsArray = Object.values(data).reverse();
-                commentsArray.forEach(c => {
-                    const timeStr = formatTimeAgo(c.timestamp);
-                    const div = document.createElement('div');
-                    div.className = "bg-slate-800/30 p-4 rounded-xl border border-gray-800/50 hover:border-gray-700 transition mb-4";
-                    div.innerHTML = `
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="font-bold text-blue-400 text-sm">${c.user}</span>
-                            <span class="text-[10px] text-gray-500 font-bold uppercase tracking-tighter">${timeStr}</span>
-                        </div>
-                        <p class="text-gray-300 text-sm leading-relaxed">${c.text}</p>
-                    `;
-                    list.appendChild(div);
-                });
+            
+            if (!data) {
+                list.innerHTML = "<p class='text-gray-600 text-center text-sm py-4 italic'>No comments yet. Start the conversation!</p>";
+                return;
             }
+
+            list.innerHTML = "";
+            const commentsArray = Object.values(data).reverse();
+            
+            commentsArray.forEach(c => {
+                const timeStr = formatTimeAgo(c.timestamp);
+                const div = document.createElement('div');
+                div.className = "bg-slate-800/30 p-4 rounded-xl border border-gray-800/50 hover:border-gray-700 transition mb-4";
+                div.innerHTML = `
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="font-bold text-blue-400 text-sm">${c.user}</span>
+                        <span class="text-[10px] text-gray-500 font-bold uppercase tracking-tighter">${timeStr}</span>
+                    </div>
+                    <p class="text-gray-300 text-sm leading-relaxed">${c.text}</p>
+                `;
+                list.appendChild(div);
+            });
         });
 
         function formatTimeAgo(timestamp) {
@@ -203,12 +218,13 @@
             return new Date(timestamp).toLocaleDateString();
         }
 
+        // Particle configuration
         particlesJS("particles-js", {
             "particles": {
                 "number": { "value": 70, "density": { "enable": true, "value_area": 800 } },
                 "color": { "value": "#6366f1" },
                 "shape": { "type": "circle" },
-                "opacity": { "value": 0.3, "random": false },
+                "opacity": { "value": 0.3 },
                 "size": { "value": 2, "random": true },
                 "line_linked": {
                     "enable": true,
@@ -217,25 +233,11 @@
                     "opacity": 0.2,
                     "width": 1
                 },
-                "move": {
-                    "enable": true,
-                    "speed": 1.2,
-                    "direction": "none",
-                    "random": false,
-                    "straight": false,
-                    "out_mode": "out",
-                    "bounce": false
-                }
+                "move": { "enable": true, "speed": 1.2 }
             },
             "interactivity": {
-                "detect_on": "canvas",
-                "events": {
-                    "onhover": { "enable": true, "mode": "grab" },
-                    "onclick": { "enable": false }
-                },
-                "modes": {
-                    "grab": { "distance": 200, "line_linked": { "opacity": 0.5 } }
-                }
+                "events": { "onhover": { "enable": true, "mode": "grab" } },
+                "modes": { "grab": { "distance": 200, "line_linked": { "opacity": 0.5 } } }
             },
             "retina_detect": true
         });
