@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech World | Data Link Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body { background-color: #0f172a; color: #f8fafc; font-family: sans-serif; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .gradient-text { background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        /* Game Card Styles */
+        .card { height: 100px; cursor: pointer; perspective: 1000px; }
+        .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
+        .card.flipped .card-inner { transform: rotateY(180deg); }
+        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; border-radius: 12px; font-size: 2rem; }
+        .card-front { background: #1e293b; border: 1px solid #334155; }
+        .card-back { background: #3b82f6; transform: rotateY(180deg); color: white; }
+        .matched .card-back { background: #10b981; }
+    </style>
+</head>
+<body class="p-6">
+
+    <div class="max-w-md mx-auto text-center">
+        <h1 class="text-3xl font-bold mb-2 gradient-text">DATA LINK</h1>
+        <p class="text-gray-400 text-sm mb-6">Match the tech icons to restore the submarine cable link!</p>
+        
+        <div id="game-stats" class="flex justify-between mb-4 px-4 font-mono text-blue-400">
+            <span>Moves: <span id="moves">0</span></span>
+            <span>Time: <span id="timer">0</span>s</span>
+        </div>
+
+        <div id="grid" class="grid grid-cols-4 gap-3 mb-8">
+            </div>
+
+        <button onclick="resetGame()" class="bg-blue-600 hover:bg-blue-500 px-8 py-3 rounded-xl font-bold transition w-full shadow-lg">
+            Restart System
+        </button>
+    </div>
+
+    <script>
+        const icons = ['fa-microchip', 'fa-code', 'fa-database', 'fa-wifi', 'fa-satellite', 'fa-shield-halved', 'fa-server', 'fa-bolt'];
+        let cards = [...icons, ...icons];
+        let flippedCards = [];
+        let matchedCount = 0;
+        let moves = 0;
+        let timer = 0;
+        let interval;
+
+        function shuffle(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+
+        function createBoard() {
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+            shuffle(cards).forEach((icon, index) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="card-inner">
+                        <div class="card-front"><i class="fa-solid fa-question text-slate-700"></i></div>
+                        <div class="card-back"><i class="fa-solid ${icon}"></i></div>
+                    </div>`;
+                card.onclick = () => flipCard(card, icon);
+                grid.appendChild(card);
+            });
+        }
+
+        function flipCard(card, icon) {
+            if (flippedCards.length < 2 && !card.classList.contains('flipped')) {
+                card.classList.add('flipped');
+                flippedCards.push({ card, icon });
+
+                if (flippedCards.length === 2) {
+                    moves++;
+                    document.getElementById('moves').textContent = moves;
+                    checkMatch();
+                }
+            }
+        }
+
+        function checkMatch() {
+            const [c1, c2] = flippedCards;
+            if (c1.icon === c2.icon) {
+                c1.card.classList.add('matched');
+                c2.card.classList.add('matched');
+                matchedCount += 2;
+                flippedCards = [];
+                if (matchedCount === cards.length) {
+                    clearInterval(interval);
+                    alert(`System Restored! Completed in ${moves} moves.`);
+                }
+            } else {
+                setTimeout(() => {
+                    c1.card.classList.remove('flipped');
+                    c2.card.classList.remove('flipped');
+                    flippedCards = [];
+                }, 1000);
+            }
+        }
+
+        function resetGame() {
+            moves = 0;
+            timer = 0;
+            matchedCount = 0;
+            flippedCards = [];
+            document.getElementById('moves').textContent = '0';
+            document.getElementById('timer').textContent = '0';
+            clearInterval(interval);
+            interval = setInterval(() => {
+                timer++;
+                document.getElementById('timer').textContent = timer;
+            }, 1000);
+            createBoard();
+        }
+
+        resetGame();
+    </script>
+</body>
+</html>
