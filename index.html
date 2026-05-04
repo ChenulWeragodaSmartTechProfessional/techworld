@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: 'unsafe-inline';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: 'unsafe-inline'; script-src 'self' https://www.googletagmanager.com https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://www.gstatic.com;">
+    
     <title>Tech World | Stay Ahead of the Future</title>
     <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
@@ -32,15 +33,7 @@
         .animate-slide { animation: slideIn 0.5s ease-out forwards; }
     </style>
 </head>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-S157MJXH6K"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
 
-  gtag('config', 'G-S157MJXH6K');
-</script>
 <body class="font-sans">
 
     <div id="particles-js"></div>
@@ -72,7 +65,7 @@
             </div>
             <div class="py-4 text-xs text-gray-500 font-bold uppercase">Or</div>
             <button id="googleBtn" class="w-full bg-white text-black py-3 rounded-xl font-bold flex items-center justify-center gap-2">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="18"> Google Account
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="18" alt="Google"> Google Account
             </button>
         </div>
     </section>
@@ -92,7 +85,10 @@
             </div>
 
             <div class="p-6 md:p-8">
-                <div class="rounded-2xl overflow-hidden mb-6"><img src="https://raw.githubusercontent.com/ChenulWeragodaSmartTechProfessional/techworld/main/post1.png" class="w-full"></div>
+                <div class="rounded-2xl overflow-hidden mb-6">
+                    <img src="https://raw.githubusercontent.com/ChenulWeragodaSmartTechProfessional/techworld/main/post1.png" class="w-full" alt="Post Hero Image">
+                </div>
+                
                 <div class="whatsapp-post" id="postText">
 <b>අපේ Internet එන්නේ අහසින් නෙවෙයි මුහුද යටින්? 🌊🌍</b>
 
@@ -108,7 +104,7 @@
 <hr class="border-white/5 my-6">
 චන්ද්‍රිකා වලට වඩා ඉතාම වේගයෙන් දත්ත හුවමාරු කරන්න මේ කේබල් වලට පුළුවන් වගේම මේවා ලෝක ආර්ථිකයේ හදවත වගේ තමයි. 📉 මොකද මේ එක කේබල් එකක් හරි කැපුනොත් මුළු ලෝකයේම බැංකු පද්ධති, කොටස් වෙළඳපොළ සහ Internet සේවාවන් සම්පූර්ණයෙන් අඩාල වෙන්න පුළුවන්. ලෝකයේ දිගම කේබල් එක වන <b>2Africa</b> කේබල් එක පෘථිවියේ වටප්‍රමාණයටත් වඩා දිගින් වැඩියි! (45,000km+) 📏
 <hr class="border-white/5 my-6">
-අපේ පුංචි ලංකාවත් මේ වගේ ලොකු කේබල් පද්ධති කිහිපයකටම සම්බන්ධ වෙලා තියෙන්නේ. 💡😌 ගොඩබිම ඉන්න අපිට කිසිම බාධාවකින් තොරව Facebook, YouTube යන්න පුළුවන් වෙලා තියෙන්නේ මුහුද යට තියෙන මේ අපූරු තාක්ෂණය නිසයි!
+අපේ පුංචි ලංකාවත් මේ වගේ ලොකු කේබල් පද්ධති කිහිපයකටම සම්බන්ධ වෙලා තියෙන්නේ. 💡😌 ගොඩබිම ඉන්න අපිට කිසිම බාධාවකින් තොරව Facebook, YouTube යන්න පුළුවන් වෙලා තියෙනන්නේ මුහුද යට තියෙන මේ අපූරු තාක්ෂණය නිසයි!
 
 අපි හැමෝම හිතන්නේ තාක්ෂණය තියෙන්නේ අහසේ කියලා, හැබැයි ඇත්තටම ලෝකය එකට යා කරලා තියෙනන්නේ මුහුද යටින් යන මේ පුදුම නූල් වැනි කේබල් පද්ධතියයි. මේක හරියට පෘථිවියේ "ස්නායු පද්ධතිය" වගෙයි. 🗿💪
 
@@ -132,113 +128,6 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getDatabase, ref, get, set, update, push, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDM4BWnLf6jGycrMdQClWtq-Ra2iDidWsQ",
-            authDomain: "tech-world-93ee6.firebaseapp.com",
-            databaseURL: "https://tech-world-93ee6-default-rtdb.firebaseio.com",
-            projectId: "tech-world-93ee6",
-            storageBucket: "tech-world-93ee6.firebasestorage.app",
-            appId: "1:912275465700:web:5ec12525e03446712153f1"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getDatabase(app);
-        const provider = new GoogleAuthProvider();
-
-        
-        document.getElementById('authBtn').onclick = async () => {
-            const email = document.getElementById('email').value.trim();
-            const pass = document.getElementById('password').value;
-            try { 
-                await signInWithEmailAndPassword(auth, email, pass); 
-            } catch (e) {
-                try {
-                    const res = await createUserWithEmailAndPassword(auth, email, pass);
-                    await sendEmailVerification(res.user);
-                    alert("Verification email sent! Check your inbox.");
-                    await signOut(auth);
-                } catch (err) { alert(err.message); }
-            }
-        };
-
-        document.getElementById('googleBtn').onclick = async () => { try { await signInWithPopup(auth, provider); } catch (e) { alert(e.message); } };
-        window.signOutUser = () => signOut(auth);
-
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                
-                if (user.emailVerified || user.providerData[0].providerId === "google.com") {
-                    document.getElementById('authSection').classList.add('auth-hidden');
-                    document.getElementById('mainContent').classList.remove('auth-hidden');
-                    document.getElementById('userHeader').classList.remove('auth-hidden');
-                    handlePoints(user);
-                    loadComments();
-                } else {
-                    alert("Check Your Email for verification!");
-                    signOut(auth);
-                }
-            } else {
-                document.getElementById('authSection').classList.remove('auth-hidden');
-                document.getElementById('mainContent').classList.add('auth-hidden');
-                document.getElementById('userHeader').classList.add('auth-hidden');
-            }
-        });
-
-        async function handlePoints(user) {
-            const userRef = ref(db, 'users/' + user.uid);
-            const today = new Date().toISOString().split('T')[0];
-            const snap = await get(userRef);
-            if (snap.exists()) {
-                const data = snap.val();
-                document.getElementById('displayPoints').textContent = (data.points || 0) + " PTS";
-                if (data.lastLogin !== today) {
-                    const newTotal = (data.points || 0) + 5;
-                    await update(userRef, { points: newTotal, lastLogin: today });
-                    document.getElementById('displayPoints').textContent = newTotal + " PTS";
-                    document.getElementById('rewardMsg').classList.remove('hidden');
-                }
-            } else {
-                await set(userRef, { points: 5, lastLogin: today, email: user.email });
-                document.getElementById('displayPoints').textContent = "5 PTS";
-                document.getElementById('rewardMsg').classList.remove('hidden');
-            }
-        }
-
-        document.getElementById('postComment').onclick = () => {
-            const input = document.getElementById('commentMsg');
-            const text = input.value.trim();
-            if(text) {
-                push(ref(db, 'comments'), {
-                    user: auth.currentUser.displayName || auth.currentUser.email.split('@')[0],
-                    text: text,
-                    timestamp: serverTimestamp()
-                });
-                input.value = "";
-                gtag('event', 'post_comment');
-            }
-        };
-
-        function loadComments() {
-            onValue(ref(db, 'comments'), (snap) => {
-                const list = document.getElementById('commentList'); list.innerHTML = "";
-                const data = snap.val();
-                if(data) {
-                    Object.values(data).reverse().forEach(c => {
-                        const div = document.createElement('div');
-                        div.className = "bg-slate-900/40 p-4 rounded-2xl border border-white/5";
-                        div.innerHTML = `<span class="text-blue-400 font-bold text-xs">${c.user}</span><p class="text-slate-300 text-sm mt-1">${c.text}</p>`;
-                        list.appendChild(div);
-                    });
-                }
-            });
-        }
-        particlesJS("particles-js", { "particles": { "number": { "value": 50 }, "color": { "value": "#3b82f6" }, "move": { "enable": true, "speed": 1 } } });
-    </script>
+    <script type="module" src="index.js"></script>
 </body>
 </html>
