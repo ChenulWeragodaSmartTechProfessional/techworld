@@ -3,8 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tech World</title>
-    <link rel="icon" type="image/jpeg" sizes="32x32" href="/techworld.jpeg">
+    <title>Tech World | Stay Ahead of the Future</title>
+    
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-S157MJXH6K"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -40,40 +44,41 @@
                 <i class="fa-solid fa-user-circle text-blue-400"></i>
                 <span id="displayPoints" class="text-yellow-500 font-bold text-sm">0 PTS</span>
             </a>
-            <button onclick="signOutUser()" class="text-red-400 text-xs font-bold border border-red-400/30 px-3 py-1.5 rounded-lg uppercase">Logout</button>
+            <button onclick="signOutUser()" class="text-red-400 text-xs font-bold uppercase tracking-widest px-2">Logout</button>
         </div>
 
-        <a id="joinBtn" href="https://whatsapp.com/channel/0029VbBw2JR9cDDiNozMYF1p" target="_blank" class="bg-blue-600 hover:bg-blue-500 px-5 py-2 rounded-full font-medium transition flex items-center gap-2 text-sm">
-            <i class="fa-brands fa-whatsapp text-lg"></i> Join Channel
+        <a href="https://whatsapp.com/channel/0029VbBw2JR9cDDiNozMYF1p" target="_blank" class="bg-blue-600 hover:bg-blue-500 px-5 py-2 rounded-full font-medium transition text-sm">
+            <i class="fa-brands fa-whatsapp"></i> Join Channel
         </a>
     </nav>
 
     <section id="authSection" class="max-w-md mx-auto mt-16 px-4 relative z-10">
         <div class="glass p-8 rounded-3xl shadow-2xl text-center">
-            <h2 class="text-3xl font-bold mb-2">Welcome</h2>
-            <p class="text-gray-400 mb-8">Login to unlock content and earn rewards.</p>
+            <h2 class="text-3xl font-bold mb-2">Member Portal</h2>
+            <p class="text-gray-400 mb-8">Sign in to read and earn daily points.</p>
             <div class="space-y-3">
                 <input type="email" id="email" placeholder="Email" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500">
                 <input type="password" id="password" placeholder="Password" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500">
-                <button id="authBtn" class="w-full bg-blue-600 hover:bg-blue-500 py-3 rounded-xl font-bold transition">Continue</button>
+                <button id="authBtn" class="w-full bg-blue-600 hover:bg-blue-500 py-3 rounded-xl font-bold transition">Sign In / Register</button>
             </div>
-            <button id="googleBtn" class="w-full bg-white text-black py-3 rounded-xl font-bold transition flex items-center justify-center gap-2 mt-6">
+            <div class="py-4 text-xs text-gray-500 font-bold uppercase">Or</div>
+            <button id="googleBtn" class="w-full bg-white text-black py-3 rounded-xl font-bold flex items-center justify-center gap-2">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="18"> Google Account
             </button>
         </div>
     </section>
 
     <main id="mainContent" class="max-w-3xl mx-auto px-4 pb-20 mt-8 relative z-10 auth-hidden">
-        <div id="rewardMsg" class="hidden bg-gradient-to-r from-blue-600 to-indigo-600 p-4 rounded-2xl text-center font-bold mb-8 animate-slide shadow-xl">
-            🎉 Daily Bonus! +5 Points added.
+        <div id="rewardMsg" class="hidden bg-blue-600 p-4 rounded-2xl text-center font-bold mb-8 animate-slide">
+            🎉 +5 Points added for your daily visit!
         </div>
 
         <article class="glass rounded-3xl overflow-hidden shadow-2xl">
             <div class="p-6 md:p-8 flex items-center gap-4 border-b border-gray-800">
                 <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center font-black">TW</div>
                 <div>
-                    <p class="font-bold">Tech World <i class="fa-solid fa-circle-check text-blue-400 text-xs"></i></p>
-                    <p class="text-xs text-gray-500 uppercase tracking-widest">Admin Update</p>
+                    <p class="font-bold">Tech World Admin <i class="fa-solid fa-circle-check text-blue-400"></i></p>
+                    <p class="text-xs text-gray-500 tracking-widest uppercase">Official Update</p>
                 </div>
             </div>
 
@@ -106,10 +111,10 @@
                 </div>
 
                 <section class="mt-12 pt-8 border-t border-slate-800">
-                    <h4 class="text-xs font-bold text-slate-500 uppercase mb-6 tracking-widest">Discussion</h4>
+                    <h4 class="text-xs font-bold text-slate-500 uppercase mb-6">Community Chat</h4>
                     <div class="flex gap-2 mb-8">
-                        <input type="text" id="commentMsg" placeholder="Type a comment..." class="flex-1 bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500">
-                        <button id="postComment" class="bg-blue-600 px-6 py-3 rounded-xl font-bold hover:bg-blue-500 transition shadow-lg shadow-blue-900/20 text-sm">Post</button>
+                        <input type="text" id="commentMsg" placeholder="Say something..." class="flex-1 bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:border-blue-500">
+                        <button id="postComment" class="bg-blue-600 px-6 py-3 rounded-xl font-bold text-sm">Post</button>
                     </div>
                     <div id="commentList" class="space-y-4"></div>
                 </section>
@@ -120,7 +125,7 @@
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getDatabase, ref, get, set, update, push, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
@@ -137,11 +142,20 @@
         const db = getDatabase(app);
         const provider = new GoogleAuthProvider();
 
+        // Auth Logic with Email Verification
         document.getElementById('authBtn').onclick = async () => {
             const email = document.getElementById('email').value.trim();
             const pass = document.getElementById('password').value;
-            try { await signInWithEmailAndPassword(auth, email, pass); } 
-            catch (e) { try { await createUserWithEmailAndPassword(auth, email, pass); } catch (err) { alert(err.message); } }
+            try { 
+                await signInWithEmailAndPassword(auth, email, pass); 
+            } catch (e) {
+                try {
+                    const res = await createUserWithEmailAndPassword(auth, email, pass);
+                    await sendEmailVerification(res.user);
+                    alert("Verification email sent! Check your inbox.");
+                    await signOut(auth);
+                } catch (err) { alert(err.message); }
+            }
         };
 
         document.getElementById('googleBtn').onclick = async () => { try { await signInWithPopup(auth, provider); } catch (e) { alert(e.message); } };
@@ -149,12 +163,17 @@
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                document.getElementById('authSection').classList.add('auth-hidden');
-                document.getElementById('mainContent').classList.remove('auth-hidden');
-                document.getElementById('userHeader').classList.remove('auth-hidden');
-                handlePoints(user);
-                loadComments();
-                gtag('set', 'user_properties', { 'login_status': 'logged_in' });
+                // Only allow access if verified or Google User
+                if (user.emailVerified || user.providerData[0].providerId === "google.com") {
+                    document.getElementById('authSection').classList.add('auth-hidden');
+                    document.getElementById('mainContent').classList.remove('auth-hidden');
+                    document.getElementById('userHeader').classList.remove('auth-hidden');
+                    handlePoints(user);
+                    loadComments();
+                } else {
+                    alert("Account exists, but email is not verified!");
+                    signOut(auth);
+                }
             } else {
                 document.getElementById('authSection').classList.remove('auth-hidden');
                 document.getElementById('mainContent').classList.add('auth-hidden');
@@ -185,21 +204,20 @@
         document.getElementById('postComment').onclick = () => {
             const input = document.getElementById('commentMsg');
             const text = input.value.trim();
-            if(text && !text.includes('<')) {
+            if(text) {
                 push(ref(db, 'comments'), {
                     user: auth.currentUser.displayName || auth.currentUser.email.split('@')[0],
                     text: text,
                     timestamp: serverTimestamp()
                 });
                 input.value = "";
-                gtag('event', 'post_comment', { 'user': auth.currentUser.email });
+                gtag('event', 'post_comment');
             }
         };
 
         function loadComments() {
             onValue(ref(db, 'comments'), (snap) => {
-                const list = document.getElementById('commentList');
-                list.innerHTML = "";
+                const list = document.getElementById('commentList'); list.innerHTML = "";
                 const data = snap.val();
                 if(data) {
                     Object.values(data).reverse().forEach(c => {
@@ -211,8 +229,7 @@
                 }
             });
         }
-
-        particlesJS("particles-js", { "particles": { "number": { "value": 50 }, "color": { "value": "#3b82f6" }, "opacity": { "value": 0.2 }, "line_linked": { "enable": true, "opacity": 0.1 }, "move": { "enable": true, "speed": 1 } } });
+        particlesJS("particles-js", { "particles": { "number": { "value": 50 }, "color": { "value": "#3b82f6" }, "move": { "enable": true, "speed": 1 } } });
     </script>
 </body>
 </html>
