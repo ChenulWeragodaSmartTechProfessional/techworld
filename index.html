@@ -3,8 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tech World | Submarine Cables Update</title>
+    <title>Tech World</title>
     
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-S157MJXH6K"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-S157MJXH6K');
+    </script>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
    
@@ -16,8 +24,6 @@
         .whatsapp-post { line-height: 1.8; white-space: pre-wrap; word-wrap: break-word; font-size: 1.05rem; color: #cbd5e1; }
         .whatsapp-post b { color: #fff; font-weight: 800; }
         .auth-hidden { display: none !important; }
-        
-        /* Animation for reward */
         @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .animate-slide { animation: slideIn 0.5s ease-out forwards; }
     </style>
@@ -30,10 +36,11 @@
         <h1 class="text-2xl font-bold tracking-tighter uppercase gradient-text">Tech World</h1>
         
         <div id="userHeader" class="auth-hidden flex items-center gap-4">
-            <div class="flex flex-col items-end">
-                <span id="displayPoints" class="bg-yellow-500/10 text-yellow-500 px-4 py-1 rounded-full font-bold border border-yellow-500/20 text-sm">0 PTS</span>
-            </div>
-            <button onclick="signOutUser()" class="text-red-400 hover:bg-red-400/10 transition text-xs font-bold border border-red-400/30 px-3 py-1.5 rounded-lg uppercase">Logout</button>
+            <a href="profile.html" class="flex items-center gap-2 bg-slate-800/50 border border-white/10 px-4 py-1.5 rounded-full hover:bg-slate-700 transition">
+                <i class="fa-solid fa-user-circle text-blue-400"></i>
+                <span id="displayPoints" class="text-yellow-500 font-bold text-sm">0 PTS</span>
+            </a>
+            <button onclick="signOutUser()" class="text-red-400 text-xs font-bold border border-red-400/30 px-3 py-1.5 rounded-lg uppercase">Logout</button>
         </div>
 
         <a id="joinBtn" href="https://whatsapp.com/channel/0029VbBw2JR9cDDiNozMYF1p" target="_blank" class="bg-blue-600 hover:bg-blue-500 px-5 py-2 rounded-full font-medium transition flex items-center gap-2 text-sm">
@@ -43,25 +50,14 @@
 
     <section id="authSection" class="max-w-md mx-auto mt-16 px-4 relative z-10">
         <div class="glass p-8 rounded-3xl shadow-2xl text-center">
-            <div class="mb-6">
-                <i class="fa-solid fa-microchip text-5xl text-blue-500"></i>
-            </div>
-            <h2 class="text-3xl font-bold mb-2">Welcome to Tech World</h2>
-            <p class="text-gray-400 mb-8">Login to read the full update and earn daily reward points.</p>
-            
+            <h2 class="text-3xl font-bold mb-2">Welcome</h2>
+            <p class="text-gray-400 mb-8">Login to unlock content and earn rewards.</p>
             <div class="space-y-3">
-                <input type="email" id="email" placeholder="Email Address" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 transition">
-                <input type="password" id="password" placeholder="Password" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 transition">
-                <button id="authBtn" class="w-full bg-blue-600 hover:bg-blue-500 py-3 rounded-xl font-bold transition shadow-lg shadow-blue-900/20">Continue</button>
+                <input type="email" id="email" placeholder="Email" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500">
+                <input type="password" id="password" placeholder="Password" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500">
+                <button id="authBtn" class="w-full bg-blue-600 hover:bg-blue-500 py-3 rounded-xl font-bold transition">Continue</button>
             </div>
-            
-            <div class="relative flex py-6 items-center">
-                <div class="flex-grow border-t border-slate-800"></div>
-                <span class="flex-shrink mx-4 text-gray-500 text-xs font-bold uppercase tracking-widest">Connect with</span>
-                <div class="flex-grow border-t border-slate-800"></div>
-            </div>
-
-            <button id="googleBtn" class="w-full bg-white text-black py-3 rounded-xl font-bold transition flex items-center justify-center gap-2 hover:bg-gray-100">
+            <button id="googleBtn" class="w-full bg-white text-black py-3 rounded-xl font-bold transition flex items-center justify-center gap-2 mt-6">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="18"> Google Account
             </button>
         </div>
@@ -69,29 +65,20 @@
 
     <main id="mainContent" class="max-w-3xl mx-auto px-4 pb-20 mt-8 relative z-10 auth-hidden">
         <div id="rewardMsg" class="hidden bg-gradient-to-r from-blue-600 to-indigo-600 p-4 rounded-2xl text-center font-bold mb-8 animate-slide shadow-xl">
-            🎉 Daily Bonus! +5 Points added to your account.
+            🎉 Daily Bonus! +5 Points added.
         </div>
 
         <article class="glass rounded-3xl overflow-hidden shadow-2xl">
             <div class="p-6 md:p-8 flex items-center gap-4 border-b border-gray-800">
-                <div class="w-14 h-14 bg-gradient-to-tr from-blue-600 to-indigo-500 rounded-full flex items-center justify-center text-xl font-black shadow-lg">TW</div>
+                <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center font-black">TW</div>
                 <div>
-                    <div class="flex items-center gap-2">
-                        <p class="font-bold text-lg">Tech World</p>
-                        <i class="fa-solid fa-circle-check text-blue-400 text-sm"></i>
-                    </div>
-                    <p class="text-xs text-gray-500 uppercase tracking-widest font-semibold">Admin • Agent Ghost</p>
-                </div>
-            </div>
-
-            <div class="px-6 md:px-8 pt-6">
-                <div class="rounded-2xl overflow-hidden border border-white/5 relative group">
-                    <img src="https://raw.githubusercontent.com/ChenulWeragodaSmartTechProfessional/techworld/main/post1.png" class="w-full h-auto transition duration-700 group-hover:scale-105">
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent"></div>
+                    <p class="font-bold">Tech World <i class="fa-solid fa-circle-check text-blue-400 text-xs"></i></p>
+                    <p class="text-xs text-gray-500 uppercase tracking-widest">Admin Update</p>
                 </div>
             </div>
 
             <div class="p-6 md:p-8">
+                <div class="rounded-2xl overflow-hidden mb-6"><img src="https://raw.githubusercontent.com/ChenulWeragodaSmartTechProfessional/techworld/main/post1.png" class="w-full"></div>
                 <div class="whatsapp-post" id="postText">
 <b>අපේ Internet එන්නේ අහසින් නෙවෙයි මුහුද යටින්? 🌊🌍</b>
 
@@ -119,17 +106,12 @@
                 </div>
 
                 <section class="mt-12 pt-8 border-t border-slate-800">
-                    <h4 class="text-xs font-bold text-slate-500 tracking-[0.2em] uppercase mb-6 flex items-center gap-2">
-                        <i class="fa-solid fa-comments text-blue-500"></i> Community Discussion
-                    </h4>
-                    
+                    <h4 class="text-xs font-bold text-slate-500 uppercase mb-6 tracking-widest">Discussion</h4>
                     <div class="flex gap-2 mb-8">
-                        <input type="text" id="commentMsg" placeholder="Type a comment..." class="flex-1 bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 transition text-sm">
+                        <input type="text" id="commentMsg" placeholder="Type a comment..." class="flex-1 bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500">
                         <button id="postComment" class="bg-blue-600 px-6 py-3 rounded-xl font-bold hover:bg-blue-500 transition shadow-lg shadow-blue-900/20 text-sm">Post</button>
                     </div>
-
-                    <div id="commentList" class="space-y-4">
-                        </div>
+                    <div id="commentList" class="space-y-4"></div>
                 </section>
             </div>
         </article>
@@ -141,7 +123,6 @@
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getDatabase, ref, get, set, update, push, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // Your Config
         const firebaseConfig = {
             apiKey: "AIzaSyDM4BWnLf6jGycrMdQClWtq-Ra2iDidWsQ",
             authDomain: "tech-world-93ee6.firebaseapp.com",
@@ -156,50 +137,35 @@
         const db = getDatabase(app);
         const provider = new GoogleAuthProvider();
 
-        // --- AUTH ---
         document.getElementById('authBtn').onclick = async () => {
             const email = document.getElementById('email').value.trim();
             const pass = document.getElementById('password').value;
-            if(!email || !pass) return alert("Please fill details");
-            try {
-                await signInWithEmailAndPassword(auth, email, pass);
-            } catch (e) {
-                try {
-                    await createUserWithEmailAndPassword(auth, email, pass);
-                } catch (err) { alert(err.message); }
-            }
+            try { await signInWithEmailAndPassword(auth, email, pass); } 
+            catch (e) { try { await createUserWithEmailAndPassword(auth, email, pass); } catch (err) { alert(err.message); } }
         };
 
-        document.getElementById('googleBtn').onclick = async () => {
-            try { await signInWithPopup(auth, provider); } catch (e) { alert(e.message); }
-        };
-
+        document.getElementById('googleBtn').onclick = async () => { try { await signInWithPopup(auth, provider); } catch (e) { alert(e.message); } };
         window.signOutUser = () => signOut(auth);
 
         onAuthStateChanged(auth, (user) => {
-            const authSec = document.getElementById('authSection');
-            const mainSec = document.getElementById('mainContent');
-            const headSec = document.getElementById('userHeader');
-            
             if (user) {
-                authSec.classList.add('auth-hidden');
-                mainSec.classList.remove('auth-hidden');
-                headSec.classList.remove('auth-hidden');
+                document.getElementById('authSection').classList.add('auth-hidden');
+                document.getElementById('mainContent').classList.remove('auth-hidden');
+                document.getElementById('userHeader').classList.remove('auth-hidden');
                 handlePoints(user);
                 loadComments();
+                gtag('set', 'user_properties', { 'login_status': 'logged_in' });
             } else {
-                authSec.classList.remove('auth-hidden');
-                mainSec.classList.add('auth-hidden');
-                headSec.classList.add('auth-hidden');
+                document.getElementById('authSection').classList.remove('auth-hidden');
+                document.getElementById('mainContent').classList.add('auth-hidden');
+                document.getElementById('userHeader').classList.add('auth-hidden');
             }
         });
 
-        // --- POINTS ---
         async function handlePoints(user) {
             const userRef = ref(db, 'users/' + user.uid);
             const today = new Date().toISOString().split('T')[0];
             const snap = await get(userRef);
-            
             if (snap.exists()) {
                 const data = snap.val();
                 document.getElementById('displayPoints').textContent = (data.points || 0) + " PTS";
@@ -216,7 +182,6 @@
             }
         }
 
-        // --- COMMENTS ---
         document.getElementById('postComment').onclick = () => {
             const input = document.getElementById('commentMsg');
             const text = input.value.trim();
@@ -227,6 +192,7 @@
                     timestamp: serverTimestamp()
                 });
                 input.value = "";
+                gtag('event', 'post_comment', { 'user': auth.currentUser.email });
             }
         };
 
@@ -239,30 +205,14 @@
                     Object.values(data).reverse().forEach(c => {
                         const div = document.createElement('div');
                         div.className = "bg-slate-900/40 p-4 rounded-2xl border border-white/5";
-                        div.innerHTML = `<div class="flex justify-between items-center mb-1">
-                                            <span class="text-blue-400 font-bold text-xs uppercase tracking-wider">${c.user}</span>
-                                         </div>
-                                         <p class="text-slate-300 text-sm leading-relaxed">${c.text}</p>`;
+                        div.innerHTML = `<span class="text-blue-400 font-bold text-xs">${c.user}</span><p class="text-slate-300 text-sm mt-1">${c.text}</p>`;
                         list.appendChild(div);
                     });
                 }
             });
         }
 
-        // Particles
-        particlesJS("particles-js", {
-            "particles": {
-                "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
-                "color": { "value": "#3b82f6" },
-                "shape": { "type": "circle" },
-                "opacity": { "value": 0.2 },
-                "size": { "value": 2 },
-                "line_linked": { "enable": true, "distance": 150, "color": "#3b82f6", "opacity": 0.1, "width": 1 },
-                "move": { "enable": true, "speed": 1, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
-            },
-            "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": true, "mode": "bubble" }, "onclick": { "enable": true, "mode": "push" }, "resize": true } },
-            "retina_detect": true
-        });
+        particlesJS("particles-js", { "particles": { "number": { "value": 50 }, "color": { "value": "#3b82f6" }, "opacity": { "value": 0.2 }, "line_linked": { "enable": true, "opacity": 0.1 }, "move": { "enable": true, "speed": 1 } } });
     </script>
 </body>
 </html>
