@@ -3,270 +3,266 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tech World | Secure Rewards Portal</title>
+    <title>Tech World | Submarine Cables Update</title>
     
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+   
     <style>
-        :root {
-            --bg: #0f172a;
-            --card: rgba(30, 41, 59, 0.8);
-            --accent: #3b82f6;
-            --text: #f8fafc;
-            --text-dim: #94a3b8;
-        }
-
-        body { 
-            background-color: var(--bg); 
-            color: var(--text); 
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            margin: 0; padding: 0;
-            line-height: 1.6;
-        }
-
-        .container { max-width: 750px; margin: 0 auto; padding: 20px; }
-
-        nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; }
-        .logo { font-size: 1.5rem; font-weight: 800; color: #38bdf8; text-transform: uppercase; letter-spacing: 1px; }
-        
-        .glass-card { 
-            background: var(--card); 
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 1.5rem;
-            padding: 2.5rem;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
+        body { background-color: #0f172a; color: #f8fafc; overflow-x: hidden; scroll-behavior: smooth; }
+        #particles-js { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-color: #0f172a; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .gradient-text { background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .whatsapp-post { line-height: 1.8; white-space: pre-wrap; word-wrap: break-word; font-size: 1.05rem; color: #cbd5e1; }
+        .whatsapp-post b { color: #fff; font-weight: 800; }
         .auth-hidden { display: none !important; }
         
-        input { 
-            width: 100%; padding: 14px; margin: 10px 0; 
-            border-radius: 10px; border: 1px solid #334155; 
-            background: #1e293b; color: white; box-sizing: border-box;
-            outline: none; transition: 0.3s;
-        }
-        input:focus { border-color: var(--accent); }
-
-        .btn-main { 
-            width: 100%; padding: 14px; border-radius: 10px; border: none; 
-            background: var(--accent); color: white; font-weight: bold; cursor: pointer; 
-            transition: 0.3s;
-        }
-        .btn-main:hover { opacity: 0.9; transform: translateY(-1px); }
-        
-        .btn-google {
-            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ffffff;
-            background: transparent; color: white; font-weight: bold; cursor: pointer;
-            margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 10px;
-        }
-
-        .reward-banner {
-            background: linear-gradient(90deg, #1d4ed8, #4f46e5);
-            padding: 15px; border-radius: 12px; text-align: center;
-            margin-bottom: 20px; display: none; font-weight: bold;
-            animation: slideDown 0.5s ease-out;
-        }
-
-        .points-display { font-size: 1.2rem; color: #fbbf24; font-weight: bold; background: rgba(251, 191, 36, 0.1); padding: 5px 15px; border-radius: 20px; }
-        
-        .post-text { white-space: pre-wrap; font-size: 1.05rem; color: #e2e8f0; }
-        .post-text b { color: #fff; }
-
-        .comment-item { background: rgba(15, 23, 42, 0.5); padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid var(--accent); }
-
-        @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        /* Animation for reward */
+        @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .animate-slide { animation: slideIn 0.5s ease-out forwards; }
     </style>
 </head>
-<body>
+<body class="font-sans">
 
-<div class="container">
-    <nav>
-        <div class="logo">Tech World</div>
-        <div id="userHeader" class="auth-hidden">
-            <span id="displayPoints" class="points-display">0 PTS</span>
-            <button onclick="signOutUser()" style="background:none; border:1px solid #ef4444; color:#ef4444; padding:5px 10px; border-radius:5px; margin-left:10px; cursor:pointer;">Logout</button>
+    <div id="particles-js"></div>
+
+    <nav class="p-6 flex justify-between items-center max-w-6xl mx-auto relative z-10">
+        <h1 class="text-2xl font-bold tracking-tighter uppercase gradient-text">Tech World</h1>
+        
+        <div id="userHeader" class="auth-hidden flex items-center gap-4">
+            <div class="flex flex-col items-end">
+                <span id="displayPoints" class="bg-yellow-500/10 text-yellow-500 px-4 py-1 rounded-full font-bold border border-yellow-500/20 text-sm">0 PTS</span>
+            </div>
+            <button onclick="signOutUser()" class="text-red-400 hover:bg-red-400/10 transition text-xs font-bold border border-red-400/30 px-3 py-1.5 rounded-lg uppercase">Logout</button>
         </div>
+
+        <a id="joinBtn" href="https://whatsapp.com/channel/0029VbBw2JR9cDDiNozMYF1p" target="_blank" class="bg-blue-600 hover:bg-blue-500 px-5 py-2 rounded-full font-medium transition flex items-center gap-2 text-sm">
+            <i class="fa-brands fa-whatsapp text-lg"></i> Join Channel
+        </a>
     </nav>
 
-    <div id="authSection" class="glass-card">
-        <h2 style="text-align:center; margin-top:0;">Welcome to the Future</h2>
-        <p style="text-align:center; color:var(--text-dim);">Login to unlock premium content and earn daily points.</p>
-        
-        <input type="email" id="email" placeholder="Email Address">
-        <input type="password" id="password" placeholder="Password">
-        <button class="btn-main" id="authBtn">Continue</button>
-        
-        <div style="text-align:center; margin: 20px 0; color:var(--text-dim); position:relative;">
-            <span style="background: var(--bg); padding: 0 10px; position: relative; z-index: 1;">OR</span>
-            <hr style="position: absolute; top: 50%; width: 100%; border: 0; border-top: 1px solid #334155; margin:0;">
-        </div>
-        
-        <button class="btn-google" id="googleBtn">
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="18" alt="G">
-            Continue with Google
-        </button>
-    </div>
-
-    <div id="mainContent" class="auth-hidden">
-        <div class="reward-banner" id="rewardMsg">🎉 Daily Bonus! +5 Points added to your account.</div>
-
-        <article class="glass-card">
-            <div class="post-text">
-                               <center><h2><b>New Post Comming Soon!</b></h2></center>
-                             <center>Share Our Channel For more updates.</center>
-                                    <center>1k.......🚶‍♂️......0</center>
+    <section id="authSection" class="max-w-md mx-auto mt-16 px-4 relative z-10">
+        <div class="glass p-8 rounded-3xl shadow-2xl text-center">
+            <div class="mb-6">
+                <i class="fa-solid fa-microchip text-5xl text-blue-500"></i>
+            </div>
+            <h2 class="text-3xl font-bold mb-2">Welcome to Tech World</h2>
+            <p class="text-gray-400 mb-8">Login to read the full update and earn daily reward points.</p>
+            
+            <div class="space-y-3">
+                <input type="email" id="email" placeholder="Email Address" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 transition">
+                <input type="password" id="password" placeholder="Password" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 transition">
+                <button id="authBtn" class="w-full bg-blue-600 hover:bg-blue-500 py-3 rounded-xl font-bold transition shadow-lg shadow-blue-900/20">Continue</button>
+            </div>
+            
+            <div class="relative flex py-6 items-center">
+                <div class="flex-grow border-t border-slate-800"></div>
+                <span class="flex-shrink mx-4 text-gray-500 text-xs font-bold uppercase tracking-widest">Connect with</span>
+                <div class="flex-grow border-t border-slate-800"></div>
             </div>
 
-            <section style="margin-top:40px;">
-                <h4 style="color:var(--text-dim); letter-spacing: 1px;">DISCUSSION</h4>
-                <div style="display:flex; gap:10px; margin-bottom:20px;">
-                    <input type="text" id="commentMsg" placeholder="Share your thoughts..." style="margin:0;">
-                    <button id="postComment" style="background:var(--accent); border:none; color:white; padding:0 20px; border-radius:10px; cursor:pointer; font-weight:bold;">Post</button>
+            <button id="googleBtn" class="w-full bg-white text-black py-3 rounded-xl font-bold transition flex items-center justify-center gap-2 hover:bg-gray-100">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="18"> Google Account
+            </button>
+        </div>
+    </section>
+
+    <main id="mainContent" class="max-w-3xl mx-auto px-4 pb-20 mt-8 relative z-10 auth-hidden">
+        <div id="rewardMsg" class="hidden bg-gradient-to-r from-blue-600 to-indigo-600 p-4 rounded-2xl text-center font-bold mb-8 animate-slide shadow-xl">
+            🎉 Daily Bonus! +5 Points added to your account.
+        </div>
+
+        <article class="glass rounded-3xl overflow-hidden shadow-2xl">
+            <div class="p-6 md:p-8 flex items-center gap-4 border-b border-gray-800">
+                <div class="w-14 h-14 bg-gradient-to-tr from-blue-600 to-indigo-500 rounded-full flex items-center justify-center text-xl font-black shadow-lg">TW</div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <p class="font-bold text-lg">Tech World</p>
+                        <i class="fa-solid fa-circle-check text-blue-400 text-sm"></i>
+                    </div>
+                    <p class="text-xs text-gray-500 uppercase tracking-widest font-semibold">Admin • Agent Ghost</p>
                 </div>
-                <div id="commentList"></div>
-            </section>
-        </article>
-    </div>
-</div>
+            </div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getDatabase, ref, get, set, update, push, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+            <div class="px-6 md:px-8 pt-6">
+                <div class="rounded-2xl overflow-hidden border border-white/5 relative group">
+                    <img src="https://raw.githubusercontent.com/ChenulWeragodaSmartTechProfessional/techworld/main/post1.png" class="w-full h-auto transition duration-700 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent"></div>
+                </div>
+            </div>
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyDM4BWnLf6jGycrMdQClWtq-Ra2iDidWsQ",
-        authDomain: "tech-world-93ee6.firebaseapp.com",
-        databaseURL: "https://tech-world-93ee6-default-rtdb.firebaseio.com",
-        projectId: "tech-world-93ee6",
-        storageBucket: "tech-world-93ee6.firebasestorage.app",
-        appId: "1:912275465700:web:5ec12525e03446712153f1"
-    };
+            <div class="p-6 md:p-8">
+                <div class="whatsapp-post" id="postText">
+<b>අපේ Internet එන්නේ අහසින් නෙවෙයි මුහුද යටින්? 🌊🌍</b>
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getDatabase(app);
-    const provider = new GoogleAuthProvider();
+ඔයා හිතන් ඉන්නේ Internet වැඩ කරන්නේ Satellites වලින් කියලද? 🛰️❌ එහෙනම් මේක අනිවාර්යයෙන් කියවන්න! ගොඩක් අය නොදන්න ලෝකයේ ලොකුම Tech රහසක් තමයි මේක. 💪🔥
 
-    // Email Validation Regex
-    const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+අපි ලෝකේ කොහේ ඉන්න කෙනෙක්ට Message එකක් යැව්වත්, Video එකක් බැලුවත් ඒ දත්ත වලින් **99% ක්ම** ගමන් කරන්නේ මුහුද යට එලලා තියෙන ඉතාම සිහින් කේබල් හරහායි! 😱👀
 
-    // Email/Password Login & Register
-    document.getElementById('authBtn').onclick = async () => {
-        const email = document.getElementById('email').value.trim();
-        const pass = document.getElementById('password').value;
+ඒ තමයි <b>(Submarine Communications Cables)!</b> 🏗️🌐
+<hr class="border-white/5 my-6">
+මේක නිකම්ම කේබල් එකක් නෙවෙයි, මුළු පෘථිවියම එකට යා කරන දැවැන්ත ජාලයක්. ලෝකය පුරා මුහුද පතුලේ කිලෝමීටර් මිලියන ගණනක Fiber Optic කේබල් එලලා තියෙනවා. මේවා හරහා දත්ත ගමන් කරන්නේ ආලෝකයේ වේගයට සමාන වේගයකින්. ⚡
 
-        if(!validateEmail(email)) return alert("Please enter a valid email address.");
-        if(pass.length < 6) return alert("Password must be at least 6 characters.");
+විශේෂම දේ තමයි මේ කේබල් එකක් සාමාන්‍යයෙන් ගෙවත්තකට වතුර දාන බටයක් තරම් සිහින් වුණාට, මුළු මහාද්වීපයකම Data ගෙනියන්න මේවට පුළුවන් වීමයි. 🤯 මුල් කාලේ මෝරුන් මේ කේබල් හපන්න උත්සාහ කරපු නිසා දැන් මේවා විශේෂ ආරක්ෂිත ආවරණ යොදලයි හදන්නේ! 🛡️🦈
+<hr class="border-white/5 my-6">
+චන්ද්‍රිකා වලට වඩා ඉතාම වේගයෙන් දත්ත හුවමාරු කරන්න මේ කේබල් වලට පුළුවන් වගේම මේවා ලෝක ආර්ථිකයේ හදවත වගේ තමයි. 📉 මොකද මේ එක කේබල් එකක් හරි කැපුනොත් මුළු ලෝකයේම බැංකු පද්ධති, කොටස් වෙළඳපොළ සහ Internet සේවාවන් සම්පූර්ණයෙන් අඩාල වෙන්න පුළුවන්. ලෝකයේ දිගම කේබල් එක වන <b>2Africa</b> කේබල් එක පෘථිවියේ වටප්‍රමාණයටත් වඩා දිගින් වැඩියි! (45,000km+) 📏
+<hr class="border-white/5 my-6">
+අපේ පුංචි ලංකාවත් මේ වගේ ලොකු කේබල් පද්ධති කිහිපයකටම සම්බන්ධ වෙලා තියෙන්නේ. 💡😌 ගොඩබිම ඉන්න අපිට කිසිම බාධාවකින් තොරව Facebook, YouTube යන්න පුළුවන් වෙලා තියෙන්නේ මුහුද යට තියෙන මේ අපූරු තාක්ෂණය නිසයි!
 
-        try {
-            await signInWithEmailAndPassword(auth, email, pass);
-        } catch (e) {
-            if (e.code === 'auth/user-not-found' || e.code === 'auth/invalid-credential') {
-                try {
-                    const res = await createUserWithEmailAndPassword(auth, email, pass);
-                    await sendEmailVerification(res.user);
-                    alert("A verification email has been sent! Please verify to unlock full features.");
-                } catch (err) { alert(err.message); }
-            } else { alert(e.message); }
-        }
-    };
+අපි හැමෝම හිතන්නේ තාක්ෂණය තියෙන්නේ අහසේ කියලා, හැබැයි ඇත්තටම ලෝකය එකට යා කරලා තියෙනන්නේ මුහුද යටින් යන මේ පුදුම නූල් වැනි කේබල් පද්ධතියයි. මේක හරියට පෘථිවියේ "ස්නායු පද්ධතිය" වගෙයි. 🗿💪
 
-    // Google Login
-    document.getElementById('googleBtn').onclick = async () => {
-        try { await signInWithPopup(auth, provider); } catch (e) { alert(e.message); }
-    };
+ඉතින් මේ සුපිරි රහස තාමත් නොදන්න යාළුවෙක්ට බලන්න මේ පෝස්ට් එක Share කරන්න. 🌍✨
 
-    window.signOutUser = () => signOut(auth);
+| ᴏᴡɴᴇʀ | ᴀɢᴇɴᴛ ɢʜᴏsᴛ
+|🚫 Don't Copy This
+| 🔥 𝐓𝐄𝐂𝐇 🌐 𝐖𝐎𝐑𝐋𝐃 ⚙️𝚂𝚈𝙼𝙱𝙾𝙻 𝙾𝙵 𝚃𝙴𝙲𝙷 𝚁𝙴𝚅𝙾𝙻𝚄𝚃𝙸𝙾𝙽.......
+                </div>
 
-    // Auth State Monitor
-    onAuthStateChanged(auth, async (user) => {
-        const authSec = document.getElementById('authSection');
-        const mainSec = document.getElementById('mainContent');
-        const headSec = document.getElementById('userHeader');
-
-        if (user) {
-            authSec.classList.add('auth-hidden');
-            mainSec.classList.remove('auth-hidden');
-            headSec.classList.remove('auth-hidden');
-            
-            // Check if email is verified (Only for Email login)
-            if (!user.emailVerified && user.providerData[0].providerId === "password") {
-                console.log("Email not verified yet.");
-            }
-
-            handlePoints(user);
-            loadComments();
-        } else {
-            authSec.classList.remove('auth-hidden');
-            mainSec.classList.add('auth-hidden');
-            headSec.classList.add('auth-hidden');
-        }
-    });
-
-    // Points System Logic
-    async function handlePoints(user) {
-        const userRef = ref(db, 'users/' + user.uid);
-        const today = new Date().toISOString().split('T')[0];
-        const snap = await get(userRef);
-        
-        if (snap.exists()) {
-            const data = snap.val();
-            document.getElementById('displayPoints').textContent = (data.points || 0) + " PTS";
-            if (data.lastLogin !== today) {
-                const newTotal = (data.points || 0) + 5;
-                await update(userRef, { points: newTotal, lastLogin: today });
-                document.getElementById('displayPoints').textContent = newTotal + " PTS";
-                document.getElementById('rewardMsg').style.display = 'block';
-            }
-        } else {
-            await set(userRef, { points: 5, lastLogin: today, email: user.email });
-            document.getElementById('displayPoints').textContent = "5 PTS";
-            document.getElementById('rewardMsg').style.display = 'block';
-        }
-    }
-
-    // Secure Comment Loading
-    function loadComments() {
-        onValue(ref(db, 'comments'), (snap) => {
-            const list = document.getElementById('commentList');
-            list.innerHTML = "";
-            const data = snap.val();
-            if(data) {
-                Object.values(data).reverse().forEach(c => {
-                    const div = document.createElement('div');
-                    div.className = "comment-item";
+                <section class="mt-12 pt-8 border-t border-slate-800">
+                    <h4 class="text-xs font-bold text-slate-500 tracking-[0.2em] uppercase mb-6 flex items-center gap-2">
+                        <i class="fa-solid fa-comments text-blue-500"></i> Community Discussion
+                    </h4>
                     
-                    const u = document.createElement('div');
-                    u.style.fontWeight = "bold"; u.style.color = "#60a5fa";
-                    u.textContent = c.user; // SECURE text
+                    <div class="flex gap-2 mb-8">
+                        <input type="text" id="commentMsg" placeholder="Type a comment..." class="flex-1 bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 transition text-sm">
+                        <button id="postComment" class="bg-blue-600 px-6 py-3 rounded-xl font-bold hover:bg-blue-500 transition shadow-lg shadow-blue-900/20 text-sm">Post</button>
+                    </div>
 
-                    const m = document.createElement('div');
-                    m.style.fontSize = "0.95rem"; m.style.marginTop = "5px";
-                    m.textContent = c.text; // SECURE text - This kills the "K9" attack
+                    <div id="commentList" class="space-y-4">
+                        </div>
+                </section>
+            </div>
+        </article>
+    </main>
 
-                    div.appendChild(u); div.appendChild(m);
-                    list.appendChild(div);
-                });
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, ref, get, set, update, push, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // Your Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyDM4BWnLf6jGycrMdQClWtq-Ra2iDidWsQ",
+            authDomain: "tech-world-93ee6.firebaseapp.com",
+            databaseURL: "https://tech-world-93ee6-default-rtdb.firebaseio.com",
+            projectId: "tech-world-93ee6",
+            storageBucket: "tech-world-93ee6.firebasestorage.app",
+            appId: "1:912275465700:web:5ec12525e03446712153f1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+        const provider = new GoogleAuthProvider();
+
+        // --- AUTH ---
+        document.getElementById('authBtn').onclick = async () => {
+            const email = document.getElementById('email').value.trim();
+            const pass = document.getElementById('password').value;
+            if(!email || !pass) return alert("Please fill details");
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+            } catch (e) {
+                try {
+                    await createUserWithEmailAndPassword(auth, email, pass);
+                } catch (err) { alert(err.message); }
+            }
+        };
+
+        document.getElementById('googleBtn').onclick = async () => {
+            try { await signInWithPopup(auth, provider); } catch (e) { alert(e.message); }
+        };
+
+        window.signOutUser = () => signOut(auth);
+
+        onAuthStateChanged(auth, (user) => {
+            const authSec = document.getElementById('authSection');
+            const mainSec = document.getElementById('mainContent');
+            const headSec = document.getElementById('userHeader');
+            
+            if (user) {
+                authSec.classList.add('auth-hidden');
+                mainSec.classList.remove('auth-hidden');
+                headSec.classList.remove('auth-hidden');
+                handlePoints(user);
+                loadComments();
+            } else {
+                authSec.classList.remove('auth-hidden');
+                mainSec.classList.add('auth-hidden');
+                headSec.classList.add('auth-hidden');
             }
         });
-    }
 
-    // Secure Comment Posting
-    document.getElementById('postComment').onclick = () => {
-        const input = document.getElementById('commentMsg');
-        const text = input.value.trim();
-        if(text && !text.includes('<')) {
-            push(ref(db, 'comments'), {
-                user: auth.currentUser.displayName || auth.currentUser.email.split('@')[0],
-                text: text,
-                timestamp: serverTimestamp()
-            });
-            input.value = "";
-        } else if (text.includes('<')) {
-            alert("No HTML tags allowed!");
+        // --- POINTS ---
+        async function handlePoints(user) {
+            const userRef = ref(db, 'users/' + user.uid);
+            const today = new Date().toISOString().split('T')[0];
+            const snap = await get(userRef);
+            
+            if (snap.exists()) {
+                const data = snap.val();
+                document.getElementById('displayPoints').textContent = (data.points || 0) + " PTS";
+                if (data.lastLogin !== today) {
+                    const newTotal = (data.points || 0) + 5;
+                    await update(userRef, { points: newTotal, lastLogin: today });
+                    document.getElementById('displayPoints').textContent = newTotal + " PTS";
+                    document.getElementById('rewardMsg').classList.remove('hidden');
+                }
+            } else {
+                await set(userRef, { points: 5, lastLogin: today, email: user.email });
+                document.getElementById('displayPoints').textContent = "5 PTS";
+                document.getElementById('rewardMsg').classList.remove('hidden');
+            }
         }
-    };
-</script>
+
+        // --- COMMENTS ---
+        document.getElementById('postComment').onclick = () => {
+            const input = document.getElementById('commentMsg');
+            const text = input.value.trim();
+            if(text && !text.includes('<')) {
+                push(ref(db, 'comments'), {
+                    user: auth.currentUser.displayName || auth.currentUser.email.split('@')[0],
+                    text: text,
+                    timestamp: serverTimestamp()
+                });
+                input.value = "";
+            }
+        };
+
+        function loadComments() {
+            onValue(ref(db, 'comments'), (snap) => {
+                const list = document.getElementById('commentList');
+                list.innerHTML = "";
+                const data = snap.val();
+                if(data) {
+                    Object.values(data).reverse().forEach(c => {
+                        const div = document.createElement('div');
+                        div.className = "bg-slate-900/40 p-4 rounded-2xl border border-white/5";
+                        div.innerHTML = `<div class="flex justify-between items-center mb-1">
+                                            <span class="text-blue-400 font-bold text-xs uppercase tracking-wider">${c.user}</span>
+                                         </div>
+                                         <p class="text-slate-300 text-sm leading-relaxed">${c.text}</p>`;
+                        list.appendChild(div);
+                    });
+                }
+            });
+        }
+
+        // Particles
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#3b82f6" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.2 },
+                "size": { "value": 2 },
+                "line_linked": { "enable": true, "distance": 150, "color": "#3b82f6", "opacity": 0.1, "width": 1 },
+                "move": { "enable": true, "speed": 1, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
+            },
+            "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": true, "mode": "bubble" }, "onclick": { "enable": true, "mode": "push" }, "resize": true } },
+            "retina_detect": true
+        });
+    </script>
 </body>
 </html>
