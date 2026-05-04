@@ -46,7 +46,6 @@
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // PASTE YOUR EXACT CONFIG FROM INDEX.HTML HERE
     const firebaseConfig = {
         apiKey: "AIzaSyDM4BWnLf6jGycrMdQClWtq-Ra2iDidWsQ",
         authDomain: "tech-world-93ee6.firebaseapp.com",
@@ -61,43 +60,46 @@
     const db = getDatabase(app);
 
     let currentUser = null;
-    const icons = ['fa-microchip', 'fa-code', 'fa-database', 'fa-wifi', 'fa-satellite', 'fa-shield-halved', 'fa-server', 'fa-bolt'];
-    let cards = [...icons, ...icons];
+    let currentLevel = 1;
+    let timeLeft = 30;
+    let timerInterval;
     let flippedCards = [];
     let matchedCount = 0;
     let moves = 0;
 
-    // Track user login
+    const allIcons = ['fa-microchip', 'fa-code', 'fa-database', 'fa-wifi', 'fa-satellite', 'fa-shield-halved', 'fa-server', 'fa-bolt', 'fa-robot', 'fa-laptop-code'];
+
     onAuthStateChanged(auth, (user) => {
-        if (user) {
-            currentUser = user;
-        } else {
-            alert("Please login first to earn points!");
-            window.location.href = "index.html";
-        }
+        if (user) { currentUser = user; }
     });
+
+    function startTimer() {
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            document.getElementById('timer').textContent = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                alert("⏳ TIME OUT! Game Over. Try again!");
+                resetGame(true); // Restart same level
+            }
+        }, 1000);
+    }
 
     async function addWinPoints() {
         if (!currentUser) return;
-
         const userRef = ref(db, 'users/' + currentUser.uid);
         const snap = await get(userRef);
-        
         if (snap.exists()) {
-            const currentPoints = snap.val().points || 0;
-            const newTotal = currentPoints + 10; // Reward 10 points
-            
+            const newTotal = (snap.val().points || 0) + (currentLevel * 5); // Level 1=5pts, Level 2=10pts...
             await update(userRef, { points: newTotal });
-            alert(`🎉 System Restored! +10 Points added. Total: ${newTotal}`);
         }
     }
 
-    // --- GAME LOGIC ---
     window.flipCard = (card, icon) => {
         if (flippedCards.length < 2 && !card.classList.contains('flipped')) {
             card.classList.add('flipped');
             flippedCards.push({ card, icon });
-
             if (flippedCards.length === 2) {
                 moves++;
                 document.getElementById('moves').textContent = moves;
@@ -113,39 +115,72 @@
             c2.card.classList.add('matched');
             matchedCount += 2;
             flippedCards = [];
-            if (matchedCount === cards.length) {
-                addWinPoints(); // CALL THE FIREBASE FUNCTION HERE
+            
+            const totalCardsForLevel = (currentLevel + 1) * 2; 
+            if (matchedCount >= (currentLevel === 1 ? 4 : currentLevel === 2 ? 8 : 16)) {
+                clearInterval(timerInterval);
+                addWinPoints();
+                
+                if (currentLevel < 3) {
+                    alert(`Level ${currentLevel} Cleared! Get ready for Level ${currentLevel + 1}`);
+                    currentLevel++;
+                    resetGame(false);
+                } else {
+                    alert("🏆 ULTIMATE CHAMPION! You cleared all levels.");
+                    currentLevel = 1;
+                    resetGame(false);
+                }
             }
         } else {
             setTimeout(() => {
                 c1.card.classList.remove('flipped');
                 c2.card.classList.remove('flipped');
                 flippedCards = [];
-            }, 1000);
+            }, 800);
         }
     }
 
-    window.resetGame = () => {
+    window.resetGame = (isRetry) => {
         const grid = document.getElementById('grid');
         grid.innerHTML = '';
         matchedCount = 0;
         moves = 0;
-        document.getElementById('moves').textContent = '0';
+        flippedCards = [];
         
-        cards.sort(() => Math.random() - 0.5).forEach((icon) => {
+        // Difficulty scaling
+        let cardCount = 4; // Level 1
+        if (currentLevel === 2) cardCount = 8;
+        if (currentLevel === 3) cardCount = 16;
+        
+        timeLeft = currentLevel === 1 ? 20 : currentLevel === 2 ? 40 : 60;
+        
+        document.getElementById('level').textContent = currentLevel;
+        document.getElementById('moves').textContent = '0';
+        document.getElementById('timer').textContent = timeLeft;
+
+        // Set Grid Columns
+        grid.className = `grid gap-3 mb-8 ${currentLevel === 3 ? 'grid-cols-4' : 'grid-cols-2'}`;
+
+        const levelIcons = allIcons.slice(0, cardCount / 2);
+        const gameCards = [...levelIcons, ...levelIcons].sort(() => Math.random() - 0.5);
+
+        gameCards.forEach((icon) => {
             const card = document.createElement('div');
             card.className = 'card';
+            card.style.height = currentLevel === 3 ? '80px' : '120px'; // Shrink cards for Level 3
             card.innerHTML = `
                 <div class="card-inner">
-                    <div class="card-front"><i class="fa-solid fa-question text-slate-700"></i></div>
+                    <div class="card-front"><i class="fa-solid fa-microchip opacity-20"></i></div>
                     <div class="card-back"><i class="fa-solid ${icon}"></i></div>
                 </div>`;
             card.onclick = () => window.flipCard(card, icon);
             grid.appendChild(card);
         });
+
+        startTimer();
     };
 
-    resetGame();
+    window.resetGame(false);
 </script>
 </body>
 </html>
