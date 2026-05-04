@@ -4,41 +4,117 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile | Tech World</title>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-S157MJXH6K"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-S157MJXH6K');
+    </script>
+
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <style>
-        body { background-color: #0f172a; color: #f8fafc; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        body { background-color: #0f172a; color: #f8fafc; min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow-x: hidden; }
         .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .gradient-text { background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     </style>
 </head>
-<body class="p-4">
+
+<body class="p-4 font-sans">
+
     <div class="max-w-md w-full glass rounded-3xl p-8 shadow-2xl">
-        <a href="index.html" class="text-slate-400 text-sm mb-6 inline-block">← Back</a>
-        <h2 id="displayUser" class="text-2xl font-bold">Loading...</h2>
-        <p id="displayEmail" class="text-slate-400 mb-6">...</p>
-        <button onclick="signOutUser()" class="w-full py-3 rounded-xl bg-red-600/20 text-red-400 font-bold">LOGOUT</button>
+        <a href="index.html" class="text-slate-400 text-sm mb-6 inline-block hover:text-white transition">
+            <i class="fa-solid fa-arrow-left"></i> Feed
+        </a>
+
+        <div class="text-center mb-8">
+            <div class="w-20 h-20 bg-blue-600 rounded-full mx-auto flex items-center justify-center text-3xl font-black mb-4 shadow-lg shadow-blue-500/20" id="initials">--</div>
+            <h2 class="text-2xl font-bold gradient-text" id="displayUser">Loading...</h2>
+            <p class="text-slate-400 text-sm" id="displayEmail">...</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mb-8 text-center">
+            <div class="bg-slate-800/50 p-4 rounded-2xl border border-white/5">
+                <p class="text-xs text-slate-500 uppercase font-bold mb-1">Points</p>
+                <p class="text-2xl font-black text-yellow-500" id="userPoints">0</p>
+            </div>
+            <div class="bg-slate-800/50 p-4 rounded-2xl border border-white/5">
+                <p class="text-xs text-slate-500 uppercase font-bold mb-1">Status</p>
+                <p class="text-sm font-bold text-green-400">Verified</p>
+            </div>
+        </div>
+
+        <div class="space-y-6">
+            <div>
+                <label class="text-xs font-bold text-slate-500 uppercase ml-1">Change Display Name</label>
+                <div class="flex gap-2 mt-2">
+                    <input type="text" id="newName" placeholder="New Display Name" class="flex-1 bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition">
+                    <button id="updateNameBtn" class="bg-blue-600 hover:bg-blue-500 px-5 rounded-xl transition text-white">
+                        <i class="fa-solid fa-check"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <button onclick="signOutUser()" class="w-full py-3 rounded-xl border border-red-500/30 text-red-400 hover:bg-red-500/10 font-bold text-sm transition tracking-widest uppercase">
+                Logout
+            </button>
+        </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, updateProfile, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDM4BWnLf6jGycrMdQClWtq-Ra2iDidWsQ",
             authDomain: "tech-world-93ee6.firebaseapp.com",
+            databaseURL: "https://tech-world-93ee6-default-rtdb.firebaseio.com",
             projectId: "tech-world-93ee6",
-            appId: "1:912275465700:web:5ec12525e03446712153f1"
+            storageBucket: "tech-world-93ee6.firebasestorage.app",
+            appId: "1:912275465700:web:5ec12525e03446712153f1",
+            measurementId: "G-S157MJXH6K"
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const db = getDatabase(app);
+        const analytics = getAnalytics(app); // Track profile page views
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                document.getElementById('displayUser').textContent = user.displayName || user.email.split('@')[0];
                 document.getElementById('displayEmail').textContent = user.email;
-            } else { window.location.href = "index.html"; }
+                onValue(ref(db, 'users/' + user.uid), (snap) => {
+                    const data = snap.val();
+                    if (data) {
+                        const name = data.displayName || user.displayName || user.email.split('@')[0];
+                        document.getElementById('displayUser').textContent = name;
+                        document.getElementById('userPoints').textContent = data.points || 0;
+                        document.getElementById('initials').textContent = name.substring(0, 2).toUpperCase();
+                    }
+                });
+            } else { 
+                window.location.href = "index.html"; 
+            }
         });
-        window.signOutUser = () => signOut(auth).then(() => window.location.href = "index.html");
+
+        document.getElementById('updateNameBtn').onclick = async () => {
+            const newName = document.getElementById('newName').value.trim();
+            if (newName.length > 2) {
+                await updateProfile(auth.currentUser, { displayName: newName });
+                await update(ref(db, 'users/' + auth.currentUser.uid), { displayName: newName });
+                alert("Name Updated!");
+                document.getElementById('newName').value = "";
+            }
+        };
+
+        window.signOutUser = () => signOut(auth).then(() => {
+            window.location.href = "index.html";
+        });
     </script>
 </body>
 </html>
