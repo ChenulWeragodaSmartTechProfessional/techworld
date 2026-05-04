@@ -142,7 +142,7 @@
         const db = getDatabase(app);
         const provider = new GoogleAuthProvider();
 
-        // Auth Logic with Email Verification
+        
         document.getElementById('authBtn').onclick = async () => {
             const email = document.getElementById('email').value.trim();
             const pass = document.getElementById('password').value;
@@ -163,7 +163,7 @@
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // Only allow access if verified or Google User
+                
                 if (user.emailVerified || user.providerData[0].providerId === "google.com") {
                     document.getElementById('authSection').classList.add('auth-hidden');
                     document.getElementById('mainContent').classList.remove('auth-hidden');
@@ -171,7 +171,7 @@
                     handlePoints(user);
                     loadComments();
                 } else {
-                    alert("Account exists, but email is not verified!");
+                    alert("Check Your Email for verification!");
                     signOut(auth);
                 }
             } else {
