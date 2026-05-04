@@ -3,184 +3,251 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tech World | Data Link Game</title>
+    <title>Tech World | Infinite Data Link</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <style>
-        body { background-color: #0f172a; color: #f8fafc; font-family: sans-serif; }
-        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .gradient-text { background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        body { 
+            background-color: #0f172a; 
+            color: #f8fafc; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+        .glass { 
+            background: rgba(30, 41, 59, 0.7); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+        }
+        .gradient-text { 
+            background: linear-gradient(90deg, #38bdf8, #818cf8); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+        }
         
-        /* Game Card Styles */
-        .card { height: 100px; cursor: pointer; perspective: 1000px; }
-        .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
+        /* Game Card Animations */
+        .card { perspective: 1000px; transition: transform 0.2s; }
+        .card:active { transform: scale(0.95); }
+        .card-inner { 
+            position: relative; 
+            width: 100%; 
+            height: 100%; 
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
+            transform-style: preserve-3d; 
+        }
         .card.flipped .card-inner { transform: rotateY(180deg); }
-        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; border-radius: 12px; font-size: 2rem; }
-        .card-front { background: #1e293b; border: 1px solid #334155; }
-        .card-back { background: #3b82f6; transform: rotateY(180deg); color: white; }
-        .matched .card-back { background: #10b981; }
+        
+        .card-front, .card-back { 
+            position: absolute; 
+            width: 100%; 
+            height: 100%; 
+            backface-visibility: hidden; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            border-radius: 16px; 
+        }
+        .card-front { 
+            background: #1e293b; 
+            border: 1px solid rgba(255, 255, 255, 0.05); 
+        }
+        .card-back { 
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8); 
+            transform: rotateY(180deg); 
+            color: white; 
+        }
+        .matched .card-back { 
+            background: linear-gradient(135deg, #10b981, #059669); 
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+        }
     </style>
 </head>
-<body class="p-6">
+<body class="min-h-screen flex flex-col items-center p-4">
 
-    <div class="max-w-md mx-auto text-center">
-        <h1 class="text-3xl font-bold mb-2 gradient-text">DATA LINK</h1>
-        <p class="text-gray-400 text-sm mb-6">Match the tech icons to restore the submarine cable link!</p>
+    <nav class="w-full max-w-2xl flex justify-between items-center py-6 mb-4">
+        <a href="index.html" class="glass px-4 py-2 rounded-full text-sm font-bold hover:bg-slate-800 transition flex items-center gap-2">
+            <i class="fa-solid fa-house"></i> <span>Home</span>
+        </a>
         
-       <div id="game-stats" class="flex justify-between mb-4 px-4 font-mono text-sm">
-    <span class="text-blue-400">Level: <span id="level">1</span></span>
-    <span class="text-red-400">Time: <span id="timer">30</span>s</span>
-    <span class="text-blue-400">Moves: <span id="moves">0</span></span>
-</div>
+        <h1 class="text-xl font-black tracking-tighter uppercase gradient-text hidden sm:block">Tech World</h1>
 
-        <div id="grid" class="grid grid-cols-4 gap-3 mb-8">
+        <a href="/profile" class="bg-blue-600/20 border border-blue-500/30 px-4 py-2 rounded-full text-sm font-bold text-blue-400 hover:bg-blue-600 hover:text-white transition flex items-center gap-2">
+            <i class="fa-solid fa-user"></i> <span>Check Score</span>
+        </a>
+    </nav>
+
+    <div class="w-full max-w-md">
+        <div class="text-center mb-6">
+            <h2 class="text-4xl font-bold mb-1">DATA LINK</h2>
+            <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Neural Syncing Protocol</p>
+        </div>
+
+        <div class="glass rounded-2xl p-4 flex justify-between items-center mb-6 border border-white/5 font-mono">
+            <div class="text-center">
+                <p class="text-[10px] text-slate-500 uppercase">Level</p>
+                <p id="level" class="text-blue-400 font-bold text-xl">1</p>
+            </div>
+            <div class="text-center bg-slate-900/50 px-6 py-1 rounded-xl border border-white/5">
+                <p class="text-[10px] text-slate-500 uppercase">Timer</p>
+                <p id="timer" class="text-red-400 font-bold text-2xl">20</p>
+            </div>
+            <div class="text-center">
+                <p class="text-[10px] text-slate-500 uppercase">Moves</p>
+                <p id="moves" class="text-blue-400 font-bold text-xl">0</p>
+            </div>
+        </div>
+
+        <div id="grid" class="grid grid-cols-2 gap-3 mb-8">
             </div>
 
-        <button onclick="resetGame()" class="bg-blue-600 hover:bg-blue-500 px-8 py-3 rounded-xl font-bold transition w-full shadow-lg">
-            Restart System
+        <button onclick="window.resetGame()" class="w-full py-4 glass hover:bg-slate-800 transition rounded-2xl font-bold tracking-widest uppercase text-sm border-t border-white/10">
+            <i class="fa-solid fa-sync-alt mr-2"></i> Restart Level
         </button>
     </div>
 
-   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyDM4BWnLf6jGycrMdQClWtq-Ra2iDidWsQ",
-        authDomain: "tech-world-93ee6.firebaseapp.com",
-        databaseURL: "https://tech-world-93ee6-default-rtdb.firebaseio.com",
-        projectId: "tech-world-93ee6",
-        storageBucket: "tech-world-93ee6.firebasestorage.app",
-        appId: "1:912275465700:web:5ec12525e03446712153f1"
-    };
+        const firebaseConfig = {
+            apiKey: "AIzaSyDM4BWnLf6jGycrMdQClWtq-Ra2iDidWsQ",
+            authDomain: "tech-world-93ee6.firebaseapp.com",
+            databaseURL: "https://tech-world-93ee6-default-rtdb.firebaseio.com",
+            projectId: "tech-world-93ee6",
+            storageBucket: "tech-world-93ee6.firebasestorage.app",
+            appId: "1:912275465700:web:5ec12525e03446712153f1"
+        };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getDatabase(app);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
 
-    let currentUser = null;
-    let currentLevel = 1;
-    let timeLeft = 30;
-    let timerInterval;
-    let flippedCards = [];
-    let matchedCount = 0;
-    let moves = 0;
+        let currentUser = null;
+        let currentLevel = 1;
+        let timeLeft = 20;
+        let timerInterval;
+        let flippedCards = [];
+        let matchedCount = 0;
+        let moves = 0;
 
-    const allIcons = ['fa-microchip', 'fa-code', 'fa-database', 'fa-wifi', 'fa-satellite', 'fa-shield-halved', 'fa-server', 'fa-bolt', 'fa-robot', 'fa-laptop-code'];
+        const allIcons = ['fa-microchip', 'fa-code', 'fa-database', 'fa-wifi', 'fa-satellite', 'fa-shield-halved', 'fa-server', 'fa-bolt', 'fa-robot', 'fa-laptop-code', 'fa-globe', 'fa-microscope', 'fa-terminal', 'fa-memory', 'fa-vr-cardboard', 'fa-sim-card'];
 
-    onAuthStateChanged(auth, (user) => {
-        if (user) { currentUser = user; }
-    });
-
-    function startTimer() {
-        clearInterval(timerInterval);
-        timerInterval = setInterval(() => {
-            timeLeft--;
-            document.getElementById('timer').textContent = timeLeft;
-            if (timeLeft <= 0) {
-                clearInterval(timerInterval);
-                alert("⏳ TIME OUT! Game Over. Try again!");
-                resetGame(true); // Restart same level
-            }
-        }, 1000);
-    }
-
-    async function addWinPoints() {
-        if (!currentUser) return;
-        const userRef = ref(db, 'users/' + currentUser.uid);
-        const snap = await get(userRef);
-        if (snap.exists()) {
-            const newTotal = (snap.val().points || 0) + (currentLevel * 5); // Level 1=5pts, Level 2=10pts...
-            await update(userRef, { points: newTotal });
-        }
-    }
-
-    window.flipCard = (card, icon) => {
-        if (flippedCards.length < 2 && !card.classList.contains('flipped')) {
-            card.classList.add('flipped');
-            flippedCards.push({ card, icon });
-            if (flippedCards.length === 2) {
-                moves++;
-                document.getElementById('moves').textContent = moves;
-                checkMatch();
-            }
-        }
-    };
-
-    function checkMatch() {
-        const [c1, c2] = flippedCards;
-        if (c1.icon === c2.icon) {
-            c1.card.classList.add('matched');
-            c2.card.classList.add('matched');
-            matchedCount += 2;
-            flippedCards = [];
-            
-            const totalCardsForLevel = (currentLevel + 1) * 2; 
-            if (matchedCount >= (currentLevel === 1 ? 4 : currentLevel === 2 ? 8 : 16)) {
-                clearInterval(timerInterval);
-                addWinPoints();
-                
-                if (currentLevel < 3) {
-                    alert(`Level ${currentLevel} Cleared! Get ready for Level ${currentLevel + 1}`);
-                    currentLevel++;
-                    resetGame(false);
-                } else {
-                    alert("🏆 ULTIMATE CHAMPION! You cleared all levels.");
-                    currentLevel = 1;
-                    resetGame(false);
-                }
-            }
-        } else {
-            setTimeout(() => {
-                c1.card.classList.remove('flipped');
-                c2.card.classList.remove('flipped');
-                flippedCards = [];
-            }, 800);
-        }
-    }
-
-    window.resetGame = (isRetry) => {
-        const grid = document.getElementById('grid');
-        grid.innerHTML = '';
-        matchedCount = 0;
-        moves = 0;
-        flippedCards = [];
-        
-        // Difficulty scaling
-        let cardCount = 4; // Level 1
-        if (currentLevel === 2) cardCount = 8;
-        if (currentLevel === 3) cardCount = 16;
-        
-        timeLeft = currentLevel === 1 ? 20 : currentLevel === 2 ? 40 : 60;
-        
-        document.getElementById('level').textContent = currentLevel;
-        document.getElementById('moves').textContent = '0';
-        document.getElementById('timer').textContent = timeLeft;
-
-        // Set Grid Columns
-        grid.className = `grid gap-3 mb-8 ${currentLevel === 3 ? 'grid-cols-4' : 'grid-cols-2'}`;
-
-        const levelIcons = allIcons.slice(0, cardCount / 2);
-        const gameCards = [...levelIcons, ...levelIcons].sort(() => Math.random() - 0.5);
-
-        gameCards.forEach((icon) => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.style.height = currentLevel === 3 ? '80px' : '120px'; // Shrink cards for Level 3
-            card.innerHTML = `
-                <div class="card-inner">
-                    <div class="card-front"><i class="fa-solid fa-microchip opacity-20"></i></div>
-                    <div class="card-back"><i class="fa-solid ${icon}"></i></div>
-                </div>`;
-            card.onclick = () => window.flipCard(card, icon);
-            grid.appendChild(card);
+        onAuthStateChanged(auth, (user) => {
+            if (user) { currentUser = user; }
+            else { window.location.href = "index.html"; } // Redirect to home if not logged in
         });
 
-        startTimer();
-    };
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert(`🚨 CONNECTION FAILED! Level ${currentLevel} Reset.`);
+                    currentLevel = 1;
+                    resetGame();
+                }
+            }, 1000);
+        }
 
-    window.resetGame(false);
-</script>
+        async function addWinPoints() {
+            if (!currentUser) return;
+            const userRef = ref(db, 'users/' + currentUser.uid);
+            const snap = await get(userRef);
+            if (snap.exists()) {
+                const reward = Math.min(currentLevel * 3, 50); // Points grow with level
+                const newTotal = (snap.val().points || 0) + reward;
+                await update(userRef, { points: newTotal });
+            }
+        }
+
+        window.flipCard = (card, icon) => {
+            if (flippedCards.length < 2 && !card.classList.contains('flipped')) {
+                card.classList.add('flipped');
+                flippedCards.push({ card, icon });
+                if (flippedCards.length === 2) {
+                    moves++;
+                    document.getElementById('moves').textContent = moves;
+                    checkMatch();
+                }
+            }
+        };
+
+        function checkMatch() {
+            const [c1, c2] = flippedCards;
+            if (c1.icon === c2.icon) {
+                c1.card.classList.add('matched');
+                c2.card.classList.add('matched');
+                matchedCount += 2;
+                flippedCards = [];
+                
+                const cardCount = getCardCount(currentLevel);
+                if (matchedCount >= cardCount) {
+                    clearInterval(timerInterval);
+                    addWinPoints();
+                    setTimeout(() => {
+                        alert(`✔️ Level ${currentLevel} Established! Moving to next node...`);
+                        currentLevel++;
+                        resetGame();
+                    }, 500);
+                }
+            } else {
+                setTimeout(() => {
+                    c1.card.classList.remove('flipped');
+                    c2.card.classList.remove('flipped');
+                    flippedCards = [];
+                }, 600);
+            }
+        }
+
+        function getCardCount(level) {
+            let count = 4 + (level - 1) * 2;
+            return Math.min(count, allIcons.length * 2);
+        }
+
+        window.resetGame = () => {
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+            matchedCount = 0;
+            moves = 0;
+            flippedCards = [];
+            
+            const cardCount = getCardCount(currentLevel);
+            timeLeft = 15 + (Math.floor(cardCount / 2) * 5);
+            
+            document.getElementById('level').textContent = currentLevel;
+            document.getElementById('moves').textContent = '0';
+            document.getElementById('timer').textContent = timeLeft;
+
+            if (cardCount <= 6) grid.className = "grid grid-cols-2 gap-3 mb-8";
+            else if (cardCount <= 12) grid.className = "grid grid-cols-3 gap-3 mb-8";
+            else grid.className = "grid grid-cols-4 gap-2 mb-8";
+
+            const levelIcons = allIcons.slice(0, cardCount / 2);
+            const gameCards = [...levelIcons, ...levelIcons].sort(() => Math.random() - 0.5);
+
+            gameCards.forEach((icon) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.style.height = cardCount > 12 ? '80px' : '110px';
+                card.innerHTML = `
+                    <div class="card-inner">
+                        <div class="card-front"><i class="fa-solid fa-microchip opacity-10"></i></div>
+                        <div class="card-back" style="font-size: ${cardCount > 12 ? '1.2rem' : '1.8rem'}">
+                            <i class="fa-solid ${icon}"></i>
+                        </div>
+                    </div>`;
+                card.onclick = () => window.flipCard(card, icon);
+                grid.appendChild(card);
+            });
+
+            startTimer();
+        };
+
+        window.resetGame();
+    </script>
 </body>
 </html>
