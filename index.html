@@ -1,424 +1,245 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: 'unsafe-inline';">
-
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://raw.githubusercontent.com https://www.youtube.com https://cdn.tailwindcss.com;">
     <title>Tech World | Stay Ahead of the Future</title>
-
     <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
-
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-
     <link rel="manifest" href="/manifest.json">
 
-
-
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-S157MJXH6K"></script>
-
     <script>
-
       window.dataLayer = window.dataLayer || [];
-
       function gtag(){dataLayer.push(arguments);}
-
       gtag('js', new Date());
-
       gtag('config', 'G-S157MJXH6K');
-
     </script>
 
-
-
     <script src="https://cdn.tailwindcss.com"></script>
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-   
-
+    
     <style>
-
         body { background-color: #0f172a; color: #f8fafc; overflow-x: hidden; scroll-behavior: smooth; }
-
         #particles-js { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-color: #0f172a; }
-
         .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
-
         .gradient-text { background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
         .whatsapp-post { line-height: 1.8; white-space: pre-wrap; word-wrap: break-word; font-size: 1.05rem; color: #cbd5e1; }
-
         .whatsapp-post b { color: #fff; font-weight: 800; }
-
         .auth-hidden { display: none !important; }
-
         @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
         .animate-slide { animation: slideIn 0.5s ease-out forwards; }
-
     </style>
-
 </head>
 
- 
-
 <body class="font-sans">
-
-
-
     <div id="particles-js"></div>
 
-
-
     <nav class="p-6 flex justify-between items-center max-w-6xl mx-auto relative z-10">
-
         <h1 class="text-2xl font-bold tracking-tighter uppercase gradient-text">Tech World</h1>
-
         
-
         <div id="userHeader" class="auth-hidden flex items-center gap-4">
-
             <a href="profile.html" class="flex items-center gap-2 bg-slate-800/50 border border-white/10 px-4 py-1.5 rounded-full hover:bg-slate-700 transition">
-
                 <i class="fa-solid fa-user-circle text-blue-400"></i>
-
                 <span id="displayPoints" class="text-yellow-500 font-bold text-sm">0 PTS</span>
-
             </a>
-
             <button onclick="signOutUser()" class="text-red-400 text-xs font-bold uppercase tracking-widest px-2">Logout</button>
-
         </div>
 
-<a href="game.html" class="hidden md:inline-block text-blue-400 border border-blue-400/30 hover:border-blue-400 px-4 py-2 rounded-full font-medium transition text-sm mr-2">
-    <i class="fa-solid fa-gamepad"></i> Play & Earn
-</a>
-
-        <a href="https://whatsapp.com/channel/0029VbBw2JR9cDDiNozMYF1p" target="_blank" class="bg-blue-600 hover:bg-blue-500 px-5 py-2 rounded-full font-medium transition text-sm">
-
-            <i class="fa-brands fa-whatsapp"></i> Join Channel
-
-        </a>
-
+        <div class="flex items-center gap-3">
+            <a href="game.html" class="hidden md:inline-block text-blue-400 border border-blue-400/30 hover:border-blue-400 px-4 py-2 rounded-full font-medium transition text-sm">
+                <i class="fa-solid fa-gamepad"></i> Play & Earn
+            </a>
+            <a href="https://whatsapp.com/channel/0029VbBw2JR9cDDiNozMYF1p" target="_blank" class="bg-blue-600 hover:bg-blue-500 px-5 py-2 rounded-full font-medium transition text-sm">
+                <i class="fa-brands fa-whatsapp"></i> Join Channel
+            </a>
+        </div>
     </nav>
 
-
-
     <section id="authSection" class="max-w-md mx-auto mt-16 px-4 relative z-10">
-
         <div class="glass p-8 rounded-3xl shadow-2xl text-center">
-
             <h2 class="text-3xl font-bold mb-2">Member Portal</h2>
-
             <p class="text-gray-400 mb-8">Sign in to read and earn daily points.</p>
-
             <div class="space-y-3">
-
                 <input type="email" id="email" placeholder="Email" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500">
-
                 <input type="password" id="password" placeholder="Password" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500">
-
                 <button id="authBtn" class="w-full bg-blue-600 hover:bg-blue-500 py-3 rounded-xl font-bold transition">Sign In / Register</button>
-
             </div>
-
             <div class="py-4 text-xs text-gray-500 font-bold uppercase">Or</div>
-
             <button id="googleBtn" class="w-full bg-white text-black py-3 rounded-xl font-bold flex items-center justify-center gap-2">
-
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="18"> Google Account
-
             </button>
-
         </div>
-
     </section>
 
-
-
     <main id="mainContent" class="max-w-3xl mx-auto px-4 pb-20 mt-8 relative z-10 auth-hidden">
-
         <div id="rewardMsg" class="hidden bg-blue-600 p-4 rounded-2xl text-center font-bold mb-8 animate-slide">
-
             🎉 +5 Points added for your daily visit!
-
         </div>
 
-
-
         <article class="glass rounded-3xl overflow-hidden shadow-2xl">
-
             <div class="p-6 md:p-8 flex items-center gap-4 border-b border-gray-800">
-
                 <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center font-black">TW</div>
-
                 <div>
-
                     <p class="font-bold">Agent Ghost <i class="fa-solid fa-circle-check text-blue-400"></i></p>
-
                     <p class="text-xs text-gray-500 tracking-widest uppercase">Official Update</p>
-
                 </div>
-
             </div>
-
-
 
             <div class="p-6 md:p-8">
-
-                <div class="rounded-2xl overflow-hidden mb-6"><img src="https://raw.githubusercontent.com/ChenulWeragodaSmartTechProfessional/techworld/main/play&earn.png" class="w-full"></div>
-
+                <div class="rounded-2xl overflow-hidden mb-6">
+                    <img src="https://raw.githubusercontent.com/ChenulWeragodaSmartTechProfessional/techworld/main/play&earn.png" class="w-full" alt="Promo">
+                </div>
                 <div class="whatsapp-post" id="postText">
-<iframe width="640" height="360" src="https://www.youtube.com/embed/mL3vmY3aqL4" title="Meet Smart Tech Professional – Where Tech Gets Real" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-<center>Join Our YouTube Channel.</center>
+                    <div class="aspect-video mb-4">
+                        <iframe class="w-full h-full rounded-xl" src="https://www.youtube.com/embed/mL3vmY3aqL4" title="Meet Smart Tech Professional" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
+                    <center class="font-bold text-blue-400">Join Our YouTube Channel.</center>
                 </div>
 
-
                 <section class="mt-12 pt-8 border-t border-slate-800">
-
                     <h4 class="text-xs font-bold text-slate-500 uppercase mb-6">Community Chat</h4>
-
                     <div class="flex gap-2 mb-8">
-
                         <input type="text" id="commentMsg" placeholder="Say something..." class="flex-1 bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:border-blue-500">
-
                         <button id="postComment" class="bg-blue-600 px-6 py-3 rounded-xl font-bold text-sm">Post</button>
-
                     </div>
-
                     <div id="commentList" class="space-y-4"></div>
-
                 </section>
-
             </div>
-
         </article>
-
     </main>
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-
     <script type="module">
-
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
         import { getDatabase, ref, get, set, update, push, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-
-
         const firebaseConfig = {
-
             apiKey: "AIzaSyDM4BWnLf6jGycrMdQClWtq-Ra2iDidWsQ",
-
             authDomain: "tech-world-93ee6.firebaseapp.com",
-
             databaseURL: "https://tech-world-93ee6-default-rtdb.firebaseio.com",
-
             projectId: "tech-world-93ee6",
-
             storageBucket: "tech-world-93ee6.firebasestorage.app",
-
             appId: "1:912275465700:web:5ec12525e03446712153f1"
-
         };
-
-
 
         const app = initializeApp(firebaseConfig);
-
         const auth = getAuth(app);
-
         const db = getDatabase(app);
-
         const provider = new GoogleAuthProvider();
 
-
-
-        
-
+        // Auth Logic
         document.getElementById('authBtn').onclick = async () => {
-
             const email = document.getElementById('email').value.trim();
-
             const pass = document.getElementById('password').value;
-
+            if(!email || !pass) return alert("Fill all fields");
+            
             try { 
-
                 await signInWithEmailAndPassword(auth, email, pass); 
-
             } catch (e) {
-
                 try {
-
                     const res = await createUserWithEmailAndPassword(auth, email, pass);
-
                     await sendEmailVerification(res.user);
-
                     alert("Verification email sent! Check your inbox.");
-
                     await signOut(auth);
-
                 } catch (err) { alert(err.message); }
-
             }
-
         };
-
-
 
         document.getElementById('googleBtn').onclick = async () => { try { await signInWithPopup(auth, provider); } catch (e) { alert(e.message); } };
-
         window.signOutUser = () => signOut(auth);
 
-
-
+        // State Listener
         onAuthStateChanged(auth, (user) => {
-
             if (user) {
-
-                
-
                 if (user.emailVerified || user.providerData[0].providerId === "google.com") {
-
                     document.getElementById('authSection').classList.add('auth-hidden');
-
                     document.getElementById('mainContent').classList.remove('auth-hidden');
-
                     document.getElementById('userHeader').classList.remove('auth-hidden');
-
                     handlePoints(user);
-
                     loadComments();
-
                 } else {
-
-                    alert("Check Your Email for verification!");
-
+                    alert("Please verify your email!");
                     signOut(auth);
-
                 }
-
             } else {
-
                 document.getElementById('authSection').classList.remove('auth-hidden');
-
                 document.getElementById('mainContent').classList.add('auth-hidden');
-
                 document.getElementById('userHeader').classList.add('auth-hidden');
-
             }
-
         });
 
-
-
+        // Points Logic
         async function handlePoints(user) {
-
             const userRef = ref(db, 'users/' + user.uid);
-
             const today = new Date().toISOString().split('T')[0];
+            
+            try {
+                const snap = await get(userRef);
+                if (snap.exists()) {
+                    const data = snap.val();
+                    const currentPoints = Number(data.points) || 0;
+                    document.getElementById('displayPoints').textContent = currentPoints + " PTS";
 
-            const snap = await get(userRef);
-
-            if (snap.exists()) {
-
-                const data = snap.val();
-
-                document.getElementById('displayPoints').textContent = (data.points || 0) + " PTS";
-
-                if (data.lastLogin !== today) {
-
-                    const newTotal = (data.points || 0) + 5;
-
-                    await update(userRef, { points: newTotal, lastLogin: today });
-
-                    document.getElementById('displayPoints').textContent = newTotal + " PTS";
-
+                    if (data.lastLogin !== today) {
+                        const newTotal = currentPoints + 5;
+                        await update(userRef, { 
+                            points: newTotal, 
+                            lastLogin: today,
+                            email: user.email 
+                        });
+                        document.getElementById('displayPoints').textContent = newTotal + " PTS";
+                        document.getElementById('rewardMsg').classList.remove('hidden');
+                    }
+                } else {
+                    // New User initialization
+                    await set(userRef, { 
+                        points: 5, 
+                        lastLogin: today, 
+                        email: user.email 
+                    });
+                    document.getElementById('displayPoints').textContent = "5 PTS";
                     document.getElementById('rewardMsg').classList.remove('hidden');
-
                 }
-
-            } else {
-
-                await set(userRef, { points: 5, lastLogin: today, email: user.email });
-
-                document.getElementById('displayPoints').textContent = "5 PTS";
-
-                document.getElementById('rewardMsg').classList.remove('hidden');
-
+            } catch (err) {
+                console.error("Point Update Failed:", err.message);
             }
-
         }
 
-
-
+        // Comments Logic
         document.getElementById('postComment').onclick = () => {
-
             const input = document.getElementById('commentMsg');
-
             const text = input.value.trim();
-
-            if(text) {
-
+            if(text && auth.currentUser) {
                 push(ref(db, 'comments'), {
-
                     user: auth.currentUser.displayName || auth.currentUser.email.split('@')[0],
-
                     text: text,
-
                     timestamp: serverTimestamp()
-
                 });
-
                 input.value = "";
-
-                gtag('event', 'post_comment');
-
             }
-
         };
 
-
-
         function loadComments() {
-
             onValue(ref(db, 'comments'), (snap) => {
-
-                const list = document.getElementById('commentList'); list.innerHTML = "";
-
+                const list = document.getElementById('commentList'); 
+                list.innerHTML = "";
                 const data = snap.val();
-
                 if(data) {
-
                     Object.values(data).reverse().forEach(c => {
-
                         const div = document.createElement('div');
-
                         div.className = "bg-slate-900/40 p-4 rounded-2xl border border-white/5";
-
                         div.innerHTML = `<span class="text-blue-400 font-bold text-xs">${c.user}</span><p class="text-slate-300 text-sm mt-1">${c.text}</p>`;
-
                         list.appendChild(div);
-
                     });
-
                 }
-
             });
-
         }
 
-        particlesJS("particles-js", { "particles": { "number": { "value": 50 }, "color": { "value": "#3b82f6" }, "move": { "enable": true, "speed": 1 } } });
-
+        // UI Effects
+        particlesJS("particles-js", { "particles": { "number": { "value": 40 }, "color": { "value": "#3b82f6" }, "move": { "enable": true, "speed": 1 }, "line_linked": { "opacity": 0.2 } } });
     </script>
-
 </body>
-
 </html>
-
