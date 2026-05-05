@@ -169,54 +169,51 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-        // Corrected Points Logic
         async function handlePoints(user) {
-            const userRef = ref(db, 'users/' + user.uid);
-            const today = new Date().toISOString().split('T')[0];
-            const displayElement = document.getElementById('displayPoints');
-            const rewardMsg = document.getElementById('rewardMsg');
+    const userRef = ref(db, 'users/' + user.uid);
+    // Use the exact date format in your DB: YYYY-MM-DD
+    const today = new Date().toISOString().split('T')[0];
+    const displayElement = document.getElementById('displayPoints');
+    const rewardMsg = document.getElementById('rewardMsg');
+    
+    try {
+        const snap = await get(userRef);
+        
+        if (snap.exists()) {
+            const data = snap.val();
+            let currentPoints = Number(data.points) || 0;
 
-            try {
-                const snap = await get(userRef);
+            // Show what they currently have immediately
+            if (displayElement) displayElement.textContent = currentPoints + " PTS";
 
-                if (snap.exists()) {
-                    const data = snap.val();
-                    const currentPoints = Number(data.points) || 0;
+            // If the date in DB ("2026-05-04") is NOT today ("2026-05-05")
+            if (data.lastLogin !== today) {
+                const newTotal = currentPoints + 5;
+                
+                await update(userRef, { 
+                    points: newTotal, 
+                    lastLogin: today,
+                    email: user.email 
+                });
 
-                    // 1. Always update UI with existing points first
-                    displayElement.textContent = currentPoints + " PTS";
-
-                    // 2. Check if the daily reward is eligible
-                    if (data.lastLogin !== today) {
-                        const newTotal = currentPoints + 5;
-                        await update(userRef, {
-                            points: newTotal,
-                            lastLogin: today,
-                            email: user.email
-                        });
-                        
-                        // Update UI to reflect the gain
-                        displayElement.textContent = newTotal + " PTS";
-                        rewardMsg.classList.remove('hidden');
-                    }
-                } else {
-                    // 3. Logic for brand new users
-                    const initialPoints = 5;
-                    await set(userRef, {
-                        points: initialPoints,
-                        lastLogin: today,
-                        email: user.email,
-                        createdAt: serverTimestamp()
-                    });
-
-                    displayElement.textContent = initialPoints + " PTS";
-                    rewardMsg.classList.remove('hidden');
-                }
-            } catch (err) {
-                console.error("Point Update Failed:", err);
+                // Update UI to the new total
+                if (displayElement) displayElement.textContent = newTotal + " PTS";
+                if (rewardMsg) rewardMsg.classList.remove('hidden');
             }
+        } else {
+            // Logic for a completely new user ID not in your list yet
+            await set(userRef, {
+                points: 5,
+                lastLogin: today,
+                email: user.email,
+                displayName: user.displayName || user.email.split('@')[0]
+            });
+            if (displayElement) displayElement.textContent = "5 PTS";
         }
-
+    } catch (error) {
+        console.error("Point system failure:", error);
+    }
+}
         // Comments Logic
         document.getElementById('postComment').onclick = () => {
             const input = document.getElementById('commentMsg');
