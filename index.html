@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: 'unsafe-inline' https://www.googletagmanager.com https://www.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://raw.githubusercontent.com https://www.youtube.com https://cdn.tailwindcss.com;">
     <title>Tech World | Stay Ahead of the Future</title>
-    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
-    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-    <link rel="manifest" href="/manifest.json">
-
+    
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-S157MJXH6K"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -26,7 +23,6 @@
         .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
         .gradient-text { background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .whatsapp-post { line-height: 1.8; white-space: pre-wrap; word-wrap: break-word; font-size: 1.05rem; color: #cbd5e1; }
-        .whatsapp-post b { color: #fff; font-weight: 800; }
         .auth-hidden { display: none !important; }
         @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .animate-slide { animation: slideIn 0.5s ease-out forwards; }
@@ -60,7 +56,6 @@
     <section id="authSection" class="max-w-md mx-auto mt-16 px-4 relative z-10">
         <div class="glass p-8 rounded-3xl shadow-2xl text-center">
             <h2 class="text-3xl font-bold mb-2">Member Portal</h2>
-            <p class="text-gray-400 mb-8">Sign in to read and earn daily points.</p>
             <div class="space-y-3">
                 <input type="email" id="email" placeholder="Email" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500">
                 <input type="password" id="password" placeholder="Password" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500">
@@ -79,29 +74,17 @@
         </div>
 
         <article class="glass rounded-3xl overflow-hidden shadow-2xl">
-            <div class="p-6 md:p-8 flex items-center gap-4 border-b border-gray-800">
-                <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center font-black">TW</div>
-                <div>
-                    <p class="font-bold">Agent Ghost <i class="fa-solid fa-circle-check text-blue-400"></i></p>
-                    <p class="text-xs text-gray-500 tracking-widest uppercase">Official Update</p>
-                </div>
-            </div>
-
             <div class="p-6 md:p-8">
-                <div class="rounded-2xl overflow-hidden mb-6">
-                    <img src="https://raw.githubusercontent.com/ChenulWeragodaSmartTechProfessional/techworld/main/play&earn.png" class="w-full" alt="Promo">
-                </div>
-                <div class="whatsapp-post" id="postText">
+                <div class="whatsapp-post">
                     <div class="aspect-video mb-4">
-                        <iframe class="w-full h-full rounded-xl" src="https://www.youtube.com/embed/mL3vmY3aqL4" title="Meet Smart Tech Professional" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        <iframe class="w-full h-full rounded-xl" src="https://www.youtube.com/embed/mL3vmY3aqL4" frameborder="0" allowfullscreen></iframe>
                     </div>
-                    <center class="font-bold text-blue-400">Join Our YouTube Channel.</center>
                 </div>
 
                 <section class="mt-12 pt-8 border-t border-slate-800">
                     <h4 class="text-xs font-bold text-slate-500 uppercase mb-6">Community Chat</h4>
                     <div class="flex gap-2 mb-8">
-                        <input type="text" id="commentMsg" placeholder="Say something..." class="flex-1 bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:border-blue-500">
+                        <input type="text" id="commentMsg" placeholder="Say something..." class="flex-1 bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-sm focus:border-blue-500 text-white">
                         <button id="postComment" class="bg-blue-600 px-6 py-3 rounded-xl font-bold text-sm">Post</button>
                     </div>
                     <div id="commentList" class="space-y-4"></div>
@@ -130,97 +113,99 @@
         const db = getDatabase(app);
         const provider = new GoogleAuthProvider();
 
-        // Auth Logic
+        // UI Logic
+        function showApp(isLoggedIn) {
+            document.getElementById('authSection').classList.toggle('auth-hidden', isLoggedIn);
+            document.getElementById('mainContent').classList.toggle('auth-hidden', !isLoggedIn);
+            document.getElementById('userHeader').classList.toggle('auth-hidden', !isLoggedIn);
+        }
+
+        // Auth
         document.getElementById('authBtn').onclick = async () => {
             const email = document.getElementById('email').value.trim();
             const pass = document.getElementById('password').value;
-            if(!email || !pass) return alert("Fill all fields");
-            
-            try { 
-                await signInWithEmailAndPassword(auth, email, pass); 
-            } catch (e) {
-                try {
-                    const res = await createUserWithEmailAndPassword(auth, email, pass);
-                    await sendEmailVerification(res.user);
-                    alert("Verification email sent! Check your inbox.");
-                    await signOut(auth);
-                } catch (err) { alert(err.message); }
-            }
+            try { await signInWithEmailAndPassword(auth, email, pass); } 
+            catch (e) { alert("Error: " + e.message); }
         };
 
-        document.getElementById('googleBtn').onclick = async () => { try { await signInWithPopup(auth, provider); } catch (e) { alert(e.message); } };
-        
+        document.getElementById('googleBtn').onclick = () => signInWithPopup(auth, provider);
         window.signOutUser = () => signOut(auth);
 
-       // State Listener
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        
-        document.getElementById('authSection').classList.add('auth-hidden');
-        document.getElementById('mainContent').classList.remove('auth-hidden');
-        document.getElementById('userHeader').classList.remove('auth-hidden');
-  
-        handlePoints(user);
-        loadComments();
-    } else {
-        document.getElementById('authSection').classList.remove('auth-hidden');
-        document.getElementById('mainContent').classList.add('auth-hidden');
-        document.getElementById('userHeader').classList.add('auth-hidden');
-    }
-});
-
-        async function handlePoints(user) {
-    const userRef = ref(db, 'users/' + user.uid);
-    // Use the exact date format in your DB: YYYY-MM-DD
-    const today = new Date().toISOString().split('T')[0];
-    const displayElement = document.getElementById('displayPoints');
-    const rewardMsg = document.getElementById('rewardMsg');
-    
-    try {
-        const snap = await get(userRef);
-        
-        if (snap.exists()) {
-            const data = snap.val();
-            let currentPoints = Number(data.points) || 0;
-
-            // Show what they currently have immediately
-            if (displayElement) displayElement.textContent = currentPoints + " PTS";
-
-            // If the date in DB ("2026-05-04") is NOT today ("2026-05-05")
-            if (data.lastLogin !== today) {
-                const newTotal = currentPoints + 5;
-                
-                await update(userRef, { 
-                    points: newTotal, 
-                    lastLogin: today,
-                    email: user.email 
-                });
-
-                // Update UI to the new total
-                if (displayElement) displayElement.textContent = newTotal + " PTS";
-                if (rewardMsg) rewardMsg.classList.remove('hidden');
+        // State Listener
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                showApp(true);
+                syncUserData(user); // Real-time points listener
+                handleDailyReward(user); // Daily check
+                loadComments(); // Fetch comments
+            } else {
+                showApp(false);
             }
-        } else {
-            // Logic for a completely new user ID not in your list yet
-            await set(userRef, {
-                points: 5,
-                lastLogin: today,
-                email: user.email,
-                displayName: user.displayName || user.email.split('@')[0]
+        });
+
+        // NEW: Real-time Point Sync
+        function syncUserData(user) {
+            const userRef = ref(db, 'users/' + user.uid);
+            onValue(userRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    document.getElementById('displayPoints').textContent = (data.points || 0) + " PTS";
+                }
             });
-            if (displayElement) displayElement.textContent = "5 PTS";
         }
-    } catch (error) {
-        console.error("Point system failure:", error);
-    }
-}
-        // Comments Logic
-        document.getElementById('postComment').onclick = () => {
+
+        // Daily Reward Logic
+        async function handleDailyReward(user) {
+            const userRef = ref(db, 'users/' + user.uid);
+            const today = new Date().toISOString().split('T')[0];
+            const snap = await get(userRef);
+            
+            if (snap.exists()) {
+                const data = snap.val();
+                if (data.lastLogin !== today) {
+                    await update(userRef, { 
+                        points: (data.points || 0) + 5, 
+                        lastLogin: today 
+                    });
+                    document.getElementById('rewardMsg').classList.remove('hidden');
+                }
+            } else {
+                await set(userRef, { points: 5, lastLogin: today, email: user.email });
+            }
+        }
+
+        // Comments Logic - Optimized to load every time
+        function loadComments() {
+            const commentRef = ref(db, 'comments');
+            onValue(commentRef, (snapshot) => {
+                const list = document.getElementById('commentList');
+                list.innerHTML = "";
+                const data = snapshot.val();
+                if (data) {
+                    // Convert object to array and reverse to see newest first
+                    Object.keys(data).reverse().forEach(key => {
+                        const c = data[key];
+                        const div = document.createElement('div');
+                        div.className = "bg-slate-900/40 p-4 rounded-2xl border border-white/5";
+                        div.innerHTML = `<span class="text-blue-400 font-bold text-xs">${c.user}</span><p class="text-slate-300 text-sm mt-1">${c.text}</p>`;
+                        list.appendChild(div);
+                    });
+                } else {
+                    list.innerHTML = "<p class='text-center text-gray-500 text-sm'>No comments yet.</p>";
+                }
+            });
+        }
+
+        document.getElementById('postComment').onclick = async () => {
             const input = document.getElementById('commentMsg');
             const text = input.value.trim();
-            if(text && auth.currentUser) {
+            if (text && auth.currentUser) {
+                // Fetch latest name from DB before posting
+                const userSnap = await get(ref(db, 'users/' + auth.currentUser.uid));
+                const name = userSnap.exists() ? (userSnap.val().displayName || auth.currentUser.email.split('@')[0]) : auth.currentUser.email.split('@')[0];
+                
                 push(ref(db, 'comments'), {
-                    user: auth.currentUser.displayName || auth.currentUser.email.split('@')[0],
+                    user: name,
                     text: text,
                     timestamp: serverTimestamp()
                 });
@@ -228,31 +213,7 @@ onAuthStateChanged(auth, (user) => {
             }
         };
 
-        function loadComments() {
-            onValue(ref(db, 'comments'), (snap) => {
-                const list = document.getElementById('commentList'); 
-                list.innerHTML = "";
-                const data = snap.val();
-                if(data) {
-                    Object.values(data).reverse().forEach(c => {
-                        const div = document.createElement('div');
-                        div.className = "bg-slate-900/40 p-4 rounded-2xl border border-white/5";
-                        div.innerHTML = `<span class="text-blue-400 font-bold text-xs">${c.user}</span><p class="text-slate-300 text-sm mt-1">${c.text}</p>`;
-                        list.appendChild(div);
-                    });
-                }
-            });
-        }
-
-        // UI Effects
-        particlesJS("particles-js", { 
-            "particles": { 
-                "number": { "value": 40 }, 
-                "color": { "value": "#3b82f6" }, 
-                "move": { "enable": true, "speed": 1 }, 
-                "line_linked": { "opacity": 0.2 } 
-            } 
-        });
+        particlesJS("particles-js", { "particles": { "number": { "value": 40 }, "color": { "value": "#3b82f6" }, "move": { "enable": true, "speed": 1 }, "line_linked": { "opacity": 0.2 } } });
     </script>
 </body>
 </html>
