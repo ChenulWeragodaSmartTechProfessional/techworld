@@ -171,38 +171,87 @@
             }
         });
 
-      // Points Logic
-async function handlePoints(user) {
-    const userRef = ref(db, 'users/' + user.uid);
-    const today = new Date().toISOString().split('T')[0];
-    const displayElement = document.getElementById('displayPoints');
-    const rewardMsg = document.getElementById('rewardMsg');
-    
-    try {
-        const snap = await get(userRef);
-        
-        if (snap.exists()) {
-            const data = snap.val();
-            const currentPoints = Number(data.points) || 0;
+     // Points Logic
+        async function handlePoints(user) {
+            const userRef = ref(db, 'users/' + user.uid);
+            const today = new Date().toISOString().split('T')[0];
+            const displayElement = document.getElementById('displayPoints');
+            const rewardMsg = document.getElementById('rewardMsg');
 
-            // Update UI with existing points immediately
-            displayElement.textContent = currentPoints + " PTS";
+            try {
+                const snap = await get(userRef);
 
-            // Check if user has already claimed today's points
-            if (data.lastLogin !== today) {
-                const newTotal = currentPoints + 5;
-                
-                await update(userRef, { 
-                    points: newTotal, 
-                    lastLogin: today,
-                    email: user.email 
-                });
+                if (snap.exists()) {
+                    const data = snap.val();
+                    const currentPoints = Number(data.points) || 0;
 
-                // Update UI for the reward
-                displayElement.textContent = newTotal + " PTS";
-                rewardMsg.classList.remove('hidden');
+                    // Update UI with existing points immediately
+                    displayElement.textContent = currentPoints + " PTS";
+
+                    // Check if user has already claimed today's points
+                    if (data.lastLogin !== today) {
+                        const newTotal = currentPoints + 5;
+
+                        await update(userRef, {
+                            points: newTotal,
+                            lastLogin: today,
+                            email: user.email
+                        });
+
+                        // Update UI for the reward
+                        displayElement.textContent = newTotal + " PTS";
+                        rewardMsg.classList.remove('hidden');
+                    }
+                } else {
+                    // New User Logic: Create their initial record and give first points
+                    const initialPoints = 5;
+                    await set(userRef, {
+                        points: initialPoints,
+                        lastLogin: today,
+                        email: user.email,
+                        createdAt: serverTimestamp()
+                    });
+
+                    displayElement.textContent = initialPoints + " PTS";
+                    rewardMsg.classList.remove('hidden');
+                }
+            } catch (err) {
+                console.error("Point Update Failed:", err.message);
             }
-        } else {
+        }
+
+        // Comments Logic
+        document.getElementById('postComment').onclick = () => {
+            const input = document.getElementById('commentMsg');
+            const text = input.value.trim();
+            if (text && auth.currentUser) {
+                push(ref(db, 'comments'), {
+                    user: auth.currentUser.displayName || auth.currentUser.email.split('@')[0],
+                    text: text,
+                    timestamp: serverTimestamp()
+                });
+                input.value = "";
+            }
+        };
+
+        function loadComments() {
+            onValue(ref(db, 'comments'), (snap) => {
+                const list = document.getElementById('commentList');
+                list.innerHTML = "";
+                const data = snap.val();
+                if (data) {
+                    Object.values(data).reverse().forEach(c => {
+                        const div = document.createElement('div');
+                        div.className = "bg-slate-900/40 p-4 rounded-2xl border border-white/5";
+                        div.innerHTML = `<span class="text-blue-400 font-bold text-xs">${c.user}</span><p class="text-slate-300 text-sm mt-1">${c.text}</p>`;
+                        list.appendChild(div);
+                    });
+                }
+            });
+        }
+
+        // UI Effects
+        particlesJS("particles-js", { "particles": { "number": { "value": 40 }, "color": { "value": "#3b82f6" }, "move": { "enable": true, "speed": 1 }, "line_linked": { "opacity": 0.2 } } });
             // New User Logic: Create their initial record and give first points
             const initialPoints = 5;
             await set(userRef, {
