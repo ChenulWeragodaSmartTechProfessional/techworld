@@ -152,25 +152,22 @@
         
         window.signOutUser = () => signOut(auth);
 
-        // State Listener
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                if (user.emailVerified || user.providerData[0].providerId === "google.com") {
-                    document.getElementById('authSection').classList.add('auth-hidden');
-                    document.getElementById('mainContent').classList.remove('auth-hidden');
-                    document.getElementById('userHeader').classList.remove('auth-hidden');
-                    handlePoints(user);
-                    loadComments();
-                } else {
-                    alert("Please verify your email!");
-                    signOut(auth);
-                }
-            } else {
-                document.getElementById('authSection').classList.remove('auth-hidden');
-                document.getElementById('mainContent').classList.add('auth-hidden');
-                document.getElementById('userHeader').classList.add('auth-hidden');
-            }
-        });
+       // State Listener
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        
+        document.getElementById('authSection').classList.add('auth-hidden');
+        document.getElementById('mainContent').classList.remove('auth-hidden');
+        document.getElementById('userHeader').classList.remove('auth-hidden');
+  
+        handlePoints(user);
+        loadComments();
+    } else {
+        document.getElementById('authSection').classList.remove('auth-hidden');
+        document.getElementById('mainContent').classList.add('auth-hidden');
+        document.getElementById('userHeader').classList.add('auth-hidden');
+    }
+});
 
         // Corrected Points Logic
         async function handlePoints(user) {
