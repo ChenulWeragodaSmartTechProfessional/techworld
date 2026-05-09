@@ -5,23 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: 'unsafe-inline' wss://*.firebaseio.com https://*.googleapis.com https://*.gstatic.com; script-src 'self' https: 'unsafe-inline' 'unsafe-eval';">
     <title>Tech World | Symbol Of Tech Revolution</title>
+    
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-   <style>
+    <style>
         body { background-color: #0f172a; color: #f8fafc; overflow-x: hidden; margin: 0; }
-                #particles-js {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: 0; 
-            pointer-events: none;
-        }
+        #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: 0; pointer-events: none; }
         nav, main, section { position: relative; z-index: 10; }
-
         .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
         .auth-hidden { display: none !important; }
         .gradient-text { background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -29,14 +21,13 @@
         .content-area h2 { color: #38bdf8; font-weight: bold; margin-top: 2rem; margin-bottom: 1rem; font-size: 1.25rem; }
         .content-area a { color: #818cf8; text-decoration: underline; word-break: break-all; }
     </style>
-    
 </head>
 
 <body class="font-sans">
     <div id="particles-js"></div>
+
     <nav class="p-6 flex justify-between items-center max-w-6xl mx-auto relative z-10">
         <h1 class="text-2xl font-bold uppercase gradient-text">Tech World</h1>
-        
         <div id="userHeader" class="auth-hidden flex items-center gap-4">
             <a href="profile.html" class="flex items-center gap-2 bg-slate-800/50 border border-white/10 px-4 py-1.5 rounded-full hover:bg-slate-700 transition">
                 <i class="fa-solid fa-user-circle text-blue-400"></i>
@@ -52,8 +43,19 @@
             <div class="space-y-3">
                 <input type="email" id="email" placeholder="Email" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500">
                 <input type="password" id="password" placeholder="Password" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500">
-                <button id="authBtn" class="w-full bg-blue-600 hover:bg-blue-500 py-3 rounded-xl font-bold transition">Sign In</button>
+                <button id="authBtn" class="w-full bg-blue-600 hover:bg-blue-500 py-3 rounded-xl font-bold transition">Sign In / Sign Up</button>
+                
+                <div class="flex items-center my-4">
+                    <div class="flex-1 border-t border-slate-700"></div>
+                    <span class="px-3 text-slate-500 text-xs uppercase">Or</span>
+                    <div class="flex-1 border-t border-slate-700"></div>
+                </div>
+
+                <button id="googleBtn" class="w-full bg-white text-slate-900 hover:bg-slate-100 py-3 rounded-xl font-bold transition flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-google text-red-500"></i> Continue with Google
+                </button>
             </div>
+            <p class="mt-4 text-[10px] text-slate-500 italic">Verify your email to access the Revolution.</p>
         </div>
     </section>
 
@@ -64,22 +66,16 @@
 
         <article class="glass rounded-3xl overflow-hidden shadow-2xl mb-8">
             <div class="p-6 md:p-10">
-                
                 <div class="flex items-center justify-between mb-8 pb-6 border-b border-white/5">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold shadow-lg shadow-blue-500/20">
-                            AG
-                        </div>
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold">AG</div>
                         <div>
                             <p class="text-sm font-bold text-slate-200">Agent Ghost</p>
-                            <p class="text-[10px] text-blue-400 font-bold uppercase tracking-wider">Official Publisher</p>
+                            <p class="text-[10px] text-blue-400 font-bold uppercase">Official Publisher</p>
                         </div>
                     </div>
-                    <div class="text-right">
-                        <div class="flex items-center gap-2 text-slate-500 text-xs font-medium">
-                            <i class="fa-regular fa-clock"></i>
-                            <span>May 9, 2026 • 08:15 AM</span>
-                        </div>
+                    <div class="text-slate-500 text-xs font-medium">
+                        <i class="fa-regular fa-clock"></i> May 9, 2026 • 08:15 AM
                     </div>
                 </div>
 
@@ -89,51 +85,36 @@
                     <p>Dark Web එක ගැන ගොඩක් අය අහලා තිබුණට, ඒක ඇතුළේ මොකද වෙන්නේ කියලා හරියටම දන්නේ පොඩි දෙනයි. ඔන්න අද අපි කතා කරමු මොකක්ද මේ Dark Web කියන්නේ සහ ඒකට යන්න කලින් දැනගන්නම ඕන ආරක්ෂිත පියවර ගැන.</p>
                     
                     <h2>🕸️ මොකක්ද මේ Dark Web කියන්නේ?</h2>
-                    <p>අපි සාමාන්‍යයෙන් Google, YouTube යන ඒවා අයිති වෙන්නේ "Surface Web" එකට.(ඕක ගැන අපි කලින් කියලා තියෙනවනේ.) හැමෝටම පේන හරිය ඒක. හැබැයි අන්තර්ජාලයේ තව ලොකු කොටසක් තියෙනවා සාමාන්‍ය Search Engine වලට අහු නොවන. ඒක තමයි Dark Web එක. මෙතැනදී හැමෝම ඉන්නේ නිර්නාමිකව (Anonymous).</p>
+                    <p>අපි සාමාන්‍යයෙන් Google, YouTube යන ඒවා අයිති වෙන්නේ "Surface Web" එකට. හැමෝටම පේන හරිය ඒක. හැබැයි අන්තර්ජාලයේ තව ලොකු කොටසක් තියෙනවා සාමාන්‍ය Search Engine වලට අහු නොවන. ඒක තමයි Dark Web එක. මෙතැනදී හැමෝම ඉන්නේ නිර්නාමිකව (Anonymous).</p>
 
                     <h2>🛡️ කොහොමද Dark Web එකට යන්නේ?</h2>
                     <p>Dark Web එකට යන එක ලේසි වුණාට, එතැනදී ඔයාගේ ආරක්ෂාව තහවුරු කරගන්න එක අමාරුයි. ඔයාට ඔයාගේ වටිනා තොරතුරු ආරක්ෂා කරගන්න ඕනෙනම් මේ දේවල් අනිවාර්යයෙන් කරන්න.</p>
 
                     <p><strong>1. Tor Browser එක භාවිතා කරන්න.</strong><br>
-                    සාමාන්‍ය Chrome හරි Safari වගේ ඒවා වලින් මේකට යන්න බැහැ. අනිවාර්යයෙන්ම Tor (The Onion Router) Browser එක ඕන.</p>
-
-                    <p><strong>📥 Tor Browser එක Download කරගන්නේ කොහොමද?</strong><br>
-                    Android වලට: <a href="https://play.google.com/store/apps/details?id=org.torproject.torbrowser" target="_blank">Download Tor Browser</a><br>
-                    Windows/Mac/Linux වලට: <a href="https://www.torproject.org/download/" target="_blank">TorProject.org</a></p>
+                    අනිවාර්යයෙන්ම Tor (The Onion Router) Browser එක ඕන.</p>
 
                     <p><strong>2. හොඳ VPN එකක් පාවිච්චි කරන්න.</strong><br>
                     Tor එකට යන්න කලින් VPN එකක් On කරගන්න. එතකොට ඔයාගේ Internet Provider වුණත් දන්නේ නැහැ ඔයා Dark Web එකට ගියා කියලා.</p>
-
-                    <p><strong>🛡️ හොඳ VPN මොනවද?</strong><br>
-                    Proton VPN: <a href="https://play.google.com/store/apps/details?id=ch.protonvpn.android" target="_blank">Download Proton VPN</a><br>
-                    Windscribe VPN: <a href="https://play.google.com/store/apps/details?id=com.windscribe.vpn" target="_blank">Download Windscribe VPN</a><br>
-                    TunnelBear: <a href="https://play.google.com/store/apps/details?id=com.tunnelbear.android" target="_blank">Download TunnelBear</a></p>
 
                     <p><strong>3. පෞද්ගලික තොරතුරු දෙන්න එපා.</strong><br>
                     ඔයාගේ ඇත්ත නම, Email, Phone Number හෝ කිසිම Password එකක් එතැනදී පාවිච්චි කරන්න එපා.</p>
 
                     <p><strong>4. Webcam එක වහන්න.</strong><br>
-                    මේක ටිකක් බය හිතෙන වැඩක් වුණාට, Dark Web එකේ ඉන්න Hackers ලාගෙන් බේරෙන්න කැමරාව Cover කරලා තියාගන්න එක ආරක්ෂිතයි. ලින්ක් Click කරනකොට ඔය ඔලුගෙඩිය අස්සේ තියෙන එක පාවිච්චි කරන්න🧠.</p>
+                    Dark Web එකේ ඉන්න Hackers ලාගෙන් බේරෙන්න කැමරාව Cover කරලා තියාගන්න එක ආරක්ෂිතයි. ලින්ක් Click කරනකොට ඔය ඔලුගෙඩිය අස්සේ තියෙන එක පාවිච්චි කරන්න🧠.</p>
 
                     <div class="bg-red-500/20 border border-red-500/50 p-4 rounded-xl my-6">
                         <p class="text-red-400 font-bold mb-0">⚠️ විශේෂ අවවාදයයි!</p>
-                        <p class="text-sm mb-0">Dark Web එකේ නීති විරෝධී දේවල් ඕනෑතරම් තියෙනවා. ඒ වගේ දේවල් වලට සම්බන්ධ වීම ලොකු කරදරයකට අතවැනීමක් වෙන්න පුළුවන්. ඒ නිසා නිකමටවත් නීති විරෝධී වෙබ් අඩවි වලට යන්න එපා.(අහු උණොත් මම වගකියන්නේ නෑ.)</p>
+                        <p class="text-sm mb-0">Dark Web එකේ නීති විරෝධී දේවල් ඕනෑතරම් තියෙනවා. ඒ වගේ දේවල් වලට සම්බන්ධ වීම ලොකු කරදරයකට අතවැනීමක් වෙන්න පුළුවන්. ඒ නිසා නිකමටවත් නීති විරෝධී වෙබ් අඩවි වලට යන්න එපා.</p>
                     </div>
 
-                    <p><strong>5. හරි. අපි ඊලගට යමු කොහොමද Dark Web එකේ Page එකකට යන්නේ කියලා.</strong><br>
-                    ඒකට අපි පාවිච්චි කරනවා <strong>Hidden Wiki</strong> කියන එක.</p>
-
-                    <p><strong>📖 මොකක්ද මේ Hidden Wiki කියන්නේ?</strong><br>
-                    Dark Web එකේ ලින්ක් ඉවර වෙන්නේ .com වලින් නෙවෙයි, .onion කියන extension එකෙන්. Hidden Wiki එකේ හොඳ ලින්ක් වගේම ගොඩක් නරක සහ Scam ලින්ක් තියෙනවා.<br>
-                    HiddenWiki Site: <a href="https://thehidden-wiki.org/wiki/index.php/Main_Page" target="_blank">Hidden Wiki Site</a></p>
-
-                    <p><strong>6. යන්න කලින් මතක තියාගන්න Tor Browser එකේ Security Settings වල Safest Mode එක පාවිච්චි කරන්න.</strong></p>
+                    <p><strong>5. Hidden Wiki භාවිතා කිරීම.</strong><br>
+                    Dark Web එකේ ලින්ක් ඉවර වෙන්නේ .onion කියන extension එකෙන්. Hidden Wiki එකේ ලින්ක් ගොඩක් තියෙනවා.</p>
 
                     <p class="text-blue-400 font-bold mt-8">හො.ම.ත.ග.යු----> කුතුහලයට ගියත්, ඔයාගේ පෞද්ගලික ආරක්ෂාව තමයි අංක 1. 🛡️💻</p>
-
 ᴏᴡɴᴇʀ | ᴀɢᴇɴᴛ ɢʜᴏsᴛ<br>
 🚫 Don't Copy This<br>
-🔥 𝐓𝐄𝐂𝐇 🌐 𝐖𝐎𝐑𝐋𝐃 ⚙️𝚂𝚈𝙼𝙱𝙾𝙻 𝙾𝙵 𝚃𝙴𝙲𝙷 𝚁𝙴𝚅𝙾𝙻𝚄𝚃𝙸𝙾𝙽.......
+🔥 𝐓𝐄𝐂𝐇 🌐 𝐖𝐎𝐑𝐋𝐃 ⚙️𝚂𝚈𝙼𝙱𝙾𝙻 𝙾𝙵 𝚃𝙴𝙲𝙷 𝚁𝙴𝚅𝙾𝙻𝚄𝚃𝙸𝙾𝙽.......<br>
+
                 </div>
 
                 <section class="mt-12 pt-8 border-t border-slate-800">
@@ -148,156 +129,122 @@
         </article>
     </main>
 
-   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { 
-        getAuth, 
-        signInWithEmailAndPassword, 
-        createUserWithEmailAndPassword, 
-        sendEmailVerification, 
-        onAuthStateChanged, 
-        signOut 
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getDatabase, ref, onValue, push, get, set, update, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { 
+            getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, 
+            sendEmailVerification, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup 
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, ref, onValue, push, get, set, update, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyDM4BWnLf6jGycrMdQClWtq-Ra2iDidWsQ",
-        authDomain: "tech-world-93ee6.firebaseapp.com",
-        databaseURL: "https://tech-world-93ee6-default-rtdb.firebaseio.com",
-        projectId: "tech-world-93ee6",
-        storageBucket: "tech-world-93ee6.firebasestorage.app",
-        appId: "1:912275465700:web:5ec12525e03446712153f1"
-    };
+        const firebaseConfig = {
+            apiKey: "AIzaSyDM4BWnLf6jGycrMdQClWtq-Ra2iDidWsQ",
+            authDomain: "tech-world-93ee6.firebaseapp.com",
+            databaseURL: "https://tech-world-93ee6-default-rtdb.firebaseio.com",
+            projectId: "tech-world-93ee6",
+            storageBucket: "tech-world-93ee6.firebasestorage.app",
+            appId: "1:912275465700:web:5ec12525e03446712153f1"
+        };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getDatabase(app);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+        const googleProvider = new GoogleAuthProvider();
 
-    // Modified Auth Logic: Handles both Sign In and Sign Up
-    document.getElementById('authBtn').onclick = async () => {
-        const email = document.getElementById('email').value;
-        const pass = document.getElementById('password').value;
+        document.getElementById('googleBtn').onclick = async () => {
+            try { await signInWithPopup(auth, googleProvider); } catch (err) { alert("Tech World: " + err.message); }
+        };
 
-        if(!email || !pass) return alert("Please fill all fields");
+        document.getElementById('authBtn').onclick = async () => {
+            const email = document.getElementById('email').value.trim();
+            const pass = document.getElementById('password').value.trim();
+            if(!email || !pass) return alert("Tech World: Enter credentials.");
 
-        try {
-            // Try to sign in first
-            await signInWithEmailAndPassword(auth, email, pass);
-        } catch (error) {
-            // If user doesn't exist, create a new account (Sign Up)
-            if (error.code === 'auth/user-not-found') {
-                try {
-                    const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-                    // Send Verification Email
-                    await sendEmailVerification(userCredential.user);
-                    alert("Tech World says: Verification email sent! Please check your inbox and verify your account before logging in.");
-                    await signOut(auth); // Force logout until verified
-                } catch (regError) {
-                    alert(regError.message);
+            try {
+                const res = await signInWithEmailAndPassword(auth, email, pass);
+                if (!res.user.emailVerified) {
+                    alert("Tech World: Please verify your email first!");
+                    await signOut(auth);
                 }
-            } else {
-                alert(error.message);
+            } catch (error) {
+                if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+                    try {
+                        const newUser = await createUserWithEmailAndPassword(auth, email, pass);
+                        await sendEmailVerification(newUser.user);
+                        alert("Tech World says: Verification email sent! Please check your inbox and verify your account.");
+                        await signOut(auth);
+                    } catch (regErr) { alert("Tech World: " + regErr.message); }
+                } else { alert("Tech World: " + error.message); }
             }
-        }
-    };
+        };
 
-    window.signOutUser = () => signOut(auth);
+        window.signOutUser = () => signOut(auth);
 
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            // Check if email is verified
-            if (user.emailVerified) {
-                document.getElementById('authSection').classList.add('auth-hidden');
-                document.getElementById('mainContent').classList.remove('auth-hidden');
-                document.getElementById('userHeader').classList.remove('auth-hidden');
-                setupRealtimeListeners(user);
-                handleDailyReward(user);
-            } else {
-                // If logged in but not verified
-                alert("Tech World: Your email is not verified yet. Check your inbox!");
-                signOut(auth);
-            }
-        } else {
-            document.getElementById('authSection').classList.remove('auth-hidden');
-            document.getElementById('mainContent').classList.add('auth-hidden');
-            document.getElementById('userHeader').classList.add('auth-hidden');
-        }
-    });
-
-  
-    function setupRealtimeListeners(user) {
-        onValue(ref(db, 'users/' + user.uid), (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                document.getElementById('displayPoints').textContent = (data.points || 0) + " PTS";
-            }
+        onAuthStateChanged(auth, (user) => {
+            const isVerified = user && user.emailVerified;
+            document.getElementById('authSection').classList.toggle('auth-hidden', isVerified);
+            document.getElementById('mainContent').classList.toggle('auth-hidden', !isVerified);
+            document.getElementById('userHeader').classList.toggle('auth-hidden', !isVerified);
+            if (isVerified) { setupRealtimeListeners(user); handleDailyReward(user); }
         });
 
-        onValue(ref(db, 'comments'), (snapshot) => {
-            const list = document.getElementById('commentList');
-            list.innerHTML = "";
-            const data = snapshot.val();
-            if (data) {
-                Object.keys(data).reverse().forEach(key => {
-                    const c = data[key];
-                    const div = document.createElement('div');
-                    div.className = "bg-slate-900/40 p-4 rounded-2xl border border-white/5";
-                    div.innerHTML = `<p class="text-blue-400 font-bold text-xs">${c.user}</p>
-                                     <p class="text-slate-300 text-sm mt-1">${c.text}</p>`;
-                    list.appendChild(div);
-                });
-            }
-        });
-    }
-
-    async function handleDailyReward(user) {
-        const today = new Date().toISOString().split('T')[0];
-        const userRef = ref(db, 'users/' + user.uid);
-        const snap = await get(userRef);
-        if (snap.exists()) {
-            const data = snap.val();
-            if (data.lastLogin !== today) {
-                await update(userRef, { points: (data.points || 0) + 5, lastLogin: today });
-                document.getElementById('rewardMsg').classList.remove('hidden');
-            }
-        } else {
-            await set(userRef, { points: 5, lastLogin: today, email: user.email });
+        function setupRealtimeListeners(user) {
+            onValue(ref(db, 'users/' + user.uid), (snap) => {
+                const d = snap.val();
+                if (d) document.getElementById('displayPoints').textContent = (d.points || 0) + " PTS";
+            });
+            onValue(ref(db, 'comments'), (snap) => {
+                const list = document.getElementById('commentList');
+                list.innerHTML = "";
+                const d = snap.val();
+                if (d) {
+                    Object.keys(d).reverse().forEach(k => {
+                        const c = d[k];
+                        const div = document.createElement('div');
+                        div.className = "bg-slate-900/40 p-4 rounded-2xl border border-white/5";
+                        div.innerHTML = `<p class="text-blue-400 font-bold text-xs">${c.user}</p><p class="text-slate-300 text-sm mt-1">${c.text}</p>`;
+                        list.appendChild(div);
+                    });
+                }
+            });
         }
-    }
 
-    document.getElementById('postComment').onclick = async () => {
-        const input = document.getElementById('commentMsg');
-        const text = input.value.trim();
-        if (text && auth.currentUser) {
-            const userSnap = await get(ref(db, 'users/' + auth.currentUser.uid));
-            const name = userSnap.exists() ? (userSnap.val().displayName || auth.currentUser.email.split('@')[0]) : auth.currentUser.email.split('@')[0];
-            push(ref(db, 'comments'), { user: name, text: text, timestamp: serverTimestamp() });
-            input.value = "";
+        async function handleDailyReward(user) {
+            const today = new Date().toISOString().split('T')[0];
+            const userRef = ref(db, 'users/' + user.uid);
+            const snap = await get(userRef);
+            if (snap.exists()) {
+                const d = snap.val();
+                if (d.lastLogin !== today) {
+                    await update(userRef, { points: (d.points || 0) + 5, lastLogin: today });
+                    document.getElementById('rewardMsg').classList.remove('hidden');
+                }
+            } else { await set(userRef, { points: 5, lastLogin: today, email: user.email }); }
         }
-    };
-</script>
+
+        document.getElementById('postComment').onclick = async () => {
+            const input = document.getElementById('commentMsg');
+            if (input.value.trim() && auth.currentUser) {
+                push(ref(db, 'comments'), { user: auth.currentUser.email.split('@')[0], text: input.value, timestamp: serverTimestamp() });
+                input.value = "";
+            }
+        };
+    </script>
+
     <script>
         particlesJS("particles-js", {
             "particles": {
-                "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+                "number": { "value": 80 },
                 "color": { "value": "#38bdf8" },
                 "shape": { "type": "circle" },
-                "opacity": { "value": 0.5, "random": false },
-                "size": { "value": 3, "random": true },
+                "opacity": { "value": 0.5 },
+                "size": { "value": 3 },
                 "line_linked": { "enable": true, "distance": 150, "color": "#38bdf8", "opacity": 0.4, "width": 1 },
-                "move": { "enable": true, "speed": 2, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
+                "move": { "enable": true, "speed": 2 }
             },
             "interactivity": {
                 "detect_on": "canvas",
-                "events": { 
-                    "onhover": { "enable": true, "mode": "repulse" }, 
-                    "onclick": { "enable": true, "mode": "push" }, 
-                    "resize": true 
-                },
-                "modes": { 
-                    "repulse": { "distance": 100, "duration": 0.4 }, 
-                    "push": { "particles_nb": 4 } 
-                }
+                "events": { "onhover": { "enable": true, "mode": "repulse" }, "onclick": { "enable": true, "mode": "push" } }
             },
             "retina_detect": true
         });
