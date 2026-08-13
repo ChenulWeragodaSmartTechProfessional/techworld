@@ -31,52 +31,58 @@
     </main>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, get, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDM4BWnLf6jGycrMdQClWtq-Ra2iDidWsQ",
-            authDomain: "tech-world-93ee6.firebaseapp.com",
-            databaseURL: "https://tech-world-93ee6-default-rtdb.firebaseio.com",
-            projectId: "tech-world-93ee6",
-            storageBucket: "tech-world-93ee6.firebasestorage.app",
-            appId: "1:912275465700:web:5ec12525e03446712153f1"
-        };
+    const firebaseConfig = {
+        apiKey: "AIzaSyDM4BWnLf6jGycrMdQClWtq-Ra2iDidWsQ",
+        authDomain: "tech-world-93ee6.firebaseapp.com",
+        databaseURL: "https://tech-world-93ee6-default-rtdb.firebaseio.com",
+        projectId: "tech-world-93ee6",
+        storageBucket: "tech-world-93ee6.firebasestorage.app",
+        appId: "1:912275465700:web:5ec12525e03446712153f1"
+    };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
-        // Fetch post ID from URL (?id=...)
-        const urlParams = new URLSearchParams(window.location.search);
-        const postId = urlParams.get('id');
+    const urlParams = new URLSearchParams(window.location.search);
+    const postId = urlParams.get('id');
+    const container = document.getElementById('postContainer');
 
-        const container = document.getElementById('postContainer');
+    if (!postId) {
+        container.innerHTML = `<p class="text-red-400 font-bold">Error: No post specified.</p>`;
+    } else {
+        // Increment total view count dynamically
+        const viewsRef = ref(db, `posts/${postId}/views`);
+        runTransaction(viewsRef, (currentViews) => {
+            return (currentViews || 0) + 1;
+        });
 
-        if (!postId) {
-            container.innerHTML = `<p class="text-red-400 font-bold">Error: No post specified.</p>`;
-        } else {
-            get(ref(db, 'posts/' + postId)).then((snapshot) => {
-                if (snapshot.exists()) {
-                    const post = snapshot.val();
-                    const imgHtml = post.imageUrl ? `<img src="${post.imageUrl}" class="w-full h-64 object-cover rounded-2xl mb-8 border border-white/10">` : '';
+        // Load article content
+        get(ref(db, 'posts/' + postId)).then((snapshot) => {
+            if (snapshot.exists()) {
+                const post = snapshot.val();
+                const imgHtml = post.imageUrl ? `<img src="${post.imageUrl}" class="w-full h-64 object-cover rounded-2xl mb-8 border border-white/10">` : '';
 
-                    container.innerHTML = `
-                        ${imgHtml}
-                        <h1 class="text-3xl md:text-4xl font-bold text-blue-400 mb-4">${post.title || 'Untitled Article'}</h1>
-                        <div class="text-xs text-slate-400 mb-8 border-b border-white/10 pb-4 flex items-center gap-4">
-                            <span><i class="fa-solid fa-user text-blue-400 mr-1"></i> ${post.author || 'Admin'}</span>
-                        </div>
-                        <div class="content-area text-slate-300">
-                            ${post.content || ''}
-                        </div>
-                    `;
-                } else {
-                    container.innerHTML = `<p class="text-red-400 font-bold">Article not found in database.</p>`;
-                }
-            }).catch((error) => {
-                container.innerHTML = `<p class="text-red-400">Error loading article: ${error.message}</p>`;
-            });
-        }
-    </script>
+                container.innerHTML = `
+                    ${imgHtml}
+                    <h1 class="text-3xl md:text-4xl font-bold text-blue-400 mb-4">${post.title || 'Untitled Article'}</h1>
+                    <div class="text-xs text-slate-400 mb-8 border-b border-white/10 pb-4 flex items-center justify-between">
+                        <span><i class="fa-solid fa-user text-blue-400 mr-1"></i> ${post.author || 'Admin'}</span>
+                        <span><i class="fa-solid fa-eye text-blue-400 mr-1"></i> ${(post.views || 0) + 1} views</span>
+                    </div>
+                    <div class="content-area text-slate-300">
+                        ${post.content || ''}
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `<p class="text-red-400 font-bold">Article not found in database.</p>`;
+            }
+        }).catch((error) => {
+            container.innerHTML = `<p class="text-red-400">Error loading article: ${error.message}</p>`;
+        });
+    }
+</script>
 </body>
 </html>
