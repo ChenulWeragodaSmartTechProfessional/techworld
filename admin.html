@@ -171,7 +171,7 @@
 
         document.getElementById('logoutBtn').onclick = () => signOut(auth);
 
-        // Fetch post list and render options (Edit, Delete, Views)
+        // Fetch post list and render options (Edit, Delete, Views, Likes)
         function loadManagePosts() {
             onValue(ref(db, 'posts'), (snapshot) => {
                 const listContainer = document.getElementById('managePostsList');
@@ -186,15 +186,21 @@
                 Object.keys(postsDataCache).reverse().forEach((id) => {
                     const post = postsDataCache[id];
                     const views = post.views || 0;
+                    const likes = post.likes || 0;
 
                     const card = document.createElement('div');
                     card.className = "flex items-center justify-between p-3.5 bg-slate-900/80 border border-slate-700/60 rounded-xl gap-4";
                     card.innerHTML = `
                         <div class="overflow-hidden flex-1">
                             <h3 class="font-bold text-sm text-slate-200 truncate">${post.title || 'Untitled'}</h3>
-                            <span class="text-xs text-blue-400 font-semibold inline-flex items-center gap-1.5 mt-1">
-                                <i class="fa-solid fa-eye"></i> ${views} ${views === 1 ? 'view' : 'views'}
-                            </span>
+                            <div class="flex items-center gap-3 mt-1 text-xs font-semibold">
+                                <span class="text-blue-400 inline-flex items-center gap-1">
+                                    <i class="fa-solid fa-eye"></i> ${views} ${views === 1 ? 'view' : 'views'}
+                                </span>
+                                <span class="text-rose-400 inline-flex items-center gap-1">
+                                    <i class="fa-solid fa-heart"></i> ${likes} ${likes === 1 ? 'like' : 'likes'}
+                                </span>
+                            </div>
                         </div>
                         <div class="flex items-center gap-2">
                             <button onclick="window.startEditing('${id}')" class="text-xs bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/30 px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1">
@@ -282,6 +288,7 @@
                         content: contentHtml,
                         author: auth.currentUser.email,
                         views: 0,
+                        likes: 0,
                         timestamp: serverTimestamp()
                     });
                     alert("🎉 Post published live!");
