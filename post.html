@@ -3,64 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexyora Labs | Reading Article</title>
-
+    <title>Nexyora Labs | Article View</title>
+    <link rel="icon" type="image/x-icon" href="/techworld.jpeg">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
     <style>
-        body { 
-            background-color: #0b0f19; 
-            color: #f8fafc; 
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; 
-        }
-        .glass { 
-            background: rgba(17, 24, 39, 0.7); 
-            backdrop-filter: blur(16px); 
-            border: 1px solid rgba(255, 255, 255, 0.08); 
-        }
-        .glass-card {
-            background: rgba(30, 41, 59, 0.5);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        .content-area p { margin-bottom: 1.25rem; line-height: 1.75; }
-        .content-area h1 { font-size: 1.875rem; font-weight: 800; margin-top: 1.5rem; margin-bottom: 1rem; color: #fff; }
-        .content-area h2 { font-size: 1.5rem; font-weight: 700; margin-top: 1.25rem; margin-bottom: 0.75rem; color: #f3f4f6; }
-        .content-area h3 { font-size: 1.25rem; font-weight: 600; margin-top: 1rem; margin-bottom: 0.5rem; color: #e5e7eb; }
-        .content-area ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1.25rem; }
-        .content-area ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1.25rem; }
-        .content-area a { color: #38bdf8; text-decoration: underline; }
+        body { background-color: #0f172a; color: #f8fafc; margin: 0; min-height: 100vh; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .gradient-text { background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between p-4 md:p-8">
+<body class="font-sans pb-20">
 
-    <header class="max-w-4xl mx-auto w-full glass rounded-2xl px-6 py-4 flex justify-between items-center mb-8 shadow-2xl">
-        <a href="/index.html" class="flex items-center gap-3 group">
-            <div class="w-10 h-10 bg-gradient-to-tr from-blue-600 to-indigo-500 rounded-xl flex items-center justify-center font-black text-xl text-white shadow-lg shadow-blue-500/20 group-hover:scale-105 transition">
-                N
-            </div>
-            <span class="font-extrabold text-xl tracking-wider text-white">NEXYORA LABS</span>
+    <nav class="p-6 flex justify-between items-center max-w-4xl mx-auto">
+        <a href="index.html" class="text-2xl font-bold uppercase gradient-text flex items-center gap-2">
+            <i class="fa-solid fa-arrow-left text-sm text-sky-400"></i> Nexyora Labs
         </a>
+    </nav>
 
-        <a href="/index.html" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 border border-white/10 px-4 py-2 rounded-xl font-bold transition flex items-center gap-2">
-            <i class="fa-solid fa-arrow-left"></i> All Articles
-        </a>
-    </header>
-
-    <main class="max-w-4xl mx-auto w-full flex-1">
-        <article id="postContainer" class="glass-card rounded-3xl p-6 md:p-10 shadow-2xl">
-            <div class="animate-pulse space-y-4">
-                <div class="h-8 bg-slate-700 rounded w-3/4"></div>
-                <div class="h-4 bg-slate-700 rounded w-1/4"></div>
-                <div class="h-40 bg-slate-700 rounded w-full"></div>
-            </div>
-        </article>
+    <main class="max-w-3xl mx-auto px-4 mt-6">
+        <div id="postContainer" class="glass rounded-3xl p-6 md:p-10 shadow-2xl">
+            <p class="text-slate-400 text-sm">Loading article...</p>
+        </div>
     </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, get, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDM4BWnLf6jGycrMdQClWtq-Ra2iDidWsQ",
@@ -72,61 +42,100 @@
         };
 
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getDatabase(app);
 
         const urlParams = new URLSearchParams(window.location.search);
         const postId = urlParams.get('id');
-        const container = document.getElementById('postContainer');
 
-        if (!postId) {
-            container.innerHTML = `<p class="text-red-400 font-bold">Error: No article specified.</p>`;
-        } else {
-            // Increment view count
-            const viewsRef = ref(db, `posts/${postId}/views`);
-            runTransaction(viewsRef, (currentViews) => (currentViews || 0) + 1);
+        let currentUser = null;
+        let viewIncremented = false;
 
-            // Fetch and display post content
-            get(ref(db, 'posts/' + postId)).then((snapshot) => {
-                if (snapshot.exists()) {
-                    const post = snapshot.val();
-                    const imgHtml = post.imageUrl ? `<img src="${post.imageUrl}" class="w-full h-64 md:h-96 object-cover rounded-2xl mb-8 border border-white/10 shadow-lg">` : '';
-
-                    container.innerHTML = `
-                        ${imgHtml}
-                        <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-4 leading-tight">${post.title || 'Untitled Article'}</h1>
-                        
-                        <div class="text-xs text-slate-400 mb-8 border-b border-white/10 pb-4 flex items-center justify-between">
-                            <span><i class="fa-solid fa-user text-blue-400 mr-1"></i> ${post.author || 'Admin'}</span>
-                            <span><i class="fa-solid fa-eye text-blue-400 mr-1"></i> ${(post.views || 0) + 1} views</span>
-                        </div>
-
-                        <div class="content-area text-slate-300 mb-10">
-                            ${post.content || ''}
-                        </div>
-
-                        <div class="pt-6 border-t border-white/10 flex items-center justify-between">
-                            <button id="likeBtn" class="bg-rose-600/20 hover:bg-rose-600 text-rose-400 hover:text-white border border-rose-500/30 px-5 py-2.5 rounded-xl font-bold transition flex items-center gap-2 text-sm shadow-lg">
-                                <i class="fa-solid fa-heart"></i> Like Article
-                            </button>
-                            <span id="likeCountDisplay" class="text-xs text-slate-400 font-semibold">
-                                <i class="fa-solid fa-heart text-rose-500 mr-1"></i> ${post.likes || 0} Likes
-                            </span>
-                        </div>
-                    `;
-
-                    // Live Like counter handler
-                    document.getElementById('likeBtn').onclick = async () => {
-                        const likesRef = ref(db, `posts/${postId}/likes`);
-                        const result = await runTransaction(likesRef, (currentLikes) => (currentLikes || 0) + 1);
-                        const newLikes = result.snapshot.val();
-                        document.getElementById('likeCountDisplay').innerHTML = `<i class="fa-solid fa-heart text-rose-500 mr-1"></i> ${newLikes} Likes`;
-                    };
-
-                } else {
-                    container.innerHTML = `<p class="text-red-400 font-bold">Article not found in database.</p>`;
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            if (postId) {
+                // Increment view count once per page load
+                if (!viewIncremented) {
+                    incrementViews(postId);
+                    viewIncremented = true;
                 }
-            }).catch((error) => {
-                container.innerHTML = `<p class="text-red-400">Error loading article: ${error.message}</p>`;
+                loadPostDetails(postId);
+            } else {
+                document.getElementById('postContainer').innerHTML = `<p class="text-red-400">Please log in to read full articles.</p>`;
+            }
+        });
+
+        // Safe view counter increment using transactions
+        function incrementViews(id) {
+            const viewsRef = ref(db, `posts/${id}/views`);
+            runTransaction(viewsRef, (currentViews) => {
+                return (currentViews || 0) + 1;
+            });
+        }
+
+        // Realtime loader for post content and likes
+        function loadPostDetails(id) {
+            const postRef = ref(db, `posts/${id}`);
+            onValue(postRef, (snapshot) => {
+                const post = snapshot.val();
+                const container = document.getElementById('postContainer');
+
+                if (!post) {
+                    container.innerHTML = `<p class="text-red-400">Article not found.</p>`;
+                    return;
+                }
+
+                const likeCount = post.likesCount || 0;
+                const viewCount = post.views || 0;
+                const userHasLiked = currentUser && post.likedBy && post.likedBy[currentUser.uid];
+
+                container.innerHTML = `
+                    <h1 class="text-3xl md:text-4xl font-bold mb-4 gradient-text">${post.title || 'Untitled Article'}</h1>
+                    
+                    <div class="flex items-center gap-6 text-xs text-slate-400 border-b border-white/10 pb-4 mb-6">
+                        <span><i class="fa-solid fa-eye text-sky-400 mr-1"></i> ${viewCount} Views</span>
+                        <span><i class="fa-solid fa-heart text-red-400 mr-1"></i> <span id="likeCountText">${likeCount}</span> Likes</span>
+                    </div>
+
+                    ${post.imageUrl ? `<img src="${post.imageUrl}" class="w-full max-h-96 object-cover rounded-2xl mb-6 border border-white/10" />` : ''}
+
+                    <div class="text-slate-200 leading-relaxed text-base whitespace-pre-line mb-8">
+                        ${post.content || ''}
+                    </div>
+
+                    <div class="border-t border-white/10 pt-6 flex items-center justify-between">
+                        <button id="likeBtn" class="flex items-center gap-2 ${userHasLiked ? 'bg-red-600' : 'bg-slate-800 hover:bg-slate-700'} px-6 py-2.5 rounded-full font-bold text-sm transition">
+                            <i class="fa-solid fa-heart ${userHasLiked ? 'text-white' : 'text-red-400'}"></i>
+                            <span id="likeBtnText">${userHasLiked ? 'Liked' : 'Like Post'}</span>
+                        </button>
+                    </div>
+                `;
+
+                document.getElementById('likeBtn').onclick = () => toggleLike(id);
+            });
+        }
+
+        // Toggle like status in Firebase
+        function toggleLike(id) {
+            if (!currentUser) return alert("Please log in to like posts.");
+
+            const postRef = ref(db, `posts/${id}`);
+            runTransaction(postRef, (post) => {
+                if (post) {
+                    if (!post.likedBy) post.likedBy = {};
+                    if (!post.likesCount) post.likesCount = 0;
+
+                    if (post.likedBy[currentUser.uid]) {
+                        // Unlike
+                        post.likesCount = Math.max(0, post.likesCount - 1);
+                        delete post.likedBy[currentUser.uid];
+                    } else {
+                        // Like
+                        post.likesCount = (post.likesCount || 0) + 1;
+                        post.likedBy[currentUser.uid] = true;
+                    }
+                }
+                return post;
             });
         }
     </script>
