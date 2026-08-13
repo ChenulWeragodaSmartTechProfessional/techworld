@@ -3,86 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexyora Labs | Article View</title>
-    
+    <title>Nexyora Labs | Reading Article</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
+
     <style>
-        body { background-color: #0f172a; color: #f8fafc; font-family: sans-serif; }
-        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .content-area p { margin-bottom: 1.25rem; line-height: 1.8; color: #cbd5e1; }
-        .content-area h1, .content-area h2, .content-area h3 { color: #38bdf8; font-weight: bold; margin-top: 1.5rem; margin-bottom: 1rem; }
-        .content-area a { color: #818cf8; text-decoration: underline; word-break: break-all; }
-        .content-area ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; }
-        .content-area ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1rem; }
+        body { 
+            background-color: #0b0f19; 
+            color: #f8fafc; 
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; 
+        }
+        .glass { 
+            background: rgba(17, 24, 39, 0.7); 
+            backdrop-filter: blur(16px); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .content-area p { margin-bottom: 1.25rem; line-height: 1.75; }
+        .content-area h1 { font-size: 1.875rem; font-weight: 800; margin-top: 1.5rem; margin-bottom: 1rem; color: #fff; }
+        .content-area h2 { font-size: 1.5rem; font-weight: 700; margin-top: 1.25rem; margin-bottom: 0.75rem; color: #f3f4f6; }
+        .content-area h3 { font-size: 1.25rem; font-weight: 600; margin-top: 1rem; margin-bottom: 0.5rem; color: #e5e7eb; }
+        .content-area ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1.25rem; }
+        .content-area ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1.25rem; }
+        .content-area a { color: #38bdf8; text-decoration: underline; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="min-h-screen flex flex-col justify-between p-4 md:p-8">
 
-    <main class="max-w-3xl mx-auto glass p-6 md:p-12 rounded-3xl shadow-2xl mt-8">
-        <a href="/index.html" class="inline-flex items-center text-xs font-bold text-blue-400 hover:underline mb-6">
-            <i class="fa-solid fa-arrow-left mr-2"></i> Back to Articles
+    <header class="max-w-4xl mx-auto w-full glass rounded-2xl px-6 py-4 flex justify-between items-center mb-8 shadow-2xl">
+        <a href="/index.html" class="flex items-center gap-3 group">
+            <div class="w-10 h-10 bg-gradient-to-tr from-blue-600 to-indigo-500 rounded-xl flex items-center justify-center font-black text-xl text-white shadow-lg shadow-blue-500/20 group-hover:scale-105 transition">
+                N
+            </div>
+            <span class="font-extrabold text-xl tracking-wider text-white">NEXYORA LABS</span>
         </a>
 
-        <div id="postContainer">
-            <p class="text-slate-400 italic">Loading article...</p>
-        </div>
+        <a href="/index.html" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 border border-white/10 px-4 py-2 rounded-xl font-bold transition flex items-center gap-2">
+            <i class="fa-solid fa-arrow-left"></i> All Articles
+        </a>
+    </header>
+
+    <main class="max-w-4xl mx-auto w-full flex-1">
+        <article id="postContainer" class="glass-card rounded-3xl p-6 md:p-10 shadow-2xl">
+            <div class="animate-pulse space-y-4">
+                <div class="h-8 bg-slate-700 rounded w-3/4"></div>
+                <div class="h-4 bg-slate-700 rounded w-1/4"></div>
+                <div class="h-40 bg-slate-700 rounded w-full"></div>
+            </div>
+        </article>
     </main>
 
     <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, get, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, get, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyDM4BWnLf6jGycrMdQClWtq-Ra2iDidWsQ",
-        authDomain: "tech-world-93ee6.firebaseapp.com",
-        databaseURL: "https://tech-world-93ee6-default-rtdb.firebaseio.com",
-        projectId: "tech-world-93ee6",
-        storageBucket: "tech-world-93ee6.firebasestorage.app",
-        appId: "1:912275465700:web:5ec12525e03446712153f1"
-    };
+        const firebaseConfig = {
+            apiKey: "AIzaSyDM4BWnLf6jGycrMdQClWtq-Ra2iDidWsQ",
+            authDomain: "tech-world-93ee6.firebaseapp.com",
+            databaseURL: "https://tech-world-93ee6-default-rtdb.firebaseio.com",
+            projectId: "tech-world-93ee6",
+            storageBucket: "tech-world-93ee6.firebasestorage.app",
+            appId: "1:912275465700:web:5ec12525e03446712153f1"
+        };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const postId = urlParams.get('id');
-    const container = document.getElementById('postContainer');
+        const urlParams = new URLSearchParams(window.location.search);
+        const postId = urlParams.get('id');
+        const container = document.getElementById('postContainer');
 
-    if (!postId) {
-        container.innerHTML = `<p class="text-red-400 font-bold">Error: No post specified.</p>`;
-    } else {
-        // Increment total view count dynamically
-        const viewsRef = ref(db, `posts/${postId}/views`);
-        runTransaction(viewsRef, (currentViews) => {
-            return (currentViews || 0) + 1;
-        });
+        if (!postId) {
+            container.innerHTML = `<p class="text-red-400 font-bold">Error: No article specified.</p>`;
+        } else {
+            // Increment view count
+            const viewsRef = ref(db, `posts/${postId}/views`);
+            runTransaction(viewsRef, (currentViews) => (currentViews || 0) + 1);
 
-        // Load article content
-        get(ref(db, 'posts/' + postId)).then((snapshot) => {
-            if (snapshot.exists()) {
-                const post = snapshot.val();
-                const imgHtml = post.imageUrl ? `<img src="${post.imageUrl}" class="w-full h-64 object-cover rounded-2xl mb-8 border border-white/10">` : '';
+            // Fetch and display post content
+            get(ref(db, 'posts/' + postId)).then((snapshot) => {
+                if (snapshot.exists()) {
+                    const post = snapshot.val();
+                    const imgHtml = post.imageUrl ? `<img src="${post.imageUrl}" class="w-full h-64 md:h-96 object-cover rounded-2xl mb-8 border border-white/10 shadow-lg">` : '';
 
-                container.innerHTML = `
-                    ${imgHtml}
-                    <h1 class="text-3xl md:text-4xl font-bold text-blue-400 mb-4">${post.title || 'Untitled Article'}</h1>
-                    <div class="text-xs text-slate-400 mb-8 border-b border-white/10 pb-4 flex items-center justify-between">
-                        <span><i class="fa-solid fa-user text-blue-400 mr-1"></i> ${post.author || 'Admin'}</span>
-                        <span><i class="fa-solid fa-eye text-blue-400 mr-1"></i> ${(post.views || 0) + 1} views</span>
-                    </div>
-                    <div class="content-area text-slate-300">
-                        ${post.content || ''}
-                    </div>
-                `;
-            } else {
-                container.innerHTML = `<p class="text-red-400 font-bold">Article not found in database.</p>`;
-            }
-        }).catch((error) => {
-            container.innerHTML = `<p class="text-red-400">Error loading article: ${error.message}</p>`;
-        });
-    }
-</script>
+                    container.innerHTML = `
+                        ${imgHtml}
+                        <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-4 leading-tight">${post.title || 'Untitled Article'}</h1>
+                        
+                        <div class="text-xs text-slate-400 mb-8 border-b border-white/10 pb-4 flex items-center justify-between">
+                            <span><i class="fa-solid fa-user text-blue-400 mr-1"></i> ${post.author || 'Admin'}</span>
+                            <span><i class="fa-solid fa-eye text-blue-400 mr-1"></i> ${(post.views || 0) + 1} views</span>
+                        </div>
+
+                        <div class="content-area text-slate-300 mb-10">
+                            ${post.content || ''}
+                        </div>
+
+                        <div class="pt-6 border-t border-white/10 flex items-center justify-between">
+                            <button id="likeBtn" class="bg-rose-600/20 hover:bg-rose-600 text-rose-400 hover:text-white border border-rose-500/30 px-5 py-2.5 rounded-xl font-bold transition flex items-center gap-2 text-sm shadow-lg">
+                                <i class="fa-solid fa-heart"></i> Like Article
+                            </button>
+                            <span id="likeCountDisplay" class="text-xs text-slate-400 font-semibold">
+                                <i class="fa-solid fa-heart text-rose-500 mr-1"></i> ${post.likes || 0} Likes
+                            </span>
+                        </div>
+                    `;
+
+                    // Live Like counter handler
+                    document.getElementById('likeBtn').onclick = async () => {
+                        const likesRef = ref(db, `posts/${postId}/likes`);
+                        const result = await runTransaction(likesRef, (currentLikes) => (currentLikes || 0) + 1);
+                        const newLikes = result.snapshot.val();
+                        document.getElementById('likeCountDisplay').innerHTML = `<i class="fa-solid fa-heart text-rose-500 mr-1"></i> ${newLikes} Likes`;
+                    };
+
+                } else {
+                    container.innerHTML = `<p class="text-red-400 font-bold">Article not found in database.</p>`;
+                }
+            }).catch((error) => {
+                container.innerHTML = `<p class="text-red-400">Error loading article: ${error.message}</p>`;
+            });
+        }
+    </script>
 </body>
 </html>
