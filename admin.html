@@ -256,6 +256,13 @@
                 list.innerHTML = `<p class="text-xs text-slate-500 italic">No published articles available.</p>`;
             }
         });
+
+        onAuthStateChanged(auth, (user) => {
+    if (!user || user.email !== 'ideas.by.chen@gmail.com') {
+        alert("Access Denied! Only the administrator can access this page.");
+        window.location.href = "index.html"; // Kick them back home
+    }
+});
     </script>
 
     <script>
