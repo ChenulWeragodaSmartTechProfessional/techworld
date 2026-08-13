@@ -17,7 +17,7 @@
         .hidden-panel { display: none !important; }
         
         .ql-toolbar { background: #1e293b; border-color: #334155 !important; border-radius: 0.75rem 0.75rem 0 0; }
-        .ql-container { background: #0f172a; border-color: #334155 !important; color: #f8fafc; border-radius: 0 0 0.75rem 0.75rem; min-height: 250px; font-size: 1rem; }
+        .ql-container { background: #0f172a; border-color: #334155 !important; color: #f8fafc; border-radius: 0 0 0.75rem 0.75rem; min-height: 220px; font-size: 1rem; }
         .ql-stroke { stroke: #cbd5e1 !important; }
         .ql-fill { fill: #cbd5e1 !important; }
         .ql-picker { color: #cbd5e1 !important; }
@@ -31,7 +31,7 @@
                 <i class="fa-solid fa-user-shield"></i>
             </div>
             <h2 class="text-2xl font-bold mb-2">Admin Portal Login</h2>
-            <p class="text-xs text-slate-400 mb-6">Sign in with your authorized Gmail / Google Account.</p>
+            <p class="text-xs text-slate-400 mb-6">Sign in with your authorized Gmail account.</p>
             
             <div class="space-y-4">
                 <button id="googleLoginBtn" class="w-full bg-white text-slate-900 hover:bg-slate-100 py-3 rounded-xl font-bold transition flex items-center justify-center gap-2 shadow-lg">
@@ -56,41 +56,53 @@
     <main id="adminDashboard" class="max-w-4xl mx-auto glass p-6 md:p-10 rounded-3xl shadow-2xl hidden-panel">
         <div class="flex justify-between items-center mb-8 pb-4 border-b border-white/10">
             <div>
-                <h1 class="text-2xl font-bold text-blue-400">Website Content Manager</h1>
+                <h1 class="text-2xl font-bold text-blue-400">Content Manager</h1>
                 <p class="text-xs text-slate-400">Authenticated as: <span id="adminEmailDisplay" class="text-blue-300 font-bold"></span></p>
             </div>
             <div class="flex items-center gap-3">
-                <a href="/index.html" class="text-xs bg-slate-800 border border-white/10 px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition">View Website</a>
+                <a href="/index.html" class="text-xs bg-slate-800 border border-white/10 px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition">View Site</a>
                 <button id="logoutBtn" class="text-xs bg-red-600/20 text-red-400 border border-red-500/20 px-3 py-2 rounded-lg font-bold hover:bg-red-600 hover:text-white transition">Logout</button>
             </div>
         </div>
 
-        <div class="space-y-6">
-            <div>
-                <label class="block text-sm font-semibold mb-2 text-slate-300">Post Title</label>
-                <input type="text" id="postTitle" placeholder="Enter post headline..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 font-semibold">
+        <div class="space-y-5 mb-10">
+            <div class="flex justify-between items-center">
+                <h2 id="formHeader" class="text-lg font-bold text-slate-200">Create New Article</h2>
+                <button id="cancelEditBtn" class="hidden text-xs bg-slate-700 hover:bg-slate-600 text-slate-300 px-3 py-1.5 rounded-lg transition">Cancel Edit</button>
             </div>
 
             <div>
-                <label class="block text-sm font-semibold mb-2 text-slate-300">Image URL (Optional)</label>
-                <input type="text" id="postImage" placeholder="https://images.unsplash.com/..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500">
+                <label class="block text-xs font-semibold mb-1 text-slate-400">Post Title</label>
+                <input type="text" id="postTitle" placeholder="Enter post title..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 font-semibold">
             </div>
 
             <div>
-                <label class="block text-sm font-semibold mb-2 text-slate-300">Post Content & Text Formatting</label>
+                <label class="block text-xs font-semibold mb-1 text-slate-400">Image URL (Optional)</label>
+                <input type="text" id="postImage" placeholder="https://..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500">
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold mb-1 text-slate-400">Content</label>
                 <div id="editor"></div>
             </div>
 
-            <button id="publishBtn" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 py-4 rounded-xl font-bold text-white shadow-xl transition flex items-center justify-center gap-2">
-                <i class="fa-solid fa-paper-plane"></i> Publish Live Post
+            <button id="publishBtn" class="w-full bg-blue-600 hover:bg-blue-500 py-3.5 rounded-xl font-bold text-white shadow-xl transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-paper-plane"></i> <span id="publishBtnText">Publish Live Post</span>
             </button>
+        </div>
+
+        <div class="border-t border-white/10 pt-6">
+            <h2 class="text-lg font-bold text-slate-200 mb-4">Published Articles & Analytics</h2>
+            <div id="managePostsList" class="space-y-3">
+                <p class="text-xs text-slate-400 italic">Loading existing articles...</p>
+            </div>
         </div>
     </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getDatabase, ref, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, push, update, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDM4BWnLf6jGycrMdQClWtq-Ra2iDidWsQ",
@@ -107,6 +119,8 @@
         const googleProvider = new GoogleAuthProvider();
 
         const ADMIN_EMAIL = "ideas.by.chen@gmail.com"; 
+        let editingPostId = null;
+        let postsDataCache = {};
 
         const quill = new Quill('#editor', {
             theme: 'snow',
@@ -122,13 +136,15 @@
             }
         });
 
+        // Authentication state handling
         onAuthStateChanged(auth, (user) => {
             if (user && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
                 document.getElementById('adminLoginSection').classList.add('hidden-panel');
                 document.getElementById('adminDashboard').classList.remove('hidden-panel');
                 document.getElementById('adminEmailDisplay').textContent = user.email;
+                loadManagePosts();
             } else if (user) {
-                alert("Unauthorized Access: Account " + user.email + " is not an admin.");
+                alert("Unauthorized Access: " + user.email + " is not an admin.");
                 signOut(auth);
             } else {
                 document.getElementById('adminLoginSection').classList.remove('hidden-panel');
@@ -140,57 +156,116 @@
             try {
                 const result = await signInWithPopup(auth, googleProvider);
                 if (result.user.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
-                    alert("Access Denied: " + result.user.email + " is not an admin.");
+                    alert("Access Denied.");
                     await signOut(auth);
                 }
-            } catch (err) {
-                alert("Google Sign-In Failed: " + err.message);
-            }
+            } catch (err) { alert(err.message); }
         };
 
         document.getElementById('loginBtn').onclick = async () => {
             const email = document.getElementById('adminEmail').value.trim();
             const pass = document.getElementById('adminPass').value.trim();
-
-            if (!email || !pass) return alert("Please enter both Email and Password.");
-
-            if (email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
-                return alert("Access Denied: Email address is not authorized.");
-            }
-
-            try {
-                await signInWithEmailAndPassword(auth, email, pass);
-            } catch (err) {
-                alert("Authentication Failed: " + err.message);
-            }
+            if (!email || !pass) return alert("Fill in required credentials.");
+            try { await signInWithEmailAndPassword(auth, email, pass); } catch (err) { alert(err.message); }
         };
 
         document.getElementById('logoutBtn').onclick = () => signOut(auth);
 
+        // Fetch post list and display view count analytics
+        function loadManagePosts() {
+            onValue(ref(db, 'posts'), (snapshot) => {
+                const listContainer = document.getElementById('managePostsList');
+                if (!snapshot.exists()) {
+                    listContainer.innerHTML = `<p class="text-xs text-slate-500">No posts found.</p>`;
+                    return;
+                }
+
+                postsDataCache = snapshot.val();
+                listContainer.innerHTML = '';
+
+                Object.keys(postsDataCache).reverse().forEach((id) => {
+                    const post = postsDataCache[id];
+                    const views = post.views || 0;
+
+                    const card = document.createElement('div');
+                    card.className = "flex items-center justify-between p-3.5 bg-slate-900/80 border border-slate-700/60 rounded-xl";
+                    card.innerHTML = `
+                        <div class="pr-4 overflow-hidden">
+                            <h3 class="font-bold text-sm text-slate-200 truncate">${post.title || 'Untitled'}</h3>
+                            <span class="text-xs text-blue-400 font-semibold inline-flex items-center gap-1.5 mt-1">
+                                <i class="fa-solid fa-eye"></i> ${views} ${views === 1 ? 'view' : 'views'}
+                            </span>
+                        </div>
+                        <button onclick="window.startEditing('${id}')" class="text-xs bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/30 px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1">
+                            <i class="fa-solid fa-pen-to-square"></i> Edit
+                        </button>
+                    `;
+                    listContainer.appendChild(card);
+                });
+            });
+        }
+
+        // Global functions for editing workflow
+        window.startEditing = (id) => {
+            const post = postsDataCache[id];
+            if (!post) return;
+
+            editingPostId = id;
+            document.getElementById('postTitle').value = post.title || '';
+            document.getElementById('postImage').value = post.imageUrl || '';
+            quill.root.innerHTML = post.content || '';
+
+            document.getElementById('formHeader').textContent = "Editing Post";
+            document.getElementById('publishBtnText').textContent = "Update Published Post";
+            document.getElementById('cancelEditBtn').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        document.getElementById('cancelEditBtn').onclick = resetForm;
+
+        function resetForm() {
+            editingPostId = null;
+            document.getElementById('postTitle').value = '';
+            document.getElementById('postImage').value = '';
+            quill.setText('');
+            document.getElementById('formHeader').textContent = "Create New Article";
+            document.getElementById('publishBtnText').textContent = "Publish Live Post";
+            document.getElementById('cancelEditBtn').classList.add('hidden');
+        }
+
+        // Save post (creates new OR updates existing entry)
         document.getElementById('publishBtn').onclick = async () => {
             const title = document.getElementById('postTitle').value.trim();
             const imageUrl = document.getElementById('postImage').value.trim();
             const contentHtml = quill.root.innerHTML;
 
             if (!title || quill.getText().trim().length === 0) {
-                return alert("Please enter a title and post content.");
+                return alert("Title and content cannot be empty.");
             }
 
             try {
-                await push(ref(db, 'posts'), {
-                    title: title,
-                    imageUrl: imageUrl,
-                    content: contentHtml,
-                    author: auth.currentUser.email,
-                    timestamp: serverTimestamp()
-                });
-
-                alert("🎉 Post successfully published live!");
-                document.getElementById('postTitle').value = "";
-                document.getElementById('postImage').value = "";
-                quill.setText("");
+                if (editingPostId) {
+                    await update(ref(db, 'posts/' + editingPostId), {
+                        title: title,
+                        imageUrl: imageUrl,
+                        content: contentHtml,
+                        lastUpdated: serverTimestamp()
+                    });
+                    alert("✅ Post updated successfully!");
+                } else {
+                    await push(ref(db, 'posts'), {
+                        title: title,
+                        imageUrl: imageUrl,
+                        content: contentHtml,
+                        author: auth.currentUser.email,
+                        views: 0,
+                        timestamp: serverTimestamp()
+                    });
+                    alert("🎉 Post published live!");
+                }
+                resetForm();
             } catch (err) {
-                alert("Error publishing post: " + err.message);
+                alert("Error: " + err.message);
             }
         };
     </script>
