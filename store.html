@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexyora Labs | Official Store</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/x-icon" href="/techworld.jpeg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        body { background-color: #0f172a; color: #f8fafc; overflow-x: hidden; margin: 0; }
+        #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: 0; pointer-events: none; }
+        nav, main { position: relative; z-index: 10; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .gradient-text { background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .product-card { 
+            background: rgba(15, 23, 42, 0.6); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            border-radius: 1.25rem; 
+            overflow: hidden;
+            transition: all 0.3s ease; 
+        }
+        .product-card:hover { 
+            transform: translateY(-6px); 
+            border-color: rgba(56, 189, 248, 0.5); 
+            box-shadow: 0 10px 25px -5px rgba(56, 189, 248, 0.1);
+        }
+        
+        .wa-btn { 
+            background-color: #25D366; 
+            color: #ffffff; 
+            font-weight: bold; 
+            width: 100%; 
+            padding: 0.75rem; 
+            border-radius: 0.75rem; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 0.5rem; 
+            transition: background-color 0.2s ease; 
+        }
+        .wa-btn:hover { background-color: #1da851; }
+    </style>
+</head>
+<body class="font-sans">
+
+    <div id="particles-js"></div>
+
+    <nav class="p-6 flex justify-between items-center max-w-6xl mx-auto relative z-10">
+        <a href="/index.html" class="text-2xl font-bold uppercase gradient-text flex items-center gap-2">
+            Nexyora Labs
+        </a>
+        <div class="flex items-center gap-4">
+            <a href="/index.html" class="bg-slate-800/80 border border-white/10 px-4 py-2 rounded-full hover:bg-slate-700 text-sm font-semibold transition flex items-center gap-2">
+                <i class="fa-solid fa-house text-blue-400"></i> Home Portal
+            </a>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-4 pb-20 mt-6">
+        
+        <div class="glass rounded-3xl p-8 mb-8 text-center shadow-2xl">
+            <h1 class="text-3xl md:text-4xl font-extrabold mb-3">Official Store</h1>
+            <p class="text-slate-400 max-w-xl mx-auto text-sm md:text-base">
+                Explore our official offerings. Tap any product to open a direct WhatsApp chat to place your order or ask questions!
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <div class="product-card p-5 flex flex-col justify-between">
+                <div>
+                    <img src="/techworld.jpeg" alt="Product Image" class="w-full h-48 object-cover rounded-xl mb-4">
+                    <span class="text-[10px] uppercase font-bold tracking-wider bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full">Hardware</span>
+                    <h3 class="font-bold text-white text-xl mt-2">Comming Soon</h3>
+                    <p class="text-xs text-slate-400 mt-2 mb-4">No Description</p>
+                </div>
+                <div>
+                    <div class="text-2xl font-extrabold text-blue-400 mb-4">RS.00.00</div>
+                    <button onclick="buyOnWhatsApp('Comming Soon', 'Rs.00.00')" class="wa-btn">
+                        <i class="fa-brands fa-whatsapp text-xl"></i> Order via WhatsApp
+                    </button>
+                </div>
+            </div>
+
+            <div class="product-card p-5 flex flex-col justify-between">
+                <div>
+                    <img src="/techworld.jpeg" alt="Product Image" class="w-full h-48 object-cover rounded-xl mb-4">
+                    <span class="text-[10px] uppercase font-bold tracking-wider bg-indigo-500/20 text-indigo-400 px-3 py-1 rounded-full">Software / AI</span>
+                    <h3 class="font-bold text-white text-xl mt-2">Comming Soon</h3>
+                    <p class="text-xs text-slate-400 mt-2 mb-4">No Description</p>
+                </div>
+                <div>
+                    <div class="text-2xl font-extrabold text-blue-400 mb-4">Rs.00.00</div>
+                    <button onclick="buyOnWhatsApp('Comming Soon', 'Rs.00.00')" class="wa-btn">
+                        <i class="fa-brands fa-whatsapp text-xl"></i> Order via WhatsApp
+                    </button>
+                </div>
+            </div>
+
+            <div class="product-card p-5 flex flex-col justify-between">
+                <div>
+                    <img src="/techworld.jpeg" alt="Product Image" class="w-full h-48 object-cover rounded-xl mb-4">
+                    <span class="text-[10px] uppercase font-bold tracking-wider bg-purple-500/20 text-purple-400 px-3 py-1 rounded-full">Service</span>
+                    <h3 class="font-bold text-white text-xl mt-2">Comming Soon</h3>
+                    <p class="text-xs text-slate-400 mt-2 mb-4">No Description</p>
+                </div>
+                <div>
+                    <div class="text-2xl font-extrabold text-blue-400 mb-4">Rs.00.00</div>
+                    <button onclick="buyOnWhatsApp('Comming Soon', 'Rs.00.00')" class="wa-btn">
+                        <i class="fa-brands fa-whatsapp text-xl"></i> Order via WhatsApp
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        function buyOnWhatsApp(productName, price) {
+            // ⚠️ REPLACE WITH YOUR ACTUAL WHATSAPP NUMBER (with country code, e.g., 94712345678)
+            const phone = "94721502524"; 
+
+            const message = `Hello Nexyora Labs! 👋\n\nI am interested in buying:\n📦 *Item:* ${productName}\n💵 *Price:* ${price}\n\nPlease let me know availability and payment methods!`;
+
+            const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+        }
+
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 70 },
+                "color": { "value": "#38bdf8" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.5 },
+                "size": { "value": 3 },
+                "line_linked": { "enable": true, "distance": 150, "color": "#38bdf8", "opacity": 0.4, "width": 1 },
+                "move": { "enable": true, "speed": 2 }
+            },
+            "interactivity": {
+                "events": { "onhover": { "enable": true, "mode": "repulse" } }
+            },
+            "retina_detect": true
+        });
+    </script>
+</body>
+</html>
