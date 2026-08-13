@@ -82,14 +82,53 @@
             🎉 +5 Points added for your daily visit!
         </div>
 
-        <div class="mb-8 flex justify-between items-center border-b border-white/10 pb-4">
+        <div class="mb-6 flex justify-between items-center border-b border-white/10 pb-4">
             <h2 class="text-2xl font-bold text-blue-400"><i class="fa-solid fa-newspaper mr-2"></i> Latest Articles</h2>
             <p class="text-xs text-slate-400">Explore updates across technology & innovation</p>
         </div>
 
-        <div id="postsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-            <p class="text-xs text-slate-500 italic">No published articles yet.</p>
+        <div id="postsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <p class="text-xs text-slate-500 italic">No articles published yet.</p>
         </div>
+
+        <section class="glass rounded-3xl p-6 md:p-8 mb-12 border border-red-500/20">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 border-b border-white/10 pb-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-brands fa-youtube text-red-500 text-3xl"></i> SMART TECH PROFESSIONAL
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-1">Stay updated with the latest tech tutorials, web design tips, and guides.</p>
+                </div>
+                
+                <a href="https://www.youtube.com/@SMARTTECHPROFESSIONAL?sub_confirmation=1" target="_blank" rel="noopener noreferrer" class="bg-red-600 hover:bg-red-500 text-white font-bold px-6 py-3 rounded-xl text-sm transition flex items-center gap-2 shadow-lg shadow-red-600/30">
+                    <i class="fa-brands fa-youtube text-lg"></i> Subscribe on YouTube
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <div class="bg-slate-900/60 border border-slate-700/50 rounded-2xl overflow-hidden shadow-xl hover:border-red-500/40 transition">
+                    <div class="relative w-full aspect-video">
+                        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/76YokNeOpqU" title="How to Create Simple Web Site : A Step by Step Guide For You" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-sm text-slate-200 line-clamp-1">How to Create Simple Web Site</h3>
+                        <p class="text-xs text-slate-400 mt-1 line-clamp-2">A Step-by-Step guide to creating your web application easily.</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900/60 border border-slate-700/50 rounded-2xl overflow-hidden shadow-xl hover:border-red-500/40 transition">
+                    <div class="relative w-full aspect-video">
+                        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/QCs8vmBKJgA" title="Boost Up Your PC in Minute!!!" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-sm text-slate-200 line-clamp-1">Boost Up Your PC in Minutes</h3>
+                        <p class="text-xs text-slate-400 mt-1 line-clamp-2">Clear cache files and speed up your Windows PC performance.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
 
         <section class="glass rounded-3xl p-6 md:p-8">
             <h4 class="text-xs font-bold text-slate-500 uppercase mb-6"><i class="fa-solid fa-comments mr-2"></i> Community Chat</h4>
@@ -172,7 +211,7 @@
                 if (d) document.getElementById('displayPoints').textContent = (d.points || 0) + " PTS";
             });
 
-            // 2. Realtime Posts Listener (Loads ONLY real Firebase Database entries)
+            // 2. Realtime Posts Listener
             onValue(ref(db, 'posts'), (snap) => {
                 const grid = document.getElementById('postsGrid');
                 grid.innerHTML = ""; 
