@@ -31,7 +31,9 @@
     </div>
 
     <section class="glass p-6 rounded-3xl mb-12">
-        <h2 class="text-lg font-bold mb-4 text-blue-400"><i class="fa-solid fa-plus mr-2"></i> Create New Article</h2>
+        <h2 id="formHeading" class="text-lg font-bold mb-4 text-blue-400"><i class="fa-solid fa-plus mr-2"></i> Create New Article</h2>
+        <input type="hidden" id="editPostId" value="">
+        
         <div class="space-y-4">
             <input type="text" id="postTitle" placeholder="Article Title" class="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500">
             
@@ -53,9 +55,14 @@
                 <textarea id="postContent" rows="8" placeholder="Write your article content here..." class="w-full bg-transparent p-4 text-sm text-white focus:outline-none"></textarea>
             </div>
             
-            <button id="publishBtn" class="bg-blue-600 hover:bg-blue-500 font-bold px-6 py-3 rounded-xl text-sm transition flex items-center gap-2">
-                <i class="fa-solid fa-paper-plane"></i> <span id="btnText">Publish Article</span>
-            </button>
+            <div class="flex items-center gap-3">
+                <button id="publishBtn" class="bg-blue-600 hover:bg-blue-500 font-bold px-6 py-3 rounded-xl text-sm transition flex items-center gap-2">
+                    <i class="fa-solid fa-paper-plane"></i> <span id="btnText">Publish Article</span>
+                </button>
+                <button id="cancelEditBtn" class="hidden bg-slate-700 hover:bg-slate-600 font-bold px-4 py-3 rounded-xl text-sm transition">
+                    Cancel Edit
+                </button>
+            </div>
         </div>
     </section>
 
@@ -69,7 +76,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getDatabase, ref, onValue, push, remove, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, onValue, push, update, remove, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
         import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
         const firebaseConfig = {
@@ -85,6 +92,8 @@
         const auth = getAuth(app);
         const db = getDatabase(app);
         const storage = getStorage(app);
+
+        let cachedPosts = {};
 
         // Track Authentication State
         onAuthStateChanged(auth, (user) => {
@@ -110,8 +119,23 @@
             window.location.href = "index.html";
         };
 
-        // Publish Article Handler
+        // Reset/Cancel Editing State
+        const resetForm = () => {
+            document.getElementById('editPostId').value = "";
+            document.getElementById('postTitle').value = "";
+            document.getElementById('postImgUrl').value = "";
+            document.getElementById('postImageFile').value = "";
+            document.getElementById('postContent').value = "";
+            document.getElementById('formHeading').innerHTML = '<i class="fa-solid fa-plus mr-2"></i> Create New Article';
+            document.getElementById('btnText').textContent = "Publish Article";
+            document.getElementById('cancelEditBtn').classList.add('hidden');
+        };
+
+        document.getElementById('cancelEditBtn').onclick = resetForm;
+
+        // Save / Update Article Handler
         document.getElementById('publishBtn').onclick = async () => {
+            const editId = document.getElementById('editPostId').value;
             const title = document.getElementById('postTitle').value.trim();
             const fileInput = document.getElementById('postImageFile');
             let imageUrl = document.getElementById('postImgUrl').value.trim();
@@ -124,9 +148,9 @@
 
             try {
                 publishBtn.disabled = true;
-                btnText.textContent = "Uploading & Publishing...";
+                btnText.textContent = editId ? "Updating..." : "Publishing...";
 
-                // Handle local image upload if selected
+                // Upload image if selected
                 if (fileInput.files.length > 0) {
                     const file = fileInput.files[0];
                     const fileStorageRef = storageRef(storage, `post_images/${Date.now()}_${file.name}`);
@@ -134,39 +158,44 @@
                     imageUrl = await getDownloadURL(uploadResult.ref);
                 }
 
-                // Save article to Firebase Realtime Database
-                await push(ref(db, 'posts'), {
-                    title,
-                    imageUrl,
-                    content,
-                    views: 0,
-                    likesCount: 0,
-                    timestamp: serverTimestamp()
-                });
+                if (editId) {
+                    // Update existing article
+                    const postData = { title, content };
+                    if (imageUrl) postData.imageUrl = imageUrl;
+                    
+                    await update(ref(db, `posts/${editId}`), postData);
+                    alert("Article updated successfully!");
+                } else {
+                    // Create new article
+                    await push(ref(db, 'posts'), {
+                        title,
+                        imageUrl,
+                        content,
+                        views: 0,
+                        likesCount: 0,
+                        timestamp: serverTimestamp()
+                    });
+                    alert("Article published successfully!");
+                }
 
-                document.getElementById('postTitle').value = "";
-                document.getElementById('postImgUrl').value = "";
-                document.getElementById('postImageFile').value = "";
-                document.getElementById('postContent').value = "";
-                alert("Article published successfully!");
+                resetForm();
 
             } catch (err) {
-                alert("Failed to publish post: " + err.message);
+                alert("Operation failed: " + err.message);
             } finally {
                 publishBtn.disabled = false;
-                btnText.textContent = "Publish Article";
             }
         };
 
-        // Realtime Analytics & Post Loader
+        // Realtime Analytics & Load Posts with Edit Functionality
         onValue(ref(db, 'posts'), (snapshot) => {
             const list = document.getElementById('adminPostsList');
             list.innerHTML = "";
-            const data = snapshot.val();
+            cachedPosts = snapshot.val() || {};
 
-            if (data && Object.keys(data).length > 0) {
-                Object.keys(data).reverse().forEach(key => {
-                    const post = data[key];
+            if (Object.keys(cachedPosts).length > 0) {
+                Object.keys(cachedPosts).reverse().forEach(key => {
+                    const post = cachedPosts[key];
                     const views = post.views || 0;
                     const likes = post.likesCount || 0;
 
@@ -185,13 +214,32 @@
                                 </span>
                             </div>
                         </div>
-                        <button class="delete-btn bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white px-4 py-2 rounded-xl text-xs font-bold border border-red-500/30 transition">
-                            <i class="fa-solid fa-trash mr-1"></i> Delete
-                        </button>
+                        <div class="flex items-center gap-2">
+                            <button class="edit-btn bg-blue-600/20 hover:bg-blue-600 text-blue-400 hover:text-white px-4 py-2 rounded-xl text-xs font-bold border border-blue-500/30 transition" data-id="${key}">
+                                <i class="fa-solid fa-pen-to-square mr-1"></i> Edit
+                            </button>
+                            <button class="delete-btn bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white px-4 py-2 rounded-xl text-xs font-bold border border-red-500/30 transition" data-id="${key}">
+                                <i class="fa-solid fa-trash mr-1"></i> Delete
+                            </button>
+                        </div>
                     `;
 
-                    const btn = item.querySelector('.delete-btn');
-                    btn.onclick = async () => {
+                    // Edit Button Handler
+                    item.querySelector('.edit-btn').onclick = () => {
+                        document.getElementById('editPostId').value = key;
+                        document.getElementById('postTitle').value = post.title || '';
+                        document.getElementById('postImgUrl').value = post.imageUrl || '';
+                        document.getElementById('postContent').value = post.content || '';
+                        
+                        document.getElementById('formHeading').innerHTML = '<i class="fa-solid fa-pen-to-square mr-2"></i> Edit Article';
+                        document.getElementById('btnText').textContent = "Update Article";
+                        document.getElementById('cancelEditBtn').classList.remove('hidden');
+                        
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    };
+
+                    // Delete Button Handler
+                    item.querySelector('.delete-btn').onclick = async () => {
                         if (confirm(`Are you sure you want to delete "${post.title}"?`)) {
                             try {
                                 await remove(ref(db, `posts/${key}`));
