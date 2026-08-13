@@ -32,12 +32,22 @@
                 <i class="fa-solid fa-user-shield"></i>
             </div>
             <h2 class="text-2xl font-bold mb-2">Admin Portal Login</h2>
-            <p class="text-xs text-slate-400 mb-6">Sign in with your authorized admin email address.</p>
+            <p class="text-xs text-slate-400 mb-6">Sign in with your authorized Gmail / Google Account.</p>
             
             <div class="space-y-4">
+                <button id="googleLoginBtn" class="w-full bg-white text-slate-900 hover:bg-slate-100 py-3 rounded-xl font-bold transition flex items-center justify-center gap-2 shadow-lg">
+                    <i class="fa-brands fa-google text-red-500"></i> Continue with Google
+                </button>
+
+                <div class="flex items-center my-4">
+                    <div class="flex-1 border-t border-slate-700"></div>
+                    <span class="px-3 text-slate-500 text-xs uppercase">Or Email Sign In</span>
+                    <div class="flex-1 border-t border-slate-700"></div>
+                </div>
+
                 <input type="email" id="adminEmail" placeholder="Admin Email" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500">
                 <input type="password" id="adminPass" placeholder="Password" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500">
-                <button id="loginBtn" class="w-full bg-blue-600 hover:bg-blue-500 py-3 rounded-xl font-bold transition shadow-lg">Authenticate</button>
+                <button id="loginBtn" class="w-full bg-blue-600 hover:bg-blue-500 py-3 rounded-xl font-bold transition shadow-lg">Authenticate with Password</button>
             </div>
             
             <a href="/index.html" class="inline-block mt-6 text-xs text-slate-400 hover:text-white transition">← Return to Main Site</a>
@@ -75,7 +85,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getDatabase, ref, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         // Firebase Configuration
@@ -91,8 +101,9 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getDatabase(app);
+        const googleProvider = new GoogleAuthProvider();
 
-        // 🛡️ RECLAMATION: Change this to your exact email address
+        // 🛡️ Set your authorized Admin Gmail address
         const ADMIN_EMAIL = "ideas.by.chen@gmail.com"; 
 
         // Initialize Rich Text Editor with Color controls
@@ -102,7 +113,7 @@
                 toolbar: [
                     [{ 'header': [1, 2, 3, false] }],
                     ['bold', 'italic', 'underline', 'strike'],
-                    [{ 'color': [] }, { 'background': [] }], // Font & Highlight Color Selectors
+                    [{ 'color': [] }, { 'background': [] }],
                     [{ 'align': [] }],
                     [{ 'list': 'ordered'}, { 'list': 'bullet' }],
                     ['link', 'clean']
@@ -110,14 +121,14 @@
             }
         });
 
-        // Check auth status safely via Firebase
+        // Monitor Auth State
         onAuthStateChanged(auth, (user) => {
             if (user && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
                 document.getElementById('adminLoginSection').classList.add('hidden-panel');
                 document.getElementById('adminDashboard').classList.remove('hidden-panel');
                 document.getElementById('adminEmailDisplay').textContent = user.email;
             } else if (user) {
-                alert("Unauthorized Access: This account is not an admin.");
+                alert("Unauthorized Access: Account " + user.email + " is not an admin.");
                 signOut(auth);
             } else {
                 document.getElementById('adminLoginSection').classList.remove('hidden-panel');
@@ -125,15 +136,28 @@
             }
         });
 
-        // Secure Login Event
+        // 🌐 Google Sign-In Handler
+        document.getElementById('googleLoginBtn').onclick = async () => {
+            try {
+                const result = await signInWithPopup(auth, googleProvider);
+                if (result.user.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+                    alert("Access Denied: " + result.user.email + " is not an admin.");
+                    await signOut(auth);
+                }
+            } catch (err) {
+                alert("Google Sign-In Failed: " + err.message);
+            }
+        };
+
+        // Email / Password Login Handler
         document.getElementById('loginBtn').onclick = async () => {
             const email = document.getElementById('adminEmail').value.trim();
             const pass = document.getElementById('adminPass').value.trim();
 
-            if (!email || !pass) return alert("Please fill in both Email and Password.");
+            if (!email || !pass) return alert("Please enter both Email and Password.");
 
             if (email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
-                return alert("Access Denied: Email address is not authorized for Admin access.");
+                return alert("Access Denied: Email address is not authorized.");
             }
 
             try {
@@ -143,7 +167,7 @@
             }
         };
 
-        // Logout Event
+        // Logout
         document.getElementById('logoutBtn').onclick = () => signOut(auth);
 
         // Publish Post Handler
