@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexyora Labs | Admin Portal</title>
-    <link rel="icon" type="image/x-icon" href="/techworld.jpeg">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -16,17 +15,47 @@
 <body class="font-sans p-6 max-w-5xl mx-auto">
 
     <div class="flex justify-between items-center mb-8 border-b border-white/10 pb-4">
-        <h1 class="text-2xl font-bold uppercase gradient-text">Admin Portal</h1>
-        <a href="index.html" class="text-xs text-sky-400 font-bold hover:underline"><i class="fa-solid fa-house mr-1"></i> Return Home</a>
+        <div>
+            <h1 class="text-2xl font-bold uppercase gradient-text">Admin Portal</h1>
+            <p id="adminStatus" class="text-xs text-slate-400 mt-1">Checking authentication status...</p>
+        </div>
+        
+        <div class="flex items-center gap-4">
+            <a href="index.html" class="text-xs text-sky-400 font-bold hover:underline">
+                <i class="fa-solid fa-house mr-1"></i> Return Home
+            </a>
+            <button id="logoutBtn" class="bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white px-3 py-1.5 rounded-xl text-xs font-bold border border-red-500/30 transition flex items-center gap-1">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </button>
+        </div>
     </div>
 
     <section class="glass p-6 rounded-3xl mb-12">
         <h2 class="text-lg font-bold mb-4 text-blue-400"><i class="fa-solid fa-plus mr-2"></i> Create New Article</h2>
         <div class="space-y-4">
             <input type="text" id="postTitle" placeholder="Article Title" class="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500">
-            <input type="text" id="postImg" placeholder="Image URL (Optional)" class="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500">
-            <textarea id="postContent" rows="5" placeholder="Article Content..." class="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500"></textarea>
-            <button id="publishBtn" class="bg-blue-600 hover:bg-blue-500 font-bold px-6 py-3 rounded-xl text-sm transition">Publish Article</button>
+            
+            <div>
+                <label class="block text-xs font-bold text-slate-400 mb-1">Upload Local Image (Optional):</label>
+                <input type="file" id="postImageFile" accept="image/*" class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer bg-slate-900/60 border border-slate-700 rounded-xl p-2">
+            </div>
+
+            <input type="text" id="postImgUrl" placeholder="OR Image URL (Optional)" class="w-full bg-slate-900/60 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500">
+            
+            <div class="border border-slate-700 rounded-xl overflow-hidden bg-slate-900/60">
+                <div class="flex flex-wrap gap-2 p-2 border-b border-slate-700 bg-slate-800/50">
+                    <button type="button" onclick="formatText('bold')" title="Bold" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded text-xs font-bold"><i class="fa-solid fa-bold"></i></button>
+                    <button type="button" onclick="formatText('italic')" title="Italic" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded text-xs italic"><i class="fa-solid fa-italic"></i></button>
+                    <button type="button" onclick="formatText('heading')" title="Heading" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded text-xs font-bold"><i class="fa-solid fa-heading"></i></button>
+                    <button type="button" onclick="formatText('list')" title="Bullet List" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded text-xs"><i class="fa-solid fa-list-ul"></i></button>
+                    <button type="button" onclick="formatText('link')" title="Insert Link" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded text-xs"><i class="fa-solid fa-link"></i></button>
+                </div>
+                <textarea id="postContent" rows="8" placeholder="Write your article content here..." class="w-full bg-transparent p-4 text-sm text-white focus:outline-none"></textarea>
+            </div>
+            
+            <button id="publishBtn" class="bg-blue-600 hover:bg-blue-500 font-bold px-6 py-3 rounded-xl text-sm transition flex items-center gap-2">
+                <i class="fa-solid fa-paper-plane"></i> <span id="btnText">Publish Article</span>
+            </button>
         </div>
     </section>
 
@@ -39,7 +68,9 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getDatabase, ref, onValue, push, remove, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDM4BWnLf6jGycrMdQClWtq-Ra2iDidWsQ",
@@ -51,29 +82,80 @@
         };
 
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getDatabase(app);
+        const storage = getStorage(app);
 
-        // Publish new post
+        // Track Authentication State
+        onAuthStateChanged(auth, (user) => {
+            const statusElem = document.getElementById('adminStatus');
+            if (user) {
+                statusElem.textContent = `Logged in as: ${user.email}`;
+                if (user.email === 'ideas.by.chen@gmail.com') {
+                    statusElem.className = "text-xs text-emerald-400 font-bold mt-1";
+                } else {
+                    statusElem.className = "text-xs text-amber-400 font-bold mt-1";
+                    alert(`Notice: You are logged in as ${user.email}. Publishing requires ideas.by.chen@gmail.com`);
+                }
+            } else {
+                statusElem.textContent = "Not logged in. Please log in on index.html first.";
+                statusElem.className = "text-xs text-red-400 font-bold mt-1";
+            }
+        });
+
+        // Logout Button Handler
+        document.getElementById('logoutBtn').onclick = async () => {
+            await signOut(auth);
+            alert("Logged out successfully.");
+            window.location.href = "index.html";
+        };
+
+        // Publish Article Handler
         document.getElementById('publishBtn').onclick = async () => {
             const title = document.getElementById('postTitle').value.trim();
-            const imageUrl = document.getElementById('postImg').value.trim();
+            const fileInput = document.getElementById('postImageFile');
+            let imageUrl = document.getElementById('postImgUrl').value.trim();
             const content = document.getElementById('postContent').value.trim();
 
             if (!title || !content) return alert("Please enter both a title and content.");
 
-            await push(ref(db, 'posts'), {
-                title,
-                imageUrl,
-                content,
-                views: 0,
-                likesCount: 0,
-                timestamp: serverTimestamp()
-            });
+            const btnText = document.getElementById('btnText');
+            const publishBtn = document.getElementById('publishBtn');
 
-            document.getElementById('postTitle').value = "";
-            document.getElementById('postImg').value = "";
-            document.getElementById('postContent').value = "";
-            alert("Article published successfully!");
+            try {
+                publishBtn.disabled = true;
+                btnText.textContent = "Uploading & Publishing...";
+
+                // Handle local image upload if selected
+                if (fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    const fileStorageRef = storageRef(storage, `post_images/${Date.now()}_${file.name}`);
+                    const uploadResult = await uploadBytes(fileStorageRef, file);
+                    imageUrl = await getDownloadURL(uploadResult.ref);
+                }
+
+                // Save article to Firebase Realtime Database
+                await push(ref(db, 'posts'), {
+                    title,
+                    imageUrl,
+                    content,
+                    views: 0,
+                    likesCount: 0,
+                    timestamp: serverTimestamp()
+                });
+
+                document.getElementById('postTitle').value = "";
+                document.getElementById('postImgUrl').value = "";
+                document.getElementById('postImageFile').value = "";
+                document.getElementById('postContent').value = "";
+                alert("Article published successfully!");
+
+            } catch (err) {
+                alert("Failed to publish post: " + err.message);
+            } finally {
+                publishBtn.disabled = false;
+                btnText.textContent = "Publish Article";
+            }
         };
 
         // Realtime Analytics & Post Loader
@@ -103,18 +185,20 @@
                                 </span>
                             </div>
                         </div>
-                        <button class="delete-btn bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white px-4 py-2 rounded-xl text-xs font-bold border border-red-500/30 transition" data-id="${key}">
+                        <button class="delete-btn bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white px-4 py-2 rounded-xl text-xs font-bold border border-red-500/30 transition">
                             <i class="fa-solid fa-trash mr-1"></i> Delete
                         </button>
                     `;
 
-                    // Attach click handler directly to each button
                     const btn = item.querySelector('.delete-btn');
-                    btn.onclick = () => {
-                        if (confirm("Are you sure you want to delete this article?")) {
-                            remove(ref(db, `posts/${key}`))
-                                .then(() => alert("Post deleted successfully."))
-                                .catch((err) => alert("Failed to delete post: " + err.message));
+                    btn.onclick = async () => {
+                        if (confirm(`Are you sure you want to delete "${post.title}"?`)) {
+                            try {
+                                await remove(ref(db, `posts/${key}`));
+                                alert("Post deleted successfully!");
+                            } catch (err) {
+                                alert("Failed to delete post: " + err.message);
+                            }
                         }
                     };
 
@@ -124,6 +208,40 @@
                 list.innerHTML = `<p class="text-xs text-slate-500 italic">No published articles available.</p>`;
             }
         });
+    </script>
+
+    <script>
+        function formatText(command) {
+            const textarea = document.getElementById('postContent');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const selectedText = textarea.value.substring(start, end);
+
+            let formatted = '';
+
+            switch (command) {
+                case 'bold':
+                    formatted = `**${selectedText || 'bold text'}**`;
+                    break;
+                case 'italic':
+                    formatted = `*${selectedText || 'italic text'}*`;
+                    break;
+                case 'heading':
+                    formatted = `\n### ${selectedText || 'Heading Title'}\n`;
+                    break;
+                case 'list':
+                    formatted = `\n• ${selectedText || 'List item'}`;
+                    break;
+                case 'link':
+                    const url = prompt("Enter URL:", "https://");
+                    if (url) formatted = `[${selectedText || 'Link text'}](${url})`;
+                    else return;
+                    break;
+            }
+
+            textarea.setRangeText(formatted, start, end, 'select');
+            textarea.focus();
+        }
     </script>
 </body>
 </html>
