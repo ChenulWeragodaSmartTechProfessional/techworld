@@ -88,7 +88,8 @@
         </div>
 
         <div id="postsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-            </div>
+            <p class="text-xs text-slate-500 italic">No published articles yet.</p>
+        </div>
 
         <section class="glass rounded-3xl p-6 md:p-8">
             <h4 class="text-xs font-bold text-slate-500 uppercase mb-6"><i class="fa-solid fa-comments mr-2"></i> Community Chat</h4>
@@ -163,24 +164,6 @@
             }
         });
 
-        // Sample static posts as backup if database is empty
-        const samplePosts = [
-            {
-                id: "post1",
-                title: "What Is Technology?",
-                image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80",
-                link: "post1.html",
-                desc: "Discover how technology forms the application of conceptual knowledge to achieve practical goals in modern society."
-            },
-            {
-                id: "post2",
-                title: "The Rise of Artificial Intelligence",
-                image: "https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=800&q=80",
-                link: "post2.html",
-                desc: "Explore how machine learning and modern neural networks are quietly transforming daily operational workflows globally."
-            }
-        ];
-
         // Realtime Database Listeners
         function setupRealtimeListeners(user) {
             // 1. User Points Listener
@@ -189,20 +172,20 @@
                 if (d) document.getElementById('displayPoints').textContent = (d.points || 0) + " PTS";
             });
 
-            // 2. Realtime Posts Listener with Cards & Images
+            // 2. Realtime Posts Listener (Loads ONLY real Firebase Database entries)
             onValue(ref(db, 'posts'), (snap) => {
                 const grid = document.getElementById('postsGrid');
                 grid.innerHTML = ""; 
                 const data = snap.val();
 
-                if (data) {
+                if (data && Object.keys(data).length > 0) {
                     Object.keys(data).reverse().forEach(key => {
                         const post = data[key];
                         const card = document.createElement('article');
                         card.className = "glass rounded-3xl overflow-hidden shadow-2xl flex flex-col justify-between hover:border-blue-500/50 transition duration-300";
                         
                         const postImg = post.imageUrl || 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80';
-                        const postLink = post.link || `post.html?id=${key}`;
+                        const postLink = `post.html?id=${key}`;
                         
                         card.innerHTML = `
                             <div>
@@ -223,26 +206,7 @@
                         grid.appendChild(card);
                     });
                 } else {
-                    // Fallback to sample structured posts
-                    samplePosts.forEach(post => {
-                        const card = document.createElement('article');
-                        card.className = "glass rounded-3xl overflow-hidden shadow-2xl flex flex-col justify-between hover:border-blue-500/50 transition duration-300";
-                        card.innerHTML = `
-                            <div>
-                                <img src="${post.image}" alt="${post.title}" class="w-full h-48 object-cover">
-                                <div class="p-6">
-                                    <h3 class="text-xl font-bold text-blue-400 mb-2">${post.title}</h3>
-                                    <p class="text-slate-300 text-sm mb-4">${post.desc}</p>
-                                </div>
-                            </div>
-                            <div class="px-6 pb-6 pt-0">
-                                <a href="${post.link}" class="inline-block w-full text-center bg-blue-600 hover:bg-blue-500 py-2.5 rounded-xl text-sm font-bold transition">
-                                    Read Full Article <i class="fa-solid fa-arrow-right ml-1"></i>
-                                </a>
-                            </div>
-                        `;
-                        grid.appendChild(card);
-                    });
+                    grid.innerHTML = `<p class="text-xs text-slate-500 italic col-span-2">No articles published yet.</p>`;
                 }
             });
 
