@@ -92,7 +92,7 @@
         </div>
 
         <div class="border-t border-white/10 pt-6">
-            <h2 class="text-lg font-bold text-slate-200 mb-4">Published Articles & Analytics</h2>
+            <h2 class="text-lg font-bold text-slate-200 mb-4">Published Articles & Management</h2>
             <div id="managePostsList" class="space-y-3">
                 <p class="text-xs text-slate-400 italic">Loading existing articles...</p>
             </div>
@@ -102,7 +102,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getDatabase, ref, push, update, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, push, update, remove, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDM4BWnLf6jGycrMdQClWtq-Ra2iDidWsQ",
@@ -171,7 +171,7 @@
 
         document.getElementById('logoutBtn').onclick = () => signOut(auth);
 
-        // Fetch post list and display view count analytics
+        // Fetch post list and render options (Edit, Delete, Views)
         function loadManagePosts() {
             onValue(ref(db, 'posts'), (snapshot) => {
                 const listContainer = document.getElementById('managePostsList');
@@ -188,24 +188,29 @@
                     const views = post.views || 0;
 
                     const card = document.createElement('div');
-                    card.className = "flex items-center justify-between p-3.5 bg-slate-900/80 border border-slate-700/60 rounded-xl";
+                    card.className = "flex items-center justify-between p-3.5 bg-slate-900/80 border border-slate-700/60 rounded-xl gap-4";
                     card.innerHTML = `
-                        <div class="pr-4 overflow-hidden">
+                        <div class="overflow-hidden flex-1">
                             <h3 class="font-bold text-sm text-slate-200 truncate">${post.title || 'Untitled'}</h3>
                             <span class="text-xs text-blue-400 font-semibold inline-flex items-center gap-1.5 mt-1">
                                 <i class="fa-solid fa-eye"></i> ${views} ${views === 1 ? 'view' : 'views'}
                             </span>
                         </div>
-                        <button onclick="window.startEditing('${id}')" class="text-xs bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/30 px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1">
-                            <i class="fa-solid fa-pen-to-square"></i> Edit
-                        </button>
+                        <div class="flex items-center gap-2">
+                            <button onclick="window.startEditing('${id}')" class="text-xs bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/30 px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1">
+                                <i class="fa-solid fa-pen-to-square"></i> Edit
+                            </button>
+                            <button onclick="window.deletePost('${id}')" class="text-xs bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/30 px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1">
+                                <i class="fa-solid fa-trash-can"></i> Delete
+                            </button>
+                        </div>
                     `;
                     listContainer.appendChild(card);
                 });
             });
         }
 
-        // Global functions for editing workflow
+        // Global function to start editing
         window.startEditing = (id) => {
             const post = postsDataCache[id];
             if (!post) return;
@@ -221,6 +226,24 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
+        // Global function to delete a post
+        window.deletePost = async (id) => {
+            const post = postsDataCache[id];
+            const title = post ? post.title : 'this article';
+
+            if (confirm(`Are you sure you want to permanently delete "${title}"?`)) {
+                try {
+                    await remove(ref(db, 'posts/' + id));
+                    alert("🗑️ Post deleted successfully!");
+                    if (editingPostId === id) {
+                        resetForm();
+                    }
+                } catch (err) {
+                    alert("Error deleting post: " + err.message);
+                }
+            }
+        };
+
         document.getElementById('cancelEditBtn').onclick = resetForm;
 
         function resetForm() {
@@ -233,7 +256,7 @@
             document.getElementById('cancelEditBtn').classList.add('hidden');
         }
 
-        // Save post (creates new OR updates existing entry)
+        // Save or Update post handler
         document.getElementById('publishBtn').onclick = async () => {
             const title = document.getElementById('postTitle').value.trim();
             const imageUrl = document.getElementById('postImage').value.trim();
