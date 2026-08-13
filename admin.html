@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexyora Labs | Admin Portal</title>
+    <title>Nexyora Labs | Secure Admin Portal</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -32,12 +32,12 @@
                 <i class="fa-solid fa-user-shield"></i>
             </div>
             <h2 class="text-2xl font-bold mb-2">Admin Portal Login</h2>
-            <p class="text-xs text-slate-400 mb-6">Enter your administrator credentials to manage posts.</p>
+            <p class="text-xs text-slate-400 mb-6">Sign in with your authorized admin email address.</p>
             
             <div class="space-y-4">
-                <input type="text" id="adminUser" placeholder="Admin Username" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500">
-                <input type="password" id="adminPass" placeholder="Admin Password" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500">
-                <button id="loginBtn" class="w-full bg-blue-600 hover:bg-blue-500 py-3 rounded-xl font-bold transition shadow-lg">Login to Dashboard</button>
+                <input type="email" id="adminEmail" placeholder="Admin Email" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500">
+                <input type="password" id="adminPass" placeholder="Password" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500">
+                <button id="loginBtn" class="w-full bg-blue-600 hover:bg-blue-500 py-3 rounded-xl font-bold transition shadow-lg">Authenticate</button>
             </div>
             
             <a href="/index.html" class="inline-block mt-6 text-xs text-slate-400 hover:text-white transition">← Return to Main Site</a>
@@ -48,7 +48,7 @@
         <div class="flex justify-between items-center mb-8 pb-4 border-b border-white/10">
             <div>
                 <h1 class="text-2xl font-bold text-blue-400">Website Content Manager</h1>
-                <p class="text-xs text-slate-400">Create, style, and publish live posts without modifying code.</p>
+                <p class="text-xs text-slate-400">Authenticated as: <span id="adminEmailDisplay" class="text-blue-300 font-bold"></span></p>
             </div>
             <div class="flex items-center gap-3">
                 <a href="/index.html" class="text-xs bg-slate-800 border border-white/10 px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition">View Website</a>
@@ -75,6 +75,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getDatabase, ref, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         // Firebase Configuration
@@ -88,13 +89,11 @@
         };
 
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getDatabase(app);
 
-        // 🔑 SET YOUR ADMIN USERNAME AND PASSWORD HERE
-        const ADMIN_CREDENTIALS = {
-            username: "Admin@AgentGhost",
-            password: "Agentghost@54321" 
-        };
+        // 🛡️ RECLAMATION: Change this to your exact email address
+        const ADMIN_EMAIL = "ideas.by.chen@gmail.com"; 
 
         // Initialize Rich Text Editor with Color controls
         const quill = new Quill('#editor', {
@@ -103,7 +102,7 @@
                 toolbar: [
                     [{ 'header': [1, 2, 3, false] }],
                     ['bold', 'italic', 'underline', 'strike'],
-                    [{ 'color': [] }, { 'background': [] }], // 🎨 Font & Background Color Picker
+                    [{ 'color': [] }, { 'background': [] }], // Font & Highlight Color Selectors
                     [{ 'align': [] }],
                     [{ 'list': 'ordered'}, { 'list': 'bullet' }],
                     ['link', 'clean']
@@ -111,52 +110,60 @@
             }
         });
 
-        // Login Logic
-        document.getElementById('loginBtn').onclick = () => {
-            const user = document.getElementById('adminUser').value.trim();
+        // Check auth status safely via Firebase
+        onAuthStateChanged(auth, (user) => {
+            if (user && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+                document.getElementById('adminLoginSection').classList.add('hidden-panel');
+                document.getElementById('adminDashboard').classList.remove('hidden-panel');
+                document.getElementById('adminEmailDisplay').textContent = user.email;
+            } else if (user) {
+                alert("Unauthorized Access: This account is not an admin.");
+                signOut(auth);
+            } else {
+                document.getElementById('adminLoginSection').classList.remove('hidden-panel');
+                document.getElementById('adminDashboard').classList.add('hidden-panel');
+            }
+        });
+
+        // Secure Login Event
+        document.getElementById('loginBtn').onclick = async () => {
+            const email = document.getElementById('adminEmail').value.trim();
             const pass = document.getElementById('adminPass').value.trim();
 
-            if (user === ADMIN_CREDENTIALS.username && pass === ADMIN_CREDENTIALS.password) {
-                sessionStorage.setItem('adminAuthenticated', 'true');
-                showDashboard();
-            } else {
-                alert("Invalid Admin Username or Password!");
+            if (!email || !pass) return alert("Please fill in both Email and Password.");
+
+            if (email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+                return alert("Access Denied: Email address is not authorized for Admin access.");
+            }
+
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+            } catch (err) {
+                alert("Authentication Failed: " + err.message);
             }
         };
 
-        // Logout Logic
-        document.getElementById('logoutBtn').onclick = () => {
-            sessionStorage.removeItem('adminAuthenticated');
-            window.location.reload();
-        };
+        // Logout Event
+        document.getElementById('logoutBtn').onclick = () => signOut(auth);
 
-        // Check Session
-        if (sessionStorage.getItem('adminAuthenticated') === 'true') {
-            showDashboard();
-        }
-
-        function showDashboard() {
-            document.getElementById('adminLoginSection').classList.add('hidden-panel');
-            document.getElementById('adminDashboard').classList.remove('hidden-panel');
-        }
-
-        // Publish Post to Firebase
+        // Publish Post Handler
         document.getElementById('publishBtn').onclick = async () => {
             const title = document.getElementById('postTitle').value.trim();
             const contentHtml = quill.root.innerHTML;
 
             if (!title || quill.getText().trim().length === 0) {
-                return alert("Please provide both a title and post content.");
+                return alert("Please enter a title and post content.");
             }
 
             try {
                 await push(ref(db, 'posts'), {
                     title: title,
                     content: contentHtml,
+                    author: auth.currentUser.email,
                     timestamp: serverTimestamp()
                 });
 
-                alert("🎉 Post successfully published live to index.html!");
+                alert("🎉 Post successfully published live!");
                 document.getElementById('postTitle').value = "";
                 quill.setText("");
             } catch (err) {
