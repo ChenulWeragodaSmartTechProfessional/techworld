@@ -16,7 +16,6 @@
         .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
         .hidden-panel { display: none !important; }
         
-        /* Quill Customization for Dark Theme */
         .ql-toolbar { background: #1e293b; border-color: #334155 !important; border-radius: 0.75rem 0.75rem 0 0; }
         .ql-container { background: #0f172a; border-color: #334155 !important; color: #f8fafc; border-radius: 0 0 0.75rem 0.75rem; min-height: 250px; font-size: 1rem; }
         .ql-stroke { stroke: #cbd5e1 !important; }
@@ -73,6 +72,11 @@
             </div>
 
             <div>
+                <label class="block text-sm font-semibold mb-2 text-slate-300">Image URL (Optional)</label>
+                <input type="text" id="postImage" placeholder="https://images.unsplash.com/..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500">
+            </div>
+
+            <div>
                 <label class="block text-sm font-semibold mb-2 text-slate-300">Post Content & Text Formatting</label>
                 <div id="editor"></div>
             </div>
@@ -88,7 +92,6 @@
         import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getDatabase, ref, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDM4BWnLf6jGycrMdQClWtq-Ra2iDidWsQ",
             authDomain: "tech-world-93ee6.firebaseapp.com",
@@ -103,10 +106,8 @@
         const db = getDatabase(app);
         const googleProvider = new GoogleAuthProvider();
 
-        // 🛡️ Set your authorized Admin Gmail address
         const ADMIN_EMAIL = "ideas.by.chen@gmail.com"; 
 
-        // Initialize Rich Text Editor with Color controls
         const quill = new Quill('#editor', {
             theme: 'snow',
             modules: {
@@ -121,7 +122,6 @@
             }
         });
 
-        // Monitor Auth State
         onAuthStateChanged(auth, (user) => {
             if (user && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
                 document.getElementById('adminLoginSection').classList.add('hidden-panel');
@@ -136,7 +136,6 @@
             }
         });
 
-        // 🌐 Google Sign-In Handler
         document.getElementById('googleLoginBtn').onclick = async () => {
             try {
                 const result = await signInWithPopup(auth, googleProvider);
@@ -149,7 +148,6 @@
             }
         };
 
-        // Email / Password Login Handler
         document.getElementById('loginBtn').onclick = async () => {
             const email = document.getElementById('adminEmail').value.trim();
             const pass = document.getElementById('adminPass').value.trim();
@@ -167,12 +165,11 @@
             }
         };
 
-        // Logout
         document.getElementById('logoutBtn').onclick = () => signOut(auth);
 
-        // Publish Post Handler
         document.getElementById('publishBtn').onclick = async () => {
             const title = document.getElementById('postTitle').value.trim();
+            const imageUrl = document.getElementById('postImage').value.trim();
             const contentHtml = quill.root.innerHTML;
 
             if (!title || quill.getText().trim().length === 0) {
@@ -182,6 +179,7 @@
             try {
                 await push(ref(db, 'posts'), {
                     title: title,
+                    imageUrl: imageUrl,
                     content: contentHtml,
                     author: auth.currentUser.email,
                     timestamp: serverTimestamp()
@@ -189,6 +187,7 @@
 
                 alert("🎉 Post successfully published live!");
                 document.getElementById('postTitle').value = "";
+                document.getElementById('postImage').value = "";
                 quill.setText("");
             } catch (err) {
                 alert("Error publishing post: " + err.message);
