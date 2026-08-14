@@ -70,7 +70,9 @@
                 if (snapshot.exists()) {
                     const story = snapshot.val();
 
-                    // Render page details FIRST so reader never sees PERMISSION_DENIED error
+                    // Check if this browser has already liked this story
+                    const hasLiked = localStorage.getItem(`liked_story_${id}`) === 'true';
+
                     container.innerHTML = `
                         ${story.imageUrl ? `
                             <div class="w-full h-64 md:h-96 rounded-2xl overflow-hidden mb-8 border border-white/10 shadow-xl">
@@ -88,8 +90,8 @@
                                 <span><i class="fa-solid fa-heart text-pink-500 mr-1.5"></i> <span id="likeCount">${story.likesCount || 0}</span> likes</span>
                             </span>
                             
-                            <button id="likeBtn" class="bg-purple-600/20 hover:bg-purple-600 text-purple-300 hover:text-white border border-purple-500/30 font-bold px-4 py-2 rounded-xl transition flex items-center gap-2">
-                                <i class="fa-solid fa-heart"></i> Like Story
+                            <button id="likeBtn" ${hasLiked ? 'disabled' : ''} class="${hasLiked ? 'bg-pink-600/30 text-pink-400 cursor-not-allowed border-pink-500/40' : 'bg-purple-600/20 hover:bg-purple-600 text-purple-300 hover:text-white border-purple-500/30'} border font-bold px-4 py-2 rounded-xl transition flex items-center gap-2">
+                                <i class="fa-solid fa-heart ${hasLiked ? 'text-pink-500' : ''}"></i> ${hasLiked ? 'Liked' : 'Like Story'}
                             </button>
                         </div>
 
@@ -106,14 +108,27 @@
                     }
 
                     // Like button click handler
-                    document.getElementById('likeBtn').onclick = async () => {
+                    const likeBtn = document.getElementById('likeBtn');
+                    likeBtn.onclick = async () => {
+                        if (localStorage.getItem(`liked_story_${id}`) === 'true') {
+                            return; // Double guard against clicking
+                        }
+
                         const newLikes = (story.likesCount || 0) + 1;
                         try {
                             await update(storyRef, { likesCount: newLikes });
+                            
+                            // Save preference locally
+                            localStorage.setItem(`liked_story_${id}`, 'true');
+
+                            // Update UI
                             document.getElementById('likeCount').innerText = newLikes;
-                            story.likesCount = newLikes;
+                            likeBtn.disabled = true;
+                            likeBtn.className = "bg-pink-600/30 text-pink-400 cursor-not-allowed border border-pink-500/40 font-bold px-4 py-2 rounded-xl transition flex items-center gap-2";
+                            likeBtn.innerHTML = `<i class="fa-solid fa-heart text-pink-500"></i> Liked`;
+
                         } catch (err) {
-                            alert("Could not update likes. Ensure write rules permit public updates.");
+                            alert("Could not update likes. Ensure Firebase write rules permit updates.");
                         }
                     };
 
