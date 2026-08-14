@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexyora Labs | Horror & Psychology Stories</title>
-    <link rel="icon" type="image/x-icon" href="/techworld.jpeg">
-    <link rel="stylesheet" href="styles-responsive.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -21,7 +19,7 @@
         <div class="flex items-center gap-3">
             <i class="fa-solid fa-ghost text-2xl text-purple-500"></i>
             <div>
-                <h1 class="text-xl font-extrabold uppercase tracking-wider gradient-text">Twisted Timeline</h1>
+                <h1 class="text-xl font-extrabold uppercase tracking-wider gradient-text">Shadow Archives</h1>
                 <p class="text-xs text-slate-400">Horror & Psychological Tales</p>
             </div>
         </div>
@@ -30,7 +28,9 @@
             <a href="index.html" class="text-xs text-slate-400 hover:text-purple-400 transition font-bold">
                 <i class="fa-solid fa-house mr-1"></i> Tech Blog
             </a>
-            
+            <a href="admin-stories.html" class="text-xs bg-purple-600/20 text-purple-300 hover:bg-purple-600 hover:text-white px-3 py-1.5 rounded-xl border border-purple-500/30 font-bold transition">
+                <i class="fa-solid fa-pen mr-1"></i> Story Admin
+            </a>
         </div>
     </header>
 
@@ -65,27 +65,26 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // Fetch stories live from Firebase
-        onValue(ref(db, 'posts'), (snapshot) => {
+        // Explicitly reading from the 'stories' database node only
+        onValue(ref(db, 'stories'), (snapshot) => {
             const container = document.getElementById('storiesContainer');
             container.innerHTML = "";
-            const posts = snapshot.val() || {};
+            const stories = snapshot.val() || {};
 
-            const keys = Object.keys(posts).reverse();
+            const keys = Object.keys(stories).reverse();
 
             if (keys.length > 0) {
                 keys.forEach(key => {
-                    const post = posts[key];
+                    const story = stories[key];
 
-                    // Unescape preview text
-                    let rawText = (post.content || "")
+                    // Clean formatting preview
+                    let rawText = (story.content || "")
                         .replace(/&lt;/g, "<")
                         .replace(/&gt;/g, ">")
                         .replace(/&quot;/g, '"')
                         .replace(/&#039;/g, "'")
                         .replace(/&amp;/g, "&");
 
-                    // Create short preview excerpt
                     const excerpt = rawText.replace(/<[^>]*>?/gm, '').substring(0, 120) + "...";
 
                     const card = document.createElement('div');
@@ -93,21 +92,21 @@
 
                     card.innerHTML = `
                         <div>
-                            ${post.imageUrl ? `
+                            ${story.imageUrl ? `
                                 <div class="h-44 rounded-xl overflow-hidden mb-4 border border-white/5">
-                                    <img src="${post.imageUrl}" class="w-full h-full object-cover" alt="Story Cover">
+                                    <img src="${story.imageUrl}" class="w-full h-full object-cover" alt="Story Cover">
                                 </div>
                             ` : ''}
                             <h3 class="font-bold text-lg text-slate-100 mb-2 hover:text-purple-400 transition">
-                                <a href="story.html?id=${key}">${post.title || 'Untitled Tale'}</a>
+                                <a href="story.html?id=${key}">${story.title || 'Untitled Tale'}</a>
                             </h3>
                             <p class="text-xs text-slate-400 leading-relaxed mb-4">${excerpt}</p>
                         </div>
                         
                         <div class="pt-4 border-t border-slate-800 flex justify-between items-center text-xs text-slate-500">
                             <span class="flex items-center gap-3">
-                                <span><i class="fa-solid fa-eye text-purple-400/70 mr-1"></i> ${post.views || 0}</span>
-                                <span><i class="fa-solid fa-heart text-pink-500/70 mr-1"></i> ${post.likesCount || 0}</span>
+                                <span><i class="fa-solid fa-eye text-purple-400/70 mr-1"></i> ${story.views || 0}</span>
+                                <span><i class="fa-solid fa-heart text-pink-500/70 mr-1"></i> ${story.likesCount || 0}</span>
                             </span>
                             <a href="story.html?id=${key}" class="text-purple-400 font-bold hover:underline flex items-center gap-1">
                                 Read Story <i class="fa-solid fa-arrow-right text-[10px]"></i>
