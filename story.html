@@ -3,63 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexyora Labs | Story Reader</title>
+    <title>Nexyora Labs | Horror & Psychology Stories</title>
+    <link rel="icon" type="image/x-icon" href="/techworld.jpeg">
     <link rel="stylesheet" href="styles-responsive.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="icon" type="image/x-icon" href="/techworld.jpeg">
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
     <style>
-        body { background-color: #090d16; color: #f8fafc; margin: 0; min-height: 100vh; }
+        body { background-color: #080c14; color: #f8fafc; margin: 0; min-height: 100vh; }
         .glass { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .gradient-text { background: linear-gradient(90deg, #c084fc, #e879f9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
-        /* Formatted story text styling */
-        .story-content p { margin-bottom: 1.25rem; line-height: 1.8; font-size: 1.05rem; color: #cbd5e1; }
-        .story-content h2, .story-content h3 { color: #f3e8ff; font-weight: 700; margin-top: 1.5rem; margin-bottom: 0.75rem; }
-        .story-content blockquote { border-left: 4px solid #a855f7; padding-left: 1rem; italic; color: #a1a1aa; margin: 1.5rem 0; }
+        .gradient-text { background: linear-gradient(90deg, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .story-card:hover { transform: translateY(-4px); border-color: rgba(168, 85, 247, 0.4); }
     </style>
 </head>
-<body class="font-sans p-4 md:p-8 max-w-4xl mx-auto">
+<body class="font-sans p-4 md:p-8 max-w-6xl mx-auto">
 
     <header class="flex justify-between items-center mb-10 pb-4 border-b border-white/10">
-        <a href="index.html" class="flex items-center gap-2 text-slate-300 hover:text-purple-400 text-sm font-semibold transition">
-            <i class="fa-solid fa-arrow-left"></i> Return Home
-        </a>
-        <h1 class="text-xl font-bold uppercase tracking-wider gradient-text">
-            <i class="fa-solid fa-book-open mr-2"></i>Tales & Psychology
-        </h1>
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-ghost text-2xl text-purple-500"></i>
+            <div>
+                <h1 class="text-xl font-extrabold uppercase tracking-wider gradient-text">Shadow Archives</h1>
+                <p class="text-xs text-slate-400">Horror & Psychological Tales</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-4">
+            <a href="index.html" class="text-xs text-slate-400 hover:text-purple-400 transition font-bold">
+                <i class="fa-solid fa-house mr-1"></i> Tech Blog
+            </a>
+            <a href="admin.html" class="text-xs bg-purple-600/20 text-purple-300 hover:bg-purple-600 hover:text-white px-3 py-1.5 rounded-xl border border-purple-500/30 font-bold transition">
+                <i class="fa-solid fa-pen mr-1"></i> Admin Portal
+            </a>
+        </div>
     </header>
 
-    <main id="storyContainer" class="glass rounded-3xl p-6 md:p-10 shadow-2xl">
-        <div id="loadingState" class="text-center py-12 text-slate-400 text-sm italic">
-            <i class="fa-solid fa-spinner fa-spin text-2xl text-purple-500 mb-3 block"></i>
-            Unraveling story content...
+    <section class="glass p-8 rounded-3xl mb-10 text-center relative overflow-hidden">
+        <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-purple-600/10 rounded-full blur-3xl"></div>
+        <h2 class="text-2xl md:text-3xl font-extrabold mb-2 text-purple-200">Step Into The Dark</h2>
+        <p class="text-xs md:text-sm text-slate-400 max-w-xl mx-auto">Explore mind-bending psychological thrillers, dark mysteries, and eerie horror stories.</p>
+    </section>
+
+    <main>
+        <div id="storiesContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div id="loadingState" class="col-span-full text-center py-16 text-slate-500 text-sm italic">
+                <i class="fa-solid fa-spinner fa-spin text-2xl text-purple-500 mb-3 block"></i>
+                Summoning stories from Firebase...
+            </div>
         </div>
-
-        <article id="storyArticle" class="hidden">
-            <div id="imageWrapper" class="hidden mb-8 rounded-2xl overflow-hidden border border-white/10 max-h-96">
-                <img id="storyImage" src="" alt="Story Banner" class="w-full h-full object-cover">
-            </div>
-
-            <h1 id="storyTitle" class="text-3xl md:text-4xl font-extrabold text-slate-100 mb-4 leading-tight"></h1>
-            
-            <div class="flex items-center gap-4 text-xs text-slate-400 mb-8 pb-6 border-b border-slate-800">
-                <span id="storyDate"><i class="fa-regular fa-calendar mr-1"></i> --</span>
-                <span><i class="fa-solid fa-eye mr-1"></i> <span id="storyViews">0</span> Views</span>
-                <button id="likeBtn" class="flex items-center gap-1.5 bg-purple-500/10 text-purple-400 hover:bg-purple-500/20 px-3 py-1 rounded-full border border-purple-500/20 transition cursor-pointer">
-                    <i class="fa-solid fa-heart"></i> <span id="storyLikes">0</span>
-                </button>
-            </div>
-
-            <div id="storyBody" class="story-content"></div>
-        </article>
     </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, get, update, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDM4BWnLf6jGycrMdQClWtq-Ra2iDidWsQ",
@@ -73,63 +67,66 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // Get post ID from URL parameters (e.g., story.html?id=-NX12345)
-        const urlParams = new URLSearchParams(window.location.search);
-        const storyId = urlParams.get('id');
+        // Fetch stories live from Firebase
+        onValue(ref(db, 'posts'), (snapshot) => {
+            const container = document.getElementById('storiesContainer');
+            container.innerHTML = "";
+            const posts = snapshot.val() || {};
 
-        async function loadStory() {
-            if (!storyId) {
-                document.getElementById('loadingState').innerHTML = `<p class="text-red-400">No story selected. Go back home to choose one.</p>`;
-                return;
+            const keys = Object.keys(posts).reverse();
+
+            if (keys.length > 0) {
+                keys.forEach(key => {
+                    const post = posts[key];
+
+                    // Unescape preview text
+                    let rawText = (post.content || "")
+                        .replace(/&lt;/g, "<")
+                        .replace(/&gt;/g, ">")
+                        .replace(/&quot;/g, '"')
+                        .replace(/&#039;/g, "'")
+                        .replace(/&amp;/g, "&");
+
+                    // Create short preview excerpt
+                    const excerpt = rawText.replace(/<[^>]*>?/gm, '').substring(0, 120) + "...";
+
+                    const card = document.createElement('div');
+                    card.className = "glass rounded-2xl p-5 transition-all duration-300 story-card flex flex-col justify-between";
+
+                    card.innerHTML = `
+                        <div>
+                            ${post.imageUrl ? `
+                                <div class="h-44 rounded-xl overflow-hidden mb-4 border border-white/5">
+                                    <img src="${post.imageUrl}" class="w-full h-full object-cover" alt="Story Cover">
+                                </div>
+                            ` : ''}
+                            <h3 class="font-bold text-lg text-slate-100 mb-2 hover:text-purple-400 transition">
+                                <a href="story.html?id=${key}">${post.title || 'Untitled Tale'}</a>
+                            </h3>
+                            <p class="text-xs text-slate-400 leading-relaxed mb-4">${excerpt}</p>
+                        </div>
+                        
+                        <div class="pt-4 border-t border-slate-800 flex justify-between items-center text-xs text-slate-500">
+                            <span class="flex items-center gap-3">
+                                <span><i class="fa-solid fa-eye text-purple-400/70 mr-1"></i> ${post.views || 0}</span>
+                                <span><i class="fa-solid fa-heart text-pink-500/70 mr-1"></i> ${post.likesCount || 0}</span>
+                            </span>
+                            <a href="story.html?id=${key}" class="text-purple-400 font-bold hover:underline flex items-center gap-1">
+                                Read Story <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </a>
+                        </div>
+                    `;
+
+                    container.appendChild(card);
+                });
+            } else {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-12 text-slate-500 text-sm">
+                        No horror or psychology stories published yet.
+                    </div>
+                `;
             }
-
-            const storyRef = ref(db, `posts/${storyId}`);
-
-            try {
-                // Increment view count
-                await update(storyRef, { views: increment(1) });
-
-                // Fetch story data
-                const snapshot = await get(storyRef);
-                if (snapshot.exists()) {
-                    const data = snapshot.val();
-                    
-                    document.title = `${data.title} | Nexyora Labs`;
-                    document.getElementById('storyTitle').textContent = data.title;
-                    document.getElementById('storyViews').textContent = (data.views || 0) + 1;
-                    document.getElementById('storyLikes').textContent = data.likesCount || 0;
-                    
-                    if (data.timestamp) {
-                        document.getElementById('storyDate').innerHTML = `<i class="fa-regular fa-calendar mr-1"></i> ${new Date(data.timestamp).toLocaleDateString()}`;
-                    }
-
-                    if (data.imageUrl) {
-                        document.getElementById('storyImage').src = data.imageUrl;
-                        document.getElementById('imageWrapper').classList.remove('hidden');
-                    }
-
-                    // Render markdown or HTML-safe content
-                    document.getElementById('storyBody').innerHTML = marked.parse(data.content || "");
-
-                    // Show content
-                    document.getElementById('loadingState').classList.add('hidden');
-                    document.getElementById('storyArticle').classList.remove('hidden');
-
-                    // Setup Like Button
-                    document.getElementById('likeBtn').onclick = async () => {
-                        await update(storyRef, { likesCount: increment(1) });
-                        const currentLikes = parseInt(document.getElementById('storyLikes').textContent);
-                        document.getElementById('storyLikes').textContent = currentLikes + 1;
-                    };
-                } else {
-                    document.getElementById('loadingState').innerHTML = `<p class="text-red-400">Story not found or deleted.</p>`;
-                }
-            } catch (err) {
-                document.getElementById('loadingState').innerHTML = `<p class="text-red-400">Failed to load story: ${err.message}</p>`;
-            }
-        }
-
-        loadStory();
+        });
     </script>
 </body>
 </html>
