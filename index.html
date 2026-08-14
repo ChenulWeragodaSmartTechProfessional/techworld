@@ -40,17 +40,24 @@
 
     <nav class="p-6 flex justify-between items-center max-w-6xl mx-auto relative z-10">
         <h1 class="text-2xl font-bold uppercase gradient-text">Nexyora Labs</h1>
-        <div id="userHeader" class="auth-hidden flex items-center gap-4">
-            <a href="/store.html" class="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-1.5 rounded-full hover:opacity-90 font-bold text-sm transition shadow-lg">
-                <i class="fa-solid fa-cart-shopping"></i> Visit Store
+        
+        <div class="flex items-center gap-3 md:gap-4">
+            <a href="stories.html" class="flex items-center gap-2 bg-purple-950/60 border border-purple-500/40 text-purple-300 hover:bg-purple-900/80 hover:text-white px-4 py-1.5 rounded-full font-bold text-xs md:text-sm transition shadow-lg">
+                <i class="fa-solid fa-ghost text-purple-400"></i> Stories
             </a>
 
-            <a class="flex items-center gap-2 bg-slate-800/50 border border-white/10 px-4 py-1.5 rounded-full hover:bg-slate-700 transition" href="/profile">
-                <i class="fa-solid fa-user-circle text-blue-400"></i>
-                <span id="displayPoints" class="text-yellow-500 font-bold text-sm">0 PTS</span>
-            </a>
-            
-            <button onclick="signOutUser()" class="text-red-400 text-xs font-bold uppercase hover:underline">Logout</button>
+            <div id="userHeader" class="auth-hidden flex items-center gap-3 md:gap-4">
+                <a href="/store.html" class="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-1.5 rounded-full hover:opacity-90 font-bold text-xs md:text-sm transition shadow-lg">
+                    <i class="fa-solid fa-cart-shopping"></i> Visit Store
+                </a>
+
+                <a class="flex items-center gap-2 bg-slate-800/50 border border-white/10 px-4 py-1.5 rounded-full hover:bg-slate-700 transition" href="/profile">
+                    <i class="fa-solid fa-user-circle text-blue-400"></i>
+                    <span id="displayPoints" class="text-yellow-500 font-bold text-xs md:text-sm">0 PTS</span>
+                </a>
+                
+                <button onclick="signOutUser()" class="text-red-400 text-xs font-bold uppercase hover:underline">Logout</button>
+            </div>
         </div>
     </nav>
 
@@ -158,7 +165,7 @@
         const db = getDatabase(app);
         const googleProvider = new GoogleAuthProvider();
 
-        // Google Sign-In (Google accounts are pre-verified by default)
+        // Google Sign-In
         document.getElementById('googleBtn').onclick = async () => {
             try { 
                 await signInWithPopup(auth, googleProvider); 
@@ -174,14 +181,12 @@
             if(!email || !pass) return alert("Tech World: Enter credentials.");
 
             try {
-                // Try logging in existing user
                 const res = await signInWithEmailAndPassword(auth, email, pass);
                 if (!res.user.emailVerified) {
                     alert("Tech World: Please verify your email first! Check your inbox/spam folder.");
                     await signOut(auth);
                 }
             } catch (error) {
-                // If user doesn't exist, create account and send confirmation email
                 if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
                     try {
                         const newUser = await createUserWithEmailAndPassword(auth, email, pass);
@@ -201,7 +206,6 @@
 
         // Auth State Listener
         onAuthStateChanged(auth, (user) => {
-            // Check if user exists AND email is verified (Google auth is verified automatically)
             const isVerified = user && (user.emailVerified || user.providerData.some(p => p.providerId === 'google.com'));
             
             document.getElementById('authSection').classList.toggle('auth-hidden', isVerified);
@@ -216,13 +220,11 @@
 
         // Realtime Database Listeners
         function setupRealtimeListeners(user) {
-            // 1. User Points Listener
             onValue(ref(db, 'users/' + user.uid), (snap) => {
                 const d = snap.val();
                 if (d) document.getElementById('displayPoints').textContent = (d.points || 0) + " PTS";
             });
 
-            // 2. Realtime Posts Listener
             onValue(ref(db, 'posts'), (snap) => {
                 const grid = document.getElementById('postsGrid');
                 grid.innerHTML = ""; 
@@ -260,7 +262,6 @@
                 }
             });
 
-            // 3. Live Community Comments Listener
             onValue(ref(db, 'comments'), (snap) => {
                 const list = document.getElementById('commentList');
                 list.innerHTML = ""; 
