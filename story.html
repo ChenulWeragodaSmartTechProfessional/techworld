@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexyora Labs | Read Story</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body { background-color: #080c14; color: #f8fafc; margin: 0; min-height: 100vh; }
+        .glass { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .gradient-text { background: linear-gradient(90deg, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    </style>
+</head>
+<body class="font-sans p-4 md:p-8 max-w-4xl mx-auto">
+
+    <header class="flex justify-between items-center mb-10 pb-4 border-b border-white/10">
+        <a href="stories.html" class="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-purple-400 transition">
+            <i class="fa-solid fa-arrow-left"></i> Back to Stories
+        </a>
+        
+        <div class="flex items-center gap-4">
+            <a href="index.html" class="text-xs text-slate-400 hover:text-blue-400 transition font-bold">
+                <i class="fa-solid fa-house mr-1"></i> Tech Portal
+            </a>
+        </div>
+    </header>
+
+    <main id="storyContainer" class="glass rounded-3xl p-6 md:p-10 shadow-2xl relative overflow-hidden">
+        <div id="loadingState" class="text-center py-16 text-slate-500 text-sm italic">
+            <i class="fa-solid fa-ghost fa-spin text-3xl text-purple-500 mb-3 block"></i>
+            Loading story details...
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDM4BWnLf6jGycrMdQClWtq-Ra2iDidWsQ",
+            authDomain: "tech-world-93ee6.firebaseapp.com",
+            databaseURL: "https://tech-world-93ee6-default-rtdb.firebaseio.com",
+            projectId: "tech-world-93ee6",
+            storageBucket: "tech-world-93ee6.firebasestorage.app",
+            appId: "1:912275465700:web:5ec12525e03446712153f1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Get story ID from query string URL (?id=...)
+        const urlParams = new URLSearchParams(window.location.search);
+        const storyId = urlParams.get('id');
+
+        const container = document.getElementById('storyContainer');
+
+        if (!storyId) {
+            container.innerHTML = `<p class="text-center text-red-400 py-10">Story ID not found in URL.</p>`;
+        } else {
+            loadStory(storyId);
+        }
+
+        async function loadStory(id) {
+            const storyRef = ref(db, `stories/${id}`);
+
+            try {
+                const snapshot = await get(storyRef);
+
+                if (snapshot.exists()) {
+                    const story = snapshot.val();
+
+                    // Increment views count by 1
+                    const currentViews = (story.views || 0) + 1;
+                    await update(storyRef, { views: currentViews });
+
+                    // Render page details
+                    container.innerHTML = `
+                        ${story.imageUrl ? `
+                            <div class="w-full h-64 md:h-96 rounded-2xl overflow-hidden mb-8 border border-white/10 shadow-xl">
+                                <img src="${story.imageUrl}" class="w-full h-full object-cover" alt="Story Cover">
+                            </div>
+                        ` : ''}
+
+                        <h1 class="text-2xl md:text-4xl font-extrabold gradient-text mb-4 leading-tight">
+                            ${story.title || 'Untitled Story'}
+                        </h1>
+
+                        <div class="flex items-center justify-between pb-6 mb-8 border-b border-white/10 text-xs text-slate-400">
+                            <span class="flex items-center gap-4">
+                                <span><i class="fa-solid fa-eye text-purple-400 mr-1.5"></i> ${currentViews} views</span>
+                                <span><i class="fa-solid fa-heart text-pink-500 mr-1.5"></i> <span id="likeCount">${story.likesCount || 0}</span> likes</span>
+                            </span>
+                            
+                            <button id="likeBtn" class="bg-purple-600/20 hover:bg-purple-600 text-purple-300 hover:text-white border border-purple-500/30 font-bold px-4 py-2 rounded-xl transition flex items-center gap-2">
+                                <i class="fa-solid fa-heart"></i> Like Story
+                            </button>
+                        </div>
+
+                        <div class="text-slate-300 text-sm md:text-base leading-relaxed whitespace-pre-wrap space-y-4">
+                            ${story.content}
+                        </div>
+                    `;
+
+                    // Add Like button handler
+                    document.getElementById('likeBtn').onclick = async () => {
+                        const newLikes = (story.likesCount || 0) + 1;
+                        await update(storyRef, { likesCount: newLikes });
+                        document.getElementById('likeCount').innerText = newLikes;
+                        story.likesCount = newLikes;
+                    };
+
+                } else {
+                    container.innerHTML = `<p class="text-center text-slate-400 py-10">Story not found or has been deleted.</p>`;
+                }
+            } catch (err) {
+                container.innerHTML = `<p class="text-center text-red-400 py-10">Error loading story: ${err.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
