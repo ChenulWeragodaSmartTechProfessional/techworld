@@ -106,7 +106,6 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                
                 <div class="bg-slate-900/60 border border-slate-700/50 rounded-2xl overflow-hidden shadow-xl hover:border-red-500/40 transition">
                     <div class="relative w-full aspect-video">
                         <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/76YokNeOpqU" title="How to Create Simple Web Site : A Step by Step Guide For You" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
@@ -126,7 +125,6 @@
                         <p class="text-xs text-slate-400 mt-1 line-clamp-2">Clear cache files and speed up your Windows PC performance.</p>
                     </div>
                 </div>
-
             </div>
         </section>
 
@@ -160,32 +158,42 @@
         const db = getDatabase(app);
         const googleProvider = new GoogleAuthProvider();
 
-        // Google Sign-In
+        // Google Sign-In (Google accounts are pre-verified by default)
         document.getElementById('googleBtn').onclick = async () => {
-            try { await signInWithPopup(auth, googleProvider); } catch (err) { alert("Tech World: " + err.message); }
+            try { 
+                await signInWithPopup(auth, googleProvider); 
+            } catch (err) { 
+                alert("Tech World: " + err.message); 
+            }
         };
 
-        // Email / Password Auth & Registration
+        // Email / Password Auth with Verification Email Check
         document.getElementById('authBtn').onclick = async () => {
             const email = document.getElementById('email').value.trim();
             const pass = document.getElementById('password').value.trim();
             if(!email || !pass) return alert("Tech World: Enter credentials.");
 
             try {
+                // Try logging in existing user
                 const res = await signInWithEmailAndPassword(auth, email, pass);
                 if (!res.user.emailVerified) {
-                    alert("Tech World: Please verify your email first!");
+                    alert("Tech World: Please verify your email first! Check your inbox/spam folder.");
                     await signOut(auth);
                 }
             } catch (error) {
+                // If user doesn't exist, create account and send confirmation email
                 if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
                     try {
                         const newUser = await createUserWithEmailAndPassword(auth, email, pass);
                         await sendEmailVerification(newUser.user);
-                        alert("Tech World says: Verification email sent! Please check your inbox and verify your account.");
+                        alert("Tech World: Verification email sent! Please check your inbox and confirm your account before logging in.");
                         await signOut(auth);
-                    } catch (regErr) { alert("Tech World: " + regErr.message); }
-                } else { alert("Tech World: " + error.message); }
+                    } catch (regErr) { 
+                        alert("Tech World: " + regErr.message); 
+                    }
+                } else { 
+                    alert("Tech World: " + error.message); 
+                }
             }
         };
 
@@ -193,10 +201,13 @@
 
         // Auth State Listener
         onAuthStateChanged(auth, (user) => {
-            const isVerified = user && user.emailVerified;
+            // Check if user exists AND email is verified (Google auth is verified automatically)
+            const isVerified = user && (user.emailVerified || user.providerData.some(p => p.providerId === 'google.com'));
+            
             document.getElementById('authSection').classList.toggle('auth-hidden', isVerified);
             document.getElementById('mainContent').classList.toggle('auth-hidden', !isVerified);
             document.getElementById('userHeader').classList.toggle('auth-hidden', !isVerified);
+
             if (isVerified) { 
                 setupRealtimeListeners(user); 
                 handleDailyReward(user); 
@@ -287,7 +298,9 @@
                     await update(userRef, { points: (d.points || 0) + 5, lastLogin: today });
                     document.getElementById('rewardMsg').classList.remove('hidden');
                 }
-            } else { await set(userRef, { points: 5, lastLogin: today, email: user.email }); }
+            } else { 
+                await set(userRef, { points: 5, lastLogin: today, email: user.email }); 
+            }
         }
 
         // Community Comment Post Trigger
