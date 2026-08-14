@@ -50,9 +50,10 @@
                     <button type="button" onclick="formatText('italic')" title="Italic" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded text-xs italic"><i class="fa-solid fa-italic"></i></button>
                     <button type="button" onclick="formatText('heading')" title="Heading" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded text-xs font-bold"><i class="fa-solid fa-heading"></i></button>
                     <button type="button" onclick="formatText('list')" title="Bullet List" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded text-xs"><i class="fa-solid fa-list-ul"></i></button>
+                    <button type="button" onclick="formatText('code')" title="Code Snippet" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 text-sky-400 rounded text-xs font-bold"><i class="fa-solid fa-code"></i> Code</button>
                     <button type="button" onclick="formatText('link')" title="Insert Link" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded text-xs"><i class="fa-solid fa-link"></i></button>
                 </div>
-                <textarea id="postContent" rows="8" placeholder="Write your article content here..." class="w-full bg-transparent p-4 text-sm text-white focus:outline-none"></textarea>
+                <textarea id="postContent" rows="10" placeholder="Write your article content here..." class="w-full bg-transparent p-4 text-sm text-white focus:outline-none font-mono"></textarea>
             </div>
             
             <div class="flex items-center gap-3">
@@ -95,20 +96,25 @@
 
         let cachedPosts = {};
 
-        // Track Authentication State
+        // Convert raw HTML tags so they display as code without breaking layouts
+        function escapeHTML(str) {
+            return str
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Authentication State Guard
         onAuthStateChanged(auth, (user) => {
             const statusElem = document.getElementById('adminStatus');
-            if (user) {
-                statusElem.textContent = `Logged in as: ${user.email}`;
-                if (user.email === 'ideas.by.chen@gmail.com') {
-                    statusElem.className = "text-xs text-emerald-400 font-bold mt-1";
-                } else {
-                    statusElem.className = "text-xs text-amber-400 font-bold mt-1";
-                    alert(`Notice: You are logged in as ${user.email}. Publishing requires ideas.by.chen@gmail.com`);
-                }
+            if (!user || user.email !== 'ideas.by.chen@gmail.com') {
+                alert("Access Denied! Only the administrator can access this page.");
+                window.location.href = "index.html";
             } else {
-                statusElem.textContent = "Not logged in. Please log in on index.html first.";
-                statusElem.className = "text-xs text-red-400 font-bold mt-1";
+                statusElem.textContent = `Logged in as Admin: ${user.email}`;
+                statusElem.className = "text-xs text-emerald-400 font-bold mt-1";
             }
         });
 
@@ -119,7 +125,7 @@
             window.location.href = "index.html";
         };
 
-        // Reset/Cancel Editing State
+        // Reset/Cancel Form
         const resetForm = () => {
             document.getElementById('editPostId').value = "";
             document.getElementById('postTitle').value = "";
@@ -133,24 +139,26 @@
 
         document.getElementById('cancelEditBtn').onclick = resetForm;
 
-        // Save / Update Article Handler
+        // Save / Update Handler
         document.getElementById('publishBtn').onclick = async () => {
             const editId = document.getElementById('editPostId').value;
             const title = document.getElementById('postTitle').value.trim();
             const fileInput = document.getElementById('postImageFile');
             let imageUrl = document.getElementById('postImgUrl').value.trim();
-            const content = document.getElementById('postContent').value.trim();
+            const rawContent = document.getElementById('postContent').value.trim();
 
-            if (!title || !content) return alert("Please enter both a title and content.");
+            if (!title || !rawContent) return alert("Please enter both a title and content.");
 
             const btnText = document.getElementById('btnText');
             const publishBtn = document.getElementById('publishBtn');
+
+            // Escape standard HTML tags while keeping markdown snippets readable
+            const content = escapeHTML(rawContent);
 
             try {
                 publishBtn.disabled = true;
                 btnText.textContent = editId ? "Updating..." : "Publishing...";
 
-                // Upload image if selected
                 if (fileInput.files.length > 0) {
                     const file = fileInput.files[0];
                     const fileStorageRef = storageRef(storage, `post_images/${Date.now()}_${file.name}`);
@@ -159,14 +167,12 @@
                 }
 
                 if (editId) {
-                    // Update existing article
                     const postData = { title, content };
                     if (imageUrl) postData.imageUrl = imageUrl;
                     
                     await update(ref(db, `posts/${editId}`), postData);
                     alert("Article updated successfully!");
                 } else {
-                    // Create new article
                     await push(ref(db, 'posts'), {
                         title,
                         imageUrl,
@@ -187,7 +193,7 @@
             }
         };
 
-        // Realtime Analytics & Load Posts with Edit Functionality
+        // Realtime Posts Loader & Analytics
         onValue(ref(db, 'posts'), (snapshot) => {
             const list = document.getElementById('adminPostsList');
             list.innerHTML = "";
@@ -224,12 +230,21 @@
                         </div>
                     `;
 
-                    // Edit Button Handler
+                    // Edit Post
                     item.querySelector('.edit-btn').onclick = () => {
                         document.getElementById('editPostId').value = key;
                         document.getElementById('postTitle').value = post.title || '';
                         document.getElementById('postImgUrl').value = post.imageUrl || '';
-                        document.getElementById('postContent').value = post.content || '';
+                        
+                        // Unescape HTML back for editing in textarea
+                        let unescapedContent = (post.content || '')
+                            .replace(/&lt;/g, "<")
+                            .replace(/&gt;/g, ">")
+                            .replace(/&quot;/g, '"')
+                            .replace(/&#039;/g, "'")
+                            .replace(/&amp;/g, "&");
+
+                        document.getElementById('postContent').value = unescapedContent;
                         
                         document.getElementById('formHeading').innerHTML = '<i class="fa-solid fa-pen-to-square mr-2"></i> Edit Article';
                         document.getElementById('btnText').textContent = "Update Article";
@@ -238,7 +253,7 @@
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                     };
 
-                    // Delete Button Handler
+                    // Delete Post
                     item.querySelector('.delete-btn').onclick = async () => {
                         if (confirm(`Are you sure you want to delete "${post.title}"?`)) {
                             try {
@@ -256,13 +271,6 @@
                 list.innerHTML = `<p class="text-xs text-slate-500 italic">No published articles available.</p>`;
             }
         });
-
-        onAuthStateChanged(auth, (user) => {
-    if (!user || user.email !== 'ideas.by.chen@gmail.com') {
-        alert("Access Denied! Only the administrator can access this page.");
-        window.location.href = "index.html"; // Kick them back home
-    }
-});
     </script>
 
     <script>
@@ -286,6 +294,9 @@
                     break;
                 case 'list':
                     formatted = `\n• ${selectedText || 'List item'}`;
+                    break;
+                case 'code':
+                    formatted = `\n\`\`\`html\n${selectedText || ''}\n\`\`\`\n`;
                     break;
                 case 'link':
                     const url = prompt("Enter URL:", "https://");
