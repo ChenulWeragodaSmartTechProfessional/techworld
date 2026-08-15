@@ -70,66 +70,96 @@
             </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            
-            <div class="product-card p-5 flex flex-col justify-between">
-                <div>
-                    <img src="/techworld.jpeg" alt="Product Image" class="w-full h-48 object-cover rounded-xl mb-4">
-                    <span class="text-[10px] uppercase font-bold tracking-wider bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full">Hardware</span>
-                    <h3 class="font-bold text-white text-xl mt-2">Comming Soon</h3>
-                    <p class="text-xs text-slate-400 mt-2 mb-4">No Description</p>
-                </div>
-                <div>
-                    <div class="text-2xl font-extrabold text-blue-400 mb-4">RS.00.00</div>
-                    <button onclick="buyOnWhatsApp('Comming Soon', 'Rs.00.00')" class="wa-btn">
-                        <i class="fa-brands fa-whatsapp text-xl"></i> Order via WhatsApp
-                    </button>
-                </div>
+        <div id="productsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div id="loadingState" class="col-span-full text-center py-16 text-slate-500 text-sm italic">
+                <i class="fa-solid fa-spinner fa-spin text-2xl text-blue-400 mb-3 block"></i>
+                Loading products...
             </div>
-
-            <div class="product-card p-5 flex flex-col justify-between">
-                <div>
-                    <img src="/techworld.jpeg" alt="Product Image" class="w-full h-48 object-cover rounded-xl mb-4">
-                    <span class="text-[10px] uppercase font-bold tracking-wider bg-indigo-500/20 text-indigo-400 px-3 py-1 rounded-full">Software / AI</span>
-                    <h3 class="font-bold text-white text-xl mt-2">Comming Soon</h3>
-                    <p class="text-xs text-slate-400 mt-2 mb-4">No Description</p>
-                </div>
-                <div>
-                    <div class="text-2xl font-extrabold text-blue-400 mb-4">Rs.00.00</div>
-                    <button onclick="buyOnWhatsApp('Comming Soon', 'Rs.00.00')" class="wa-btn">
-                        <i class="fa-brands fa-whatsapp text-xl"></i> Order via WhatsApp
-                    </button>
-                </div>
-            </div>
-
-            <div class="product-card p-5 flex flex-col justify-between">
-                <div>
-                    <img src="/techworld.jpeg" alt="Product Image" class="w-full h-48 object-cover rounded-xl mb-4">
-                    <span class="text-[10px] uppercase font-bold tracking-wider bg-purple-500/20 text-purple-400 px-3 py-1 rounded-full">Service</span>
-                    <h3 class="font-bold text-white text-xl mt-2">Comming Soon</h3>
-                    <p class="text-xs text-slate-400 mt-2 mb-4">No Description</p>
-                </div>
-                <div>
-                    <div class="text-2xl font-extrabold text-blue-400 mb-4">Rs.00.00</div>
-                    <button onclick="buyOnWhatsApp('Comming Soon', 'Rs.00.00')" class="wa-btn">
-                        <i class="fa-brands fa-whatsapp text-xl"></i> Order via WhatsApp
-                    </button>
-                </div>
-            </div>
-
         </div>
     </main>
 
-    <script>
-        function buyOnWhatsApp(productName, price) {
-            // ⚠️ REPLACE WITH YOUR ACTUAL WHATSAPP NUMBER (with country code, e.g., 94712345678)
-            const phone = "94721502524"; 
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
+        const firebaseConfig = {
+            apiKey: "AIzaSyDM4BWnLf6jGycrMdQClWtq-Ra2iDidWsQ",
+            authDomain: "tech-world-93ee6.firebaseapp.com",
+            databaseURL: "https://tech-world-93ee6-default-rtdb.firebaseio.com",
+            projectId: "tech-world-93ee6",
+            storageBucket: "tech-world-93ee6.firebasestorage.app",
+            appId: "1:912275465700:web:5ec12525e03446712153f1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const defaultPhone = "94721502524";
+
+        function escapeHTML(str) {
+            return (str || '').replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag]));
+        }
+
+        window.buyOnWhatsApp = function(productName, price, whatsappNum) {
+            const phone = whatsappNum || defaultPhone;
             const message = `Hello Nexyora Labs! 👋\n\nI am interested in buying:\n📦 *Item:* ${productName}\n💵 *Price:* ${price}\n\nPlease let me know availability and payment methods!`;
-
             const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
             window.open(url, '_blank');
-        }
+        };
+
+        const categoryStyles = {
+            'HARDWARE': 'bg-blue-500/20 text-blue-400',
+            'SOFTWARE / AI': 'bg-indigo-500/20 text-indigo-400',
+            'SERVICE': 'bg-purple-500/20 text-purple-400'
+        };
+
+        onValue(ref(db, 'store'), (snapshot) => {
+            const container = document.getElementById('productsGrid');
+            container.innerHTML = "";
+            const items = snapshot.val() || {};
+            const keys = Object.keys(items).reverse();
+
+            if (keys.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-12 text-slate-500 text-sm">
+                        No products available in the store at the moment.
+                    </div>
+                `;
+                return;
+            }
+
+            keys.forEach(key => {
+                const item = items[key];
+                const categoryClass = categoryStyles[item.category] || 'bg-blue-500/20 text-blue-400';
+                
+                const card = document.createElement('div');
+                card.className = "product-card p-5 flex flex-col justify-between";
+
+                const safeTitle = escapeHTML(item.title || 'Untitled Item');
+                const safePrice = escapeHTML(item.price || 'RS.00.00');
+                const safeWhatsApp = escapeHTML(item.whatsapp || defaultPhone);
+
+                card.innerHTML = `
+                    <div>
+                        <img src="${escapeHTML(item.imageUrl || '/techworld.jpeg')}" alt="${safeTitle}" class="w-full h-48 object-cover rounded-xl mb-4 border border-white/5">
+                        <span class="text-[10px] uppercase font-bold tracking-wider px-3 py-1 rounded-full ${categoryClass}">
+                            ${escapeHTML(item.category || 'HARDWARE')}
+                        </span>
+                        <h3 class="font-bold text-white text-xl mt-2">${safeTitle}</h3>
+                        <p class="text-xs text-slate-400 mt-2 mb-4 leading-relaxed">${escapeHTML(item.description || 'No Description')}</p>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-extrabold text-blue-400 mb-4">${safePrice}</div>
+                        <button onclick="buyOnWhatsApp('${safeTitle.replace(/'/g, "\\'")}', '${safePrice.replace(/'/g, "\\'")}', '${safeWhatsApp}')" class="wa-btn">
+                            <i class="fa-brands fa-whatsapp text-xl"></i> Order via WhatsApp
+                        </button>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        });
 
         particlesJS("particles-js", {
             "particles": {
