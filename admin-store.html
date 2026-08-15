@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexyora Labs | Store Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body { background-color: #080c14; color: #f8fafc; margin: 0; min-height: 100vh; }
+        .glass { background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .gradient-text { background: linear-gradient(90deg, #3b82f6, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    </style>
+</head>
+<body class="font-sans p-4 md:p-8 max-w-5xl mx-auto">
+
+    <!-- Auth Guard Screen -->
+    <div id="authCheckScreen" class="fixed inset-0 bg-[#080c14] flex items-center justify-center z-50">
+        <div class="text-center">
+            <i class="fa-solid fa-shield-halved fa-spin text-4xl text-blue-500 mb-3 block"></i>
+            <p class="text-slate-400 text-sm">Verifying Admin Access...</p>
+        </div>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="flex justify-between items-center mb-8 pb-4 border-b border-white/10">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-boxes-stacked text-2xl text-blue-500"></i>
+            <div>
+                <h1 class="text-xl font-extrabold gradient-text">Store Admin Manager</h1>
+                <p class="text-xs text-slate-400">Add, edit, or remove store products</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-4">
+            <a href="store.html" target="_blank" class="text-xs text-slate-400 hover:text-blue-400 font-bold transition">
+                <i class="fa-solid fa-store mr-1"></i> View Live Store
+            </a>
+            <button id="logoutBtn" class="bg-red-500/20 text-red-400 hover:bg-red-600 hover:text-white border border-red-500/30 text-xs font-bold px-3 py-1.5 rounded-xl transition">
+                Logout
+            </button>
+        </div>
+    </header>
+
+    <!-- Product Form -->
+    <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <section class="lg:col-span-1 glass p-6 rounded-3xl h-fit">
+            <h2 id="formTitle" class="text-lg font-bold text-slate-100 mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-plus-circle text-blue-400"></i> Add New Product
+            </h2>
+            
+            <form id="productForm" class="space-y-4">
+                <input type="hidden" id="productId">
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">PRODUCT TITLE</label>
+                    <input type="text" id="productTitle" required placeholder="e.g. Premium Bot License" 
+                        class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-blue-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">CATEGORY</label>
+                    <select id="productCategory" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-blue-500">
+                        <option value="HARDWARE">HARDWARE</option>
+                        <option value="SOFTWARE / AI">SOFTWARE / AI</option>
+                        <option value="SERVICE">SERVICE</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">PRICE (RS.)</label>
+                    <input type="text" id="productPrice" required placeholder="e.g. Rs. 2,500.00" 
+                        class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-blue-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">COVER IMAGE URL</label>
+                    <input type="url" id="productImage" placeholder="https://..." 
+                        class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-blue-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">WHATSAPP NUMBER (WITH COUNTRY CODE)</label>
+                    <input type="text" id="whatsappNumber" placeholder="94712345678" 
+                        class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-blue-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">DESCRIPTION</label>
+                    <textarea id="productDescription" rows="3" placeholder="Short item summary..." 
+                        class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-blue-500"></textarea>
+                </div>
+
+                <div class="flex gap-2 pt-2">
+                    <button type="submit" id="saveBtn" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl text-sm transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-paper-plane"></i> Save Product
+                    </button>
+                    <button type="button" id="cancelBtn" onclick="resetForm()" class="hidden bg-slate-700 hover:bg-slate-600 text-slate-300 font-bold px-4 py-2.5 rounded-xl text-sm transition">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Product Inventory List -->
+        <section class="lg:col-span-2 glass p-6 rounded-3xl">
+            <h2 class="text-lg font-bold text-slate-100 mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-list text-purple-400"></i> Current Inventory
+            </h2>
+
+            <div id="productList" class="space-y-4">
+                <div class="text-center py-12 text-slate-500 text-sm">Loading products...</div>
+            </div>
+        </section>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, ref, push, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDM4BWnLf6jGycrMdQClWtq-Ra2iDidWsQ",
+            authDomain: "tech-world-93ee6.firebaseapp.com",
+            databaseURL: "https://tech-world-93ee6-default-rtdb.firebaseio.com",
+            projectId: "tech-world-93ee6",
+            storageBucket: "tech-world-93ee6.firebasestorage.app",
+            appId: "1:912275465700:web:5ec12525e03446712153f1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+
+        // Auth Protection Guard
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('authCheckScreen').classList.add('hidden');
+                loadProducts();
+            } else {
+                window.location.href = "index.html";
+            }
+        });
+
+        document.getElementById('logoutBtn').onclick = () => signOut(auth);
+
+        // HTML Escaping Utility
+        function escapeHTML(str) {
+            return (str || '').replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag]));
+        }
+
+        // Form Submission (Add or Update)
+        document.getElementById('productForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const id = document.getElementById('productId').value;
+            const productData = {
+                title: document.getElementById('productTitle').value.trim(),
+                category: document.getElementById('productCategory').value,
+                price: document.getElementById('productPrice').value.trim(),
+                imageUrl: document.getElementById('productImage').value.trim() || 'https://cdn.corenexis.com/r/s8rGVPxauw.jpeg',
+                whatsapp: document.getElementById('whatsappNumber').value.trim(),
+                description: document.getElementById('productDescription').value.trim() || 'No Description',
+                updatedAt: Date.now()
+            };
+
+            try {
+                if (id) {
+                    await set(ref(db, `store/${id}`), productData);
+                } else {
+                    const newRef = push(ref(db, 'store'));
+                    await set(newRef, productData);
+                }
+                resetForm();
+            } catch (err) {
+                alert("Error saving product: " + err.message);
+            }
+        });
+
+        // Load Products Real-time
+        function loadProducts() {
+            onValue(ref(db, 'store'), (snapshot) => {
+                const container = document.getElementById('productList');
+                container.innerHTML = "";
+                const data = snapshot.val() || {};
+                const keys = Object.keys(data).reverse();
+
+                if (keys.length === 0) {
+                    container.innerHTML = `<p class="text-center text-slate-500 py-8">No products added yet.</p>`;
+                    return;
+                }
+
+                keys.forEach(key => {
+                    const p = data[key];
+                    const item = document.createElement('div');
+                    item.className = "bg-slate-900/80 border border-white/10 p-4 rounded-2xl flex items-center justify-between gap-4";
+                    item.innerHTML = `
+                        <div class="flex items-center gap-4">
+                            <img src="${escapeHTML(p.imageUrl)}" class="w-16 h-12 object-cover rounded-lg border border-white/10">
+                            <div>
+                                <span class="text-[10px] font-bold text-blue-400 bg-blue-500/10 border border-blue-500/20 px-2 py-0.5 rounded-md uppercase">
+                                    ${escapeHTML(p.category || 'HARDWARE')}
+                                </span>
+                                <h3 class="font-bold text-slate-100 text-sm mt-1">${escapeHTML(p.title)}</h3>
+                                <p class="text-xs font-semibold text-emerald-400">${escapeHTML(p.price)}</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <button onclick="editProduct('${key}', '${escapeHTML(p.title)}', '${escapeHTML(p.category)}', '${escapeHTML(p.price)}', '${escapeHTML(p.imageUrl)}', '${escapeHTML(p.whatsapp)}', '${escapeHTML(p.description)}')" 
+                                class="bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/30 p-2 rounded-xl text-xs font-bold transition">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                            <button onclick="deleteProduct('${key}')" 
+                                class="bg-red-600/20 hover:bg-red-600 text-red-300 hover:text-white border border-red-500/30 p-2 rounded-xl text-xs font-bold transition">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(item);
+                });
+            });
+        }
+
+        // Global functions for Edit & Delete
+        window.editProduct = (id, title, category, price, imageUrl, whatsapp, description) => {
+            document.getElementById('productId').value = id;
+            document.getElementById('productTitle').value = title;
+            document.getElementById('productCategory').value = category || 'HARDWARE';
+            document.getElementById('productPrice').value = price;
+            document.getElementById('productImage').value = imageUrl;
+            document.getElementById('whatsappNumber').value = whatsapp;
+            document.getElementById('productDescription').value = description;
+
+            document.getElementById('formTitle').innerHTML = `<i class="fa-solid fa-pen-to-square text-amber-400"></i> Edit Product`;
+            document.getElementById('saveBtn').innerHTML = `<i class="fa-solid fa-check"></i> Update Product`;
+            document.getElementById('cancelBtn').classList.remove('hidden');
+        };
+
+        window.deleteProduct = async (id) => {
+            if (confirm("Are you sure you want to remove this product from the store?")) {
+                await remove(ref(db, `store/${id}`));
+            }
+        };
+
+        window.resetForm = () => {
+            document.getElementById('productForm').reset();
+            document.getElementById('productId').value = '';
+            document.getElementById('formTitle').innerHTML = `<i class="fa-solid fa-plus-circle text-blue-400"></i> Add New Product`;
+            document.getElementById('saveBtn').innerHTML = `<i class="fa-solid fa-paper-plane"></i> Save Product`;
+            document.getElementById('cancelBtn').classList.add('hidden');
+        };
+    </script>
+</body>
+</html>
